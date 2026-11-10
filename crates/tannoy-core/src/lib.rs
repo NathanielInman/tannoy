@@ -3,11 +3,13 @@
 //! socket protocol and the waybar reader.
 
 
+pub mod art;
 pub mod config;
 pub mod model;
 pub mod mpris;
 pub mod paths;
 pub mod pick;
+pub mod proc;
 pub mod protocol;
 pub mod text;
 pub mod transport;
