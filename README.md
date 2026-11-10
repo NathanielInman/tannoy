@@ -134,6 +134,18 @@ The text module's class is `playing`, `paused`, `hidden` (do not disturb) or
 #custom-tannoy.hidden { color: #616e88; }
 ```
 
+Waybar cannot hide a group's padding and border when every module in it is
+empty, so a pill drawn on the group would sit there empty whenever nothing
+plays. Draw it on the two modules instead: the text module also gets the
+class `with-art` while the image module shows a cover, so the text can be a
+whole pill on its own and hand its left end to the cover.
+
+```css
+#custom-tannoy { background: #282a2e; border: 1px solid #4c566a; border-radius: 10px; padding: 0 12px; }
+#custom-tannoy.with-art { border-left: none; border-radius: 0 10px 10px 0; padding-left: 8px; }
+#image.tannoy-art image { background: #282a2e; border: 1px solid #4c566a; border-right: none; border-radius: 10px 0 0 10px; padding-left: 10px; }
+```
+
 For the media keys, point them at the same commands. In Hyprland's Lua
 config:
 

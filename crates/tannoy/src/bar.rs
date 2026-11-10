@@ -1,5 +1,10 @@
 //! The waybar line: artist and title, cut at a word boundary, with a class
 //! for the bar's CSS. While do not disturb hides titles, only a glyph.
+//!
+//! The classes are the state (`playing`, `paused`, `hidden`, `stopped`,
+//! `offline`) and `with-art` while the image module beside it shows a cover:
+//! waybar cannot style a group by what its modules show, so the text module
+//! is a whole pill on its own and gives up its left end to the cover.
 
 use tannoy_core::config::Config;
 use tannoy_core::model::{Snapshot, Status};
@@ -18,7 +23,7 @@ pub fn label(artist: &str, title: &str, sep: &str) -> String {
 fn empty(class: &str, tooltip: &str) -> BarLine {
     BarLine {
         text: String::new(),
-        class: class.into(),
+        class: vec![class.into()],
         alt: class.into(),
         tooltip: tooltip.into(),
     }
@@ -41,7 +46,7 @@ pub fn line(snap: &Snapshot, cfg: &Config) -> BarLine {
         }
         return BarLine {
             text,
-            class: "hidden".into(),
+            class: vec!["hidden".into()],
             alt: "hidden".into(),
             tooltip: format!(
                 "Hidden while do not disturb is on\n{} is {}",
@@ -84,9 +89,13 @@ pub fn line(snap: &Snapshot, cfg: &Config) -> BarLine {
     };
     tip.push(format!("{}{state}", p.name));
     let class = p.status.as_str();
+    let mut classes = vec![class.to_string()];
+    if art_path(snap, cfg).is_some() {
+        classes.push("with-art".into());
+    }
     BarLine {
         text,
-        class: class.into(),
+        class: classes,
         alt: class.into(),
         tooltip: escape(&tip.join("\n")),
     }
@@ -155,7 +164,7 @@ mod tests {
     fn paused_podcast() {
         let l = line(&chrome(), &Config::default());
         assert_eq!(l.text, "StarTalk · Why We Haven\u{2019}t Reached\u{2026}");
-        assert_eq!(l.class, "paused");
+        assert_eq!(l.class, vec!["paused", "with-art"]);
         assert_eq!(
             l.tooltip,
             "Why We Haven\u{2019}t Reached Superintelligence, with David Krakauer\nStarTalk\nChrome (paused)"
@@ -171,7 +180,7 @@ mod tests {
         cfg.bar.icon_playing = "\u{f04b}".into();
         let l = line(&s, &cfg);
         assert_eq!(l.text, "\u{f04b} StarTalk · Tom &amp; Jerry");
-        assert_eq!(l.class, "playing");
+        assert_eq!(l.class[0], "playing");
     }
 
     #[test]
@@ -182,7 +191,7 @@ mod tests {
         let cfg = Config::default();
         let l = line(&s, &cfg);
         assert_eq!(l.text, cfg.bar.icon_hidden);
-        assert_eq!(l.class, "hidden");
+        assert_eq!(l.class, vec!["hidden"]);
         assert!(!l.tooltip.contains("StarTalk"));
         assert!(!l.tooltip.contains("Superintelligence"));
         assert_eq!(art_path(&s, &cfg), None);
@@ -192,8 +201,10 @@ mod tests {
     fn nothing_playing_hides_the_module() {
         let l = line(&Snapshot::default(), &Config::default());
         assert_eq!(l.text, "");
-        assert_eq!(l.class, "stopped");
+        assert_eq!(l.class, vec!["stopped"]);
         let mut s = chrome();
+        s.art = None;
+        assert_eq!(line(&s, &Config::default()).class, vec!["paused"]);
         s.players[0].status = Status::Stopped;
         assert_eq!(line(&s, &Config::default()).text, "");
         assert_eq!(art_path(&s, &Config::default()), None);

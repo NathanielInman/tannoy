@@ -136,6 +136,12 @@ while it cannot connect it prints an empty `offline` line and retries every
 | Paused | `bar.icon_paused`, then `artist · title` | `paused` |
 | Daemon unreachable | empty | `offline` |
 
+The class is a list: the state, then `with-art` while `tannoy art` prints a
+cover. Waybar cannot style a group by what its modules show (a group of
+empty modules keeps its padding and border), so a bar that wants the cover
+and text in one pill draws the pill on the modules and uses `with-art` to
+join them.
+
 The text is `artist`, `bar.separator` and `title` (or whichever exists),
 shortened by `tannoy_core::text::ellipsize`: at most `bar.max_chars`
 characters, cut at the last word boundary with `…`, with a dangling

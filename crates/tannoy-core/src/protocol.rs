@@ -113,7 +113,9 @@ pub enum Event {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct BarLine {
     pub text: String,
-    pub class: String,
+    /// The state first (`playing`), then `with-art` while the image module
+    /// shows a cover, so the bar's CSS can join the two into one pill.
+    pub class: Vec<String>,
     pub alt: String,
     pub tooltip: String,
 }
