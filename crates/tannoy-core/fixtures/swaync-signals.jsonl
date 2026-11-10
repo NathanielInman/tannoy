@@ -1,0 +1,2 @@
+{"type":"signal","endian":"l","flags":1,"version":1,"cookie":398856,"timestamp-realtime":1794350009476939,"sender":":1.48","path":"/org/erikreider/swaync/cc","interface":"org.erikreider.swaync.cc","member":"SubscribeV2","payload":{"type":"ubbb","data":[44,true,false,false]}}
+{"type":"signal","endian":"l","flags":1,"version":1,"cookie":398861,"timestamp-realtime":1794350010082428,"sender":":1.48","path":"/org/erikreider/swaync/cc","interface":"org.erikreider.swaync.cc","member":"SubscribeV2","payload":{"type":"ubbb","data":[44,false,false,false]}}

@@ -11,6 +11,7 @@ pub mod paths;
 pub mod pick;
 pub mod proc;
 pub mod protocol;
+pub mod swaync;
 pub mod text;
 pub mod transport;
 pub mod waybar;
