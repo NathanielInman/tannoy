@@ -124,8 +124,9 @@ the track id is usable, else `Seek` with the difference.
 
 `tannoy bar` subscribes to the daemon and prints a waybar JSON line whenever
 it changes. If the daemon is not running it starts one (detached, in its own
-session) once; while it cannot connect it prints an empty `offline` line and
-retries every 2 seconds.
+session), at most every 10 seconds, so a crash or an upgrade heals itself;
+while it cannot connect it prints an empty `offline` line and retries every
+2 seconds.
 
 | State | Text | Class |
 |---|---|---|

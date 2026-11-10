@@ -166,7 +166,9 @@ fn bar() -> Result<i32> {
     let offline = serde_json::to_string(&crate::bar::offline())?;
     let mut out = std::io::stdout().lock();
     let mut last = String::new();
-    let mut tried_start = false;
+    // Starts the daemon when it is missing (first run, a crash, an
+    // upgrade), at most every 10 seconds.
+    let mut started: Option<std::time::Instant> = None;
     loop {
         match tannoy_core::protocol::subscribe_raw(SubKind::Bar) {
             Ok(lines) => {
@@ -179,8 +181,8 @@ fn bar() -> Result<i32> {
                     }
                 }
             }
-            Err(_) if !tried_start => {
-                tried_start = true;
+            Err(_) if started.is_none_or(|t| t.elapsed() > Duration::from_secs(10)) => {
+                started = Some(std::time::Instant::now());
                 let _ = ensure_daemon();
                 continue;
             }
