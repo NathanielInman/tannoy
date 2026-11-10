@@ -1,0 +1,31 @@
+{
+	"type" : "a{sv}",
+	"data" : [
+		{
+			"CanQuit" : {
+				"type" : "b",
+				"data" : false
+			},
+			"CanRaise" : {
+				"type" : "b",
+				"data" : false
+			},
+			"HasTrackList" : {
+				"type" : "b",
+				"data" : false
+			},
+			"Identity" : {
+				"type" : "s",
+				"data" : "Chrome"
+			},
+			"SupportedMimeTypes" : {
+				"type" : "as",
+				"data" : []
+			},
+			"SupportedUriSchemes" : {
+				"type" : "as",
+				"data" : []
+			}
+		}
+	]
+}

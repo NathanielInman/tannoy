@@ -1,0 +1,19 @@
+[package]
+name = "tannoy-core"
+description = "Tannoy model, MPRIS parsing, player pick, config, protocol and waybar reader"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+bar-anchor = { path = "../bar-anchor" }
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+anyhow.workspace = true
+ureq = { version = "3", default-features = false, features = ["rustls"] }
+
+[target.'cfg(unix)'.dependencies]
+libc.workspace = true

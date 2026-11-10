@@ -1,0 +1,93 @@
+{
+	"type" : "a{sv}",
+	"data" : [
+		{
+			"PlaybackStatus" : {
+				"type" : "s",
+				"data" : "Paused"
+			},
+			"Rate" : {
+				"type" : "d",
+				"data" : 1.000000000000000000000e+00
+			},
+			"Metadata" : {
+				"type" : "a{sv}",
+				"data" : {
+					"mpris:trackid" : {
+						"type" : "o",
+						"data" : "/org/tannoy/fake/track0"
+					},
+					"mpris:length" : {
+						"type" : "x",
+						"data" : 369000000
+					},
+					"xesam:title" : {
+						"type" : "s",
+						"data" : "Get Lucky"
+					},
+					"xesam:artist" : {
+						"type" : "as",
+						"data" : [
+							"Daft Punk",
+							"Pharrell Williams"
+						]
+					},
+					"xesam:album" : {
+						"type" : "s",
+						"data" : "Random Access Memories"
+					},
+					"mpris:artUrl" : {
+						"type" : "s",
+						"data" : "file:///usr/share/icons/hicolor/256x256/apps/firefox.png"
+					},
+					"xesam:genre" : {
+						"type" : "as",
+						"data" : [
+							"Electronic"
+						]
+					}
+				}
+			},
+			"Volume" : {
+				"type" : "d",
+				"data" : 1.000000000000000000000e+00
+			},
+			"Position" : {
+				"type" : "x",
+				"data" : 0
+			},
+			"MinimumRate" : {
+				"type" : "d",
+				"data" : 1.000000000000000000000e+00
+			},
+			"MaximumRate" : {
+				"type" : "d",
+				"data" : 1.000000000000000000000e+00
+			},
+			"CanGoNext" : {
+				"type" : "b",
+				"data" : false
+			},
+			"CanGoPrevious" : {
+				"type" : "b",
+				"data" : false
+			},
+			"CanPlay" : {
+				"type" : "b",
+				"data" : true
+			},
+			"CanPause" : {
+				"type" : "b",
+				"data" : true
+			},
+			"CanSeek" : {
+				"type" : "b",
+				"data" : true
+			},
+			"CanControl" : {
+				"type" : "b",
+				"data" : true
+			}
+		}
+	]
+}
