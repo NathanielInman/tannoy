@@ -121,8 +121,9 @@ it runs, and the daemon starts the drawer the first time you click.
 
 The image module runs `tannoy art` once and again whenever the daemon sends
 waybar `SIGRTMIN+12` (`art.signal`), which it does when the cover changes.
-`tannoy art` prints nothing when there is no cover, and waybar hides the
-module. Keep `signal` in the module and `art.signal` in the config the same.
+With no cover `tannoy art` prints a path that never exists, and waybar
+hides the module (an empty line would leave the last cover up). Keep
+`signal` in the module and `art.signal` in the config the same.
 
 The text module's class is `playing`, `paused`, `hidden` (do not disturb) or
 `stopped`, and its text is empty when nothing plays, which hides it:

@@ -149,7 +149,7 @@ The rule from the script Tannoy replaced: while swaync's do not disturb is
 on, the title stays off screen. With `dnd.hide = true` (the default):
 
 - the bar shows only the hidden glyph, with no title in the tooltip;
-- `tannoy art` prints nothing, so the image module hides;
+- `tannoy art` prints no cover, so the image module hides;
 - the drawer shows a "Hidden" card instead of the cover and title, and keeps
   the controls, players and output row;
 - `tannoy status` prints "hidden while do not disturb is on".
@@ -174,9 +174,11 @@ Only PNG, JPEG, WebP, GIF and BMP are kept (by their first bytes), named
 after each fetch.
 
 `tannoy art` asks the daemon (400 ms deadline, never starts it, since waybar
-runs it on its main thread) and prints the path or an empty line. The path
-is empty with no active track, a stopped player, do not disturb hiding
-titles, or `art.enabled = false`. With no cover, `art.fallback = "player"`
+runs it on its main thread) and prints the cover's path, or with no cover
+`$XDG_CACHE_HOME/tannoy/art/none`, which is never created: waybar hides an
+image module whose path does not exist, but an empty line leaves the
+previous image up. There is no cover with no active track, a stopped
+player, do not disturb hiding titles, or `art.enabled = false`. With no cover, `art.fallback = "player"`
 prints the player's app icon from the hicolor theme or `/usr/share/pixmaps`,
 and any other value is an image path.
 

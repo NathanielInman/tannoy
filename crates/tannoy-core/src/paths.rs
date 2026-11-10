@@ -60,6 +60,12 @@ pub fn art_dir() -> PathBuf {
     cache_dir().join("art")
 }
 
+/// What `tannoy art` prints when there is no cover: a path that is never
+/// created, so waybar's image module hides itself.
+pub fn no_art() -> PathBuf {
+    art_dir().join("none")
+}
+
 /// Per-user directory for the socket, shared by the daemon, bar module and
 /// drawer.
 pub fn runtime_dir() -> PathBuf {

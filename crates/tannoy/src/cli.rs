@@ -196,13 +196,18 @@ fn bar() -> Result<i32> {
 }
 
 /// For waybar's image module, which runs this on its own main thread: it
-/// must answer at once, so it never starts the daemon or waits long. An
-/// empty line hides the module.
+/// must answer at once, so it never starts the daemon or waits long.
+///
+/// With no cover it prints a path that never exists (`art/none` in the
+/// cache): waybar hides the module for a missing file, but keeps showing the
+/// previous image when the output is empty.
 fn art() -> Result<i32> {
     let reply =
         tannoy_core::protocol::request_within(&Request::Art, Duration::from_millis(400)).ok();
-    let path = reply.and_then(|r| r.art).unwrap_or_default();
-    println!("{path}");
+    match reply.and_then(|r| r.art) {
+        Some(path) => println!("{path}"),
+        None => println!("{}", paths::no_art().display()),
+    }
     Ok(0)
 }
 
