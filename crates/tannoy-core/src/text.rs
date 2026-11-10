@@ -65,7 +65,10 @@ mod tests {
 
     #[test]
     fn short_text_is_untouched() {
-        assert_eq!(ellipsize("Daft Punk · Get Lucky", 40), "Daft Punk · Get Lucky");
+        assert_eq!(
+            ellipsize("Daft Punk · Get Lucky", 40),
+            "Daft Punk · Get Lucky"
+        );
     }
 
     #[test]
@@ -81,7 +84,10 @@ mod tests {
 
     #[test]
     fn drops_a_dangling_separator() {
-        assert_eq!(ellipsize("StarTalk · Superintelligence", 12), "StarTalk\u{2026}");
+        assert_eq!(
+            ellipsize("StarTalk · Superintelligence", 12),
+            "StarTalk\u{2026}"
+        );
         assert_eq!(ellipsize("One, two three", 9), "One, two\u{2026}");
         assert_eq!(ellipsize("One, two three", 8), "One\u{2026}");
     }

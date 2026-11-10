@@ -154,9 +154,14 @@ mod tests {
         let mut ps = players();
         ps[0].name = "Chrome".into();
         assert_eq!(resolve(&ps, "chrome"), Ok(Some("chromium".into())));
-        assert_eq!(resolve(&ps, "chromium.instance910"), Ok(Some("chromium".into())));
+        assert_eq!(
+            resolve(&ps, "chromium.instance910"),
+            Ok(Some("chromium".into()))
+        );
         assert_eq!(resolve(&ps, "Spot"), Ok(Some("spotify".into())));
         assert_eq!(resolve(&ps, "auto"), Ok(None));
-        assert!(resolve(&ps, "vlc").unwrap_err().contains("chromium, spotify, mpv"));
+        assert!(resolve(&ps, "vlc")
+            .unwrap_err()
+            .contains("chromium, spotify, mpv"));
     }
 }
