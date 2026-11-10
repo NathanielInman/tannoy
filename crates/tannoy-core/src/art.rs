@@ -190,7 +190,7 @@ pub fn prune(dir: &Path, keep: usize) {
     if files.len() <= keep {
         return;
     }
-    files.sort_by(|a, b| b.0.cmp(&a.0));
+    files.sort_by_key(|f| std::cmp::Reverse(f.0));
     for (_, p) in files.into_iter().skip(keep) {
         let _ = std::fs::remove_file(p);
     }
@@ -263,7 +263,9 @@ mod tests {
         );
         assert_eq!(
             source("https://i.scdn.co/image/ab67616d0000b273"),
-            Some(Source::Http("https://i.scdn.co/image/ab67616d0000b273".into()))
+            Some(Source::Http(
+                "https://i.scdn.co/image/ab67616d0000b273".into()
+            ))
         );
         assert_eq!(source("data:image/png;base64,AAAA"), None);
         assert_eq!(source(""), None);
@@ -305,7 +307,11 @@ mod tests {
         assert_eq!(cached(&cache, &url), Some(got.clone()));
         let bad = dir.join("x.png");
         std::fs::write(&bad, b"not an image").unwrap();
-        let err = fetch(&cache, &format!("file://{}", bad.display()), Duration::from_secs(1));
+        let err = fetch(
+            &cache,
+            &format!("file://{}", bad.display()),
+            Duration::from_secs(1),
+        );
         assert!(err.is_err());
         let _ = std::fs::remove_dir_all(&dir);
     }
