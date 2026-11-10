@@ -5,6 +5,7 @@
 
 pub mod model;
 pub mod mpris;
+pub mod pick;
 
 pub use bar_anchor::{Anchor, Edge};
 
