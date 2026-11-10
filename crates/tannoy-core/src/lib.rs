@@ -2,8 +2,8 @@
 //! the config, the model, MPRIS parsing, the player pick, cover art, the
 //! socket protocol and the waybar reader.
 
-
 pub mod art;
+pub mod audio;
 pub mod config;
 pub mod model;
 pub mod mpris;
@@ -13,6 +13,7 @@ pub mod proc;
 pub mod protocol;
 pub mod text;
 pub mod transport;
+pub mod waybar;
 
 pub use bar_anchor::{Anchor, Edge};
 
