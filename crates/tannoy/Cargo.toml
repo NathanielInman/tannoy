@@ -1,0 +1,21 @@
+[package]
+name = "tannoy"
+description = "Tannoy: the daemon, CLI and waybar module"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "tannoy"
+path = "src/main.rs"
+
+[dependencies]
+tannoy-core = { path = "../tannoy-core" }
+bar-anchor = { path = "../bar-anchor" }
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+libc.workspace = true
+zbus = { version = "5", default-features = false, features = ["blocking-api", "async-io"] }
