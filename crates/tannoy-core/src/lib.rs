@@ -3,9 +3,13 @@
 //! socket protocol and the waybar reader.
 
 
+pub mod config;
 pub mod model;
 pub mod mpris;
+pub mod paths;
 pub mod pick;
+pub mod protocol;
+pub mod transport;
 
 pub use bar_anchor::{Anchor, Edge};
 
