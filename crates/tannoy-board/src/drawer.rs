@@ -32,7 +32,7 @@ const PREV: &str = "\u{f04ae}";
 const NEXT: &str = "\u{f04ad}";
 const MUSIC: &str = "\u{f075a}";
 const SPEAKER: &str = "\u{f04c3}";
-const SPEAKER_BT: &str = "\u{f09a2}";
+const SPEAKER_BT: &str = "\u{f00af}";
 
 /// Glyphs for the podcast skip buttons, by how far they jump.
 fn skip_glyphs(secs: u32) -> (String, String) {
