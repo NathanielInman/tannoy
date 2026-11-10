@@ -1,0 +1,175 @@
+/* Tannoy drawer default theme. With theme.from = "waybar" the bar's own
+   colors and font replace these tokens. Override anything in
+   ~/.config/tannoy/style.css; redefining an @define-color token recolors
+   everything that uses it. */
+
+@define-color tn_panel rgba(30, 32, 36, 0.97);
+@define-color tn_well #15171a;
+@define-color tn_border #41464e;
+@define-color tn_fg #c5c8c6;
+@define-color tn_dim #7c838e;
+@define-color tn_tile rgba(255, 255, 255, 0.035);
+@define-color tn_tile_border rgba(255, 255, 255, 0.07);
+@define-color tn_tile_hover #33373d;
+@define-color tn_accent #88c0d0;
+@define-color tn_playing #a3be8c;
+@define-color tn_hidden #ebcb8b;
+@define-color tn_error #bf616a;
+@define-color tn_idle #555b64;
+
+window.tannoy {
+  background: transparent;
+  color: @tn_fg;
+  font-family: monospace;
+  font-size: 13px;
+}
+window.tannoy * { font-family: inherit; }
+
+.panel {
+  background: @tn_panel;
+  border: 1px solid @tn_border;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.35);
+  padding: 14px;
+}
+
+.dim { color: @tn_dim; }
+
+/* ---- header ---- */
+.lamp { color: @tn_idle; }
+.lamp.playing { color: @tn_playing; }
+.lamp.paused { color: @tn_accent; }
+.lamp.hidden { color: @tn_hidden; }
+.brand { font-weight: bold; letter-spacing: 2px; font-size: 12px; }
+.sub { color: @tn_dim; font-size: 11px; }
+.chip {
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 9px;
+  border-radius: 999px;
+  color: @tn_dim;
+  background: alpha(@tn_idle, 0.2);
+}
+.chip.playing { color: @tn_playing; background: alpha(@tn_playing, 0.14); }
+.chip.paused { color: @tn_accent; background: alpha(@tn_accent, 0.14); }
+.chip.hidden { color: @tn_hidden; background: alpha(@tn_hidden, 0.15); }
+
+.notice { color: @tn_hidden; font-size: 11px; }
+
+/* ---- now playing ---- */
+.art {
+  border-radius: 8px;
+  background: @tn_well;
+}
+.art-none {
+  border-radius: 8px;
+  background: @tn_well;
+  color: @tn_dim;
+  font-size: 40px;
+}
+.kind {
+  color: @tn_dim;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.title { font-size: 15px; font-weight: bold; }
+.artist { color: @tn_fg; }
+.album { color: @tn_dim; font-size: 11.5px; }
+
+scale.scrub { padding: 6px 0 2px 0; }
+scale.scrub trough {
+  min-height: 4px;
+  border-radius: 2px;
+  background: @tn_tile_border;
+  border: none;
+}
+scale.scrub highlight {
+  min-height: 4px;
+  border-radius: 2px;
+  background: @tn_accent;
+  border: none;
+}
+scale.scrub slider {
+  min-width: 12px;
+  min-height: 12px;
+  margin: -5px;
+  border-radius: 999px;
+  background: @tn_fg;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+scale.scrub:disabled highlight { background: @tn_idle; }
+.time { color: @tn_dim; font-size: 11px; font-feature-settings: "tnum"; }
+
+/* ---- controls ---- */
+.controls button {
+  background: @tn_tile;
+  border: 1px solid @tn_tile_border;
+  border-radius: 10px;
+  box-shadow: none;
+  color: @tn_fg;
+  min-height: 0;
+  min-width: 0;
+  padding: 6px 12px;
+  font-size: 16px;
+}
+.controls button:hover { background: @tn_tile_hover; }
+.controls button:disabled { color: @tn_idle; }
+.controls button.primary {
+  background: @tn_accent;
+  border-color: @tn_accent;
+  color: @tn_well;
+  padding: 6px 18px;
+}
+.controls button.primary:hover { background: shade(@tn_accent, 1.08); }
+.controls button.skip { font-size: 15px; }
+
+/* ---- cards ---- */
+.card {
+  background: @tn_tile;
+  border: 1px solid @tn_tile_border;
+  border-radius: 10px;
+  padding: 9px 10px;
+}
+.card.hidden { background: alpha(@tn_hidden, 0.07); border-color: alpha(@tn_hidden, 0.3); }
+.t-label {
+  color: @tn_dim;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.card.hidden .t-label.head { color: @tn_hidden; }
+
+/* ---- players ---- */
+.players button {
+  background: transparent;
+  border: 1px solid @tn_border;
+  border-radius: 999px;
+  box-shadow: none;
+  color: @tn_dim;
+  min-height: 0;
+  padding: 2px 10px;
+  font-size: 11.5px;
+}
+.players button:hover { color: @tn_fg; background: @tn_tile_hover; }
+.players button.on { border-color: @tn_accent; color: @tn_accent; }
+.players .dot { font-size: 8px; color: @tn_idle; }
+.players .dot.playing { color: @tn_playing; }
+.players .dot.paused { color: @tn_dim; }
+
+/* ---- output ---- */
+.output-icon { color: @tn_accent; font-size: 15px; }
+.card button.change {
+  background: transparent;
+  border: 1px solid @tn_border;
+  border-radius: 8px;
+  box-shadow: none;
+  color: @tn_fg;
+  min-height: 0;
+  padding: 2px 10px;
+  font-size: 11.5px;
+}
+.card button.change:hover { background: @tn_tile_hover; color: @tn_accent; }
+
+.foot { color: @tn_dim; font-size: 10.5px; }
