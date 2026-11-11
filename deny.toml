@@ -1,0 +1,41 @@
+# cargo deny check: advisories, licenses, bans and sources for the crates
+# Tannoy actually builds (the two Linux targets it releases for).
+
+[graph]
+targets = ["x86_64-unknown-linux-gnu", "aarch64-unknown-linux-gnu"]
+
+[advisories]
+# RustSec advisories are errors; a yanked crate in the lockfile too.
+yanked = "deny"
+ignore = [
+  # zbus 6 merged zvariant, zvariant_derive and zbus_names into itself, so
+  # the standalone crates are unmaintained. Tannoy is on zbus 5 because zbus
+  # 6 removed the blocking API the daemon uses; drop these with the port.
+  { id = "RUSTSEC-2026-0370", reason = "zvariant: unmaintained, merged into zbus 6; port pending" },
+  { id = "RUSTSEC-2026-0371", reason = "zbus_names: unmaintained, merged into zbus 6; port pending" },
+  { id = "RUSTSEC-2026-0372", reason = "zvariant_derive: unmaintained, merged into zbus 6; port pending" },
+]
+
+[licenses]
+# Everything here is compatible with shipping Tannoy under MIT.
+allow = [
+  "MIT",
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "BSD-3-Clause",
+  "ISC",
+  "Unicode-3.0",
+  "CDLA-Permissive-2.0",
+]
+confidence-threshold = 0.9
+
+[bans]
+# Two majors of one crate cost build time; say so, but do not fail on it.
+multiple-versions = "warn"
+wildcards = "deny"
+# The workspace's own path dependencies have no version; they are fine.
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"

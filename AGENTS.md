@@ -25,7 +25,8 @@ for whatever you change.
 `cargo build --workspace --locked`, `cargo test --workspace --locked`,
 `cargo clippy --workspace --all-targets -- -D warnings` and `tools/e2e.sh`
 (the real daemon, bar and CLI against fake players on a private bus; CI
-runs it too). The drawer needs
+runs it too). CI also runs `cargo deny check` (`deny.toml`: advisories,
+licenses, bans, sources); an ignored advisory needs a reason there. The drawer needs
 gtk4-layer-shell; `.github/scripts/gtk4-layer-shell.sh` is how CI gets it.
 
 Parsers are pure functions over plain data and are tested against real

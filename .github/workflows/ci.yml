@@ -37,3 +37,10 @@ jobs:
           PYTHON=/usr/bin/python3 tools/e2e.sh target/debug/tannoy
       - name: Clippy
         run: cargo clippy --workspace --all-targets --locked -- -D warnings
+
+  deny:
+    name: dependencies
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: EmbarkStudios/cargo-deny-action@v2
