@@ -192,7 +192,8 @@ impl Model {
         let mut effects = vec![];
         let players: Vec<Player> = self.players.values().cloned().collect();
         let active =
-            crate::pick::choose(&players, self.picked.as_deref()).map(|i| players[i].bus.clone());
+            crate::pick::choose(&players, self.picked.as_deref(), &self.cfg.players.prefer)
+                .map(|i| players[i].bus.clone());
 
         let want = active
             .as_ref()

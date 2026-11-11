@@ -239,6 +239,7 @@ timeout = 5            # seconds for an https download
 
 [players]
 ignore = []            # bus-name keys never tracked, e.g. ["firefox"]; playerctld always is
+prefer = []            # keys that win when nothing is picked, e.g. ["spotify"]
 
 [drawer]
 width = 400

@@ -106,6 +106,10 @@ pub struct PlayersConfig {
     /// `org.mpris.MediaPlayer2.` (`firefox`, `chromium`). `playerctld` is
     /// always ignored: it mirrors another player.
     pub ignore: Vec<String>,
+    /// Keys that come first when nothing is picked, earliest first, within
+    /// playing and then within the rest (`["spotify"]`: Spotify playing wins
+    /// over a browser tab that started later).
+    pub prefer: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

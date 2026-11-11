@@ -126,9 +126,11 @@ podcast or a talk in a browser tab).
    whatever its state. The key is the bus name after the prefix, up to
    `.instance` and lowercased: `chromium.instance910` is `chromium`, so the
    pick survives a restart.
-2. Otherwise a playing player, the one that most recently started playing.
-3. Otherwise the one that was playing most recently, then paused over
-   stopped, then bus-name order.
+2. Otherwise a playing player: the first in `players.prefer`, else the one
+   that most recently started playing.
+3. Otherwise, among the rest: the first in `players.prefer`, then the one
+   that was playing most recently, then paused over stopped, then bus-name
+   order.
 
 `tannoy pick <query>` matches a key, a bus-name suffix or an `Identity`
 ("Chrome"), exactly or as a prefix, case-insensitively. `auto` (or `none`)
@@ -372,6 +374,7 @@ are microseconds, times are Unix seconds.
 | `art.fallback` | `"none"` | No cover: `none`, `player` (app icon) or an image path |
 | `art.timeout` | `5` | Seconds for an https download |
 | `players.ignore` | `[]` | Keys or bus-name suffixes never tracked (`playerctld` always is) |
+| `players.prefer` | `[]` | Keys that win when nothing is picked, first listed first, within playing and then within the rest |
 | `drawer.width` | `400` | Panel width in logical pixels |
 | `drawer.max_height` | `0.85` | Largest height as a fraction of the monitor |
 | `drawer.gap` | `8` | Gap between the bar and the panel |
