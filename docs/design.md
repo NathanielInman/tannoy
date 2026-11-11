@@ -88,6 +88,11 @@ interfaces. Loading runs on a helper thread: a hung player costs a thread,
 never the bar. `org.mpris.MediaPlayer2.playerctld` is always ignored because
 it mirrors another player.
 
+A signal stream that ends is opened again after 2 seconds. If the bus itself
+no longer answers (`GetId` fails: the session ended and left the daemon
+behind), the daemon tells the drawer to quit and exits instead of retrying
+forever; the next session's bar starts a new one.
+
 MPRIS never signals the position. While the drawer reports it is visible
 (`board_visible`), the daemon reads `Position` from the active player about
 once a second; the drawer extrapolates between readings from `position`,

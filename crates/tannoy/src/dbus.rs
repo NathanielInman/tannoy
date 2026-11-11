@@ -123,6 +123,12 @@ where
     )?)
 }
 
+/// The bus still answers. False once the session bus went away (a logout
+/// that left the daemon behind).
+pub fn bus_alive(conn: &Connection) -> bool {
+    dbus_call(conn, "GetId", &()).is_ok()
+}
+
 /// Every bus name that is an MPRIS player.
 pub fn list_players(conn: &Connection) -> Result<Vec<String>> {
     let names: Vec<String> = dbus_call(conn, "ListNames", &())?.body().deserialize()?;

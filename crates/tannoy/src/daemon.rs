@@ -450,12 +450,18 @@ fn watch_screencast(d: Shared) {
     }
 }
 
-/// Keeps a watcher alive: if its stream ends, it starts again.
+/// Keeps a watcher alive: if its stream ends, it starts again. If the bus
+/// itself is gone (the session ended), the daemon exits instead of retrying
+/// forever; the next session's bar starts a new one.
 fn keep(d: &Shared, name: &'static str, f: fn(Shared) -> Result<()>) {
     let d = d.clone();
     std::thread::spawn(move || loop {
         if let Err(e) = f(d.clone()) {
             eprintln!("tannoy: {name} watcher: {e:#}");
+        }
+        if !dbus::bus_alive(&d.conn) {
+            eprintln!("tannoy: the session bus is gone");
+            retire(&mut d.lock());
         }
         std::thread::sleep(Duration::from_secs(2));
     });
