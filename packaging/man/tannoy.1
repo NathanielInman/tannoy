@@ -1,0 +1,129 @@
+.TH TANNOY 1 "2026-11-11" "tannoy" "User Commands"
+.SH NAME
+tannoy \- now playing for waybar, with cover art and a drawer
+.SH SYNOPSIS
+.B tannoy
+.I command
+.RI [ arguments ]
+.SH DESCRIPTION
+.B tannoy
+tracks every MPRIS player on the session bus from D\-Bus signals and shows
+the one you picked, or the one that most recently started playing, in a
+waybar module with its cover.
+Clicking the module opens a drawer
+.RB ( tannoy\-board )
+with the cover, a scrub bar, the controls and the players.
+While do not disturb is on (swaync, dunst or mako) or the screen is shared
+(Hyprland), titles and covers stay off the screen.
+.PP
+One binary is the daemon, the waybar module and the command line.
+Commands start the daemon when it is not running, except
+.BR art ,
+.B status
+and
+.BR hide .
+.SH COMMANDS
+.TP
+.B play\-pause
+Play or pause the picked player.
+.TP
+.BR next ", " previous
+Skip to the next or previous track.
+.TP
+.BI seek " secs"
+Seek relative with a sign
+.RB ( +5 ", " \-15 )
+or to a position in seconds
+.RB ( 90 ).
+.TP
+.B raise
+Bring the picked player's window forward, for players that offer it.
+.TP
+.BI pick " player"
+Send the bar, the media keys and the drawer to this player: a bus name
+key, suffix or name, whole or as a prefix
+.RB ( spotify ", " chrome ).
+.B auto
+follows whichever player started playing last.
+The pick survives the player restarting.
+.TP
+.BR toggle " [" \-\-center ]
+Open or close the drawer from the bar icon under the cursor (Hyprland), or
+centered.
+.TP
+.BR show " [" \-\-center "], " hide
+Open or close the drawer.
+.TP
+.B bar
+The waybar
+.B custom
+module: prints a JSON line whenever the bar should change.
+Its classes are
+.BR playing ", " paused ", " hidden ", " stopped " or " offline ,
+plus
+.B with\-art
+while the image module shows a cover.
+.TP
+.B art
+The cover's path, for a waybar
+.B image
+module.
+Prints a path that never exists when there is no cover, which hides the
+module.
+Answers within 400 ms and never starts the daemon.
+.TP
+.BR status " [" \-\-json ]
+What is playing, on which players; with
+.BR \-\-json ,
+the daemon's snapshot.
+.TP
+.B doctor
+Check the session bus, the notification daemon, screen sharing, waybar,
+the art signal and the drawer.
+.TP
+.B daemon
+Run the daemon in the foreground.
+.TP
+.B restart
+Restart the daemon and the drawer.
+.TP
+.BR \-\-version ", " help
+Print the version or the usage.
+.SH FILES
+.TP
+.I ~/.config/tannoy/config.toml
+The config; every key is optional.
+A typo falls back to the defaults and the drawer and
+.B doctor
+say what is wrong.
+.TP
+.I ~/.config/tannoy/style.css
+Overrides any part of the drawer's look.
+.TP
+.I $XDG_STATE_HOME/tannoy/
+The picked player
+.RI ( state.json )
+and the logs
+.RI ( daemon.log ", " board.log ),
+each moved to
+.I .1
+past 1 MB.
+.TP
+.I $XDG_CACHE_HOME/tannoy/art/
+Cached covers.
+.TP
+.I $XDG_RUNTIME_DIR/tannoy/
+The daemon's socket and lock.
+.SH ENVIRONMENT
+.TP
+.BR TANNOY_CONFIG_DIR ", " TANNOY_STATE_DIR ", " TANNOY_CACHE_DIR ", " TANNOY_RUNTIME_DIR
+Move each place above, for a development build next to an installed one.
+.SH EXIT STATUS
+0 on success, 1 on an error (the message says why).
+.B tannoy daemon
+exits with 75 when another daemon is already running.
+.SH SEE ALSO
+.BR waybar (5),
+.BR systemctl (1)
+.PP
+https://github.com/NathanielInman/tannoy

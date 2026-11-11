@@ -207,6 +207,10 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("~/.local/bin/tannoy previous"))
 | `tannoy doctor` | Checks D-Bus, the notification daemon, screen shares, waybar, the art signal and the drawer |
 | `tannoy restart` | Restarts the daemon and the drawer |
 
+`man tannoy` has the details. Shell completions for bash, zsh and fish (which
+complete `pick` with the running players) are in
+[`packaging/completions`](packaging/completions); the packages install them.
+
 ## Config
 
 Everything is optional. `~/.config/tannoy/config.toml`:

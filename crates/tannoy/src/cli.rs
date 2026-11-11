@@ -556,6 +556,62 @@ fn doctor() -> Result<i32> {
 mod tests {
     use super::*;
 
+    /// Every command and flag in the usage, from its `  tannoy ...` lines.
+    fn usage_words() -> Vec<String> {
+        let mut words = vec![];
+        for line in HELP.lines() {
+            let Some(rest) = line.strip_prefix("  tannoy ") else {
+                continue;
+            };
+            // The synopsis ends where the description starts (two spaces).
+            let mut synopsis = rest.split("  ").next().unwrap_or_default().to_string();
+            // Drop argument placeholders such as `<+secs|-secs|secs>`.
+            while let (Some(a), Some(b)) = (synopsis.find('<'), synopsis.find('>')) {
+                synopsis.replace_range(a..=b, "");
+            }
+            for w in synopsis.split([' ', '[', ']', '|']) {
+                let w = w.trim();
+                if !w.is_empty()
+                    && w.trim_start_matches('-')
+                        .chars()
+                        .all(|c| c.is_ascii_lowercase() || c == '-')
+                {
+                    words.push(w.to_string());
+                }
+            }
+        }
+        words
+    }
+
+    #[test]
+    fn completions_and_man_page_know_every_command() {
+        let words = usage_words();
+        assert!(words.iter().any(|w| w == "play-pause"));
+        assert!(words.iter().any(|w| w == "--center"));
+        for (file, text) in [
+            (
+                "tannoy.bash",
+                include_str!("../../../packaging/completions/tannoy.bash"),
+            ),
+            (
+                "_tannoy",
+                include_str!("../../../packaging/completions/_tannoy"),
+            ),
+            (
+                "tannoy.fish",
+                include_str!("../../../packaging/completions/tannoy.fish"),
+            ),
+            ("tannoy.1", include_str!("../../../packaging/man/tannoy.1")),
+        ] {
+            // The man page escapes hyphens.
+            let text = text.replace("\\-", "-");
+            for w in &words {
+                let bare = w.trim_start_matches('-');
+                assert!(text.contains(bare), "{file} does not mention `{w}`");
+            }
+        }
+    }
+
     #[test]
     fn seek_arguments() {
         assert_eq!(parse_seek("+5").unwrap(), Request::Seek { offset: 5.0 });

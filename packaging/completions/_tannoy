@@ -1,0 +1,47 @@
+#compdef tannoy
+# zsh completion for tannoy
+
+_tannoy_players() {
+    local -a keys
+    keys=(${(f)"$(tannoy status --json 2>/dev/null | grep -o '"key": *"[^"]*"' | sed 's/.*"\([^"]*\)"$/\1/')"})
+    _describe -t players 'player' keys
+}
+
+_tannoy() {
+    local -a commands
+    commands=(
+        'play-pause:play or pause the picked player'
+        'next:skip to the next track'
+        'previous:skip to the previous track'
+        'seek:seek relative (+5, -15) or to a position (90)'
+        'raise:bring the picked player'"'"'s window forward'
+        'pick:send commands to this player'
+        'toggle:open or close the drawer from the clicked icon'
+        'show:open the drawer'
+        'hide:close the drawer'
+        'bar:the waybar module (JSON lines)'
+        'art:the cover'"'"'s path, for a waybar image module'
+        'status:what is playing, on which players'
+        'doctor:check the setup'
+        'daemon:run the daemon in the foreground'
+        'restart:restart the daemon and the drawer'
+        'help:show the usage'
+    )
+    if (( CURRENT == 2 )); then
+        _describe -t commands 'tannoy command' commands
+        _arguments '--version[print the version]'
+        return
+    fi
+    case $words[2] in
+        pick)
+            local -a special=('auto:follow whichever player started playing last')
+            _describe -t special 'pick' special
+            _tannoy_players
+            ;;
+        toggle|show) _arguments '--center[open centered instead of from the icon]' ;;
+        status) _arguments '--json[print the snapshot as JSON]' ;;
+        seek) _message 'seconds: +N or -N relative, N absolute' ;;
+    esac
+}
+
+_tannoy "$@"

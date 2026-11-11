@@ -72,6 +72,8 @@ Update in the same commit:
 
 - `docs/design.md` for a new config key, protocol message, signal or rule.
 - The README for anything a new user meets (CLI, keys, install, config).
+- `packaging/man/tannoy.1` and the three files in `packaging/completions`
+  for a new command or flag (a test fails until each one mentions it).
 - `docs/assets/hero.py` when the drawer or the bar module looks different,
   then run `python3 docs/assets/hero.py` to rewrite `hero.svg` (never edit
   the SVG by hand).
