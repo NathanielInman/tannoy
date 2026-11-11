@@ -1,0 +1,8 @@
+screencast>>1,monitor
+screencastv2>>1,monitor,DP-3
+screencast>>1,monitor
+screencastv2>>1,monitor,DP-2
+screencast>>0,monitor
+screencastv2>>0,monitor,DP-3
+screencast>>0,monitor
+screencastv2>>0,monitor,DP-2

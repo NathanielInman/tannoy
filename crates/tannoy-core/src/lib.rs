@@ -1,6 +1,6 @@
 //! Everything Tannoy knows that is not D-Bus or drawing: where files live,
 //! the config, the model, MPRIS parsing, the player pick, cover art, the
-//! socket protocol and the waybar reader.
+//! socket protocol, the waybar reader and Hyprland's screen-share events.
 
 pub mod art;
 pub mod audio;
@@ -11,6 +11,7 @@ pub mod paths;
 pub mod pick;
 pub mod proc;
 pub mod protocol;
+pub mod screencast;
 pub mod swaync;
 pub mod text;
 pub mod transport;
