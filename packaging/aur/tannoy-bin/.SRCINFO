@@ -1,0 +1,25 @@
+pkgbase = tannoy-bin
+	pkgdesc = Now playing for waybar: every MPRIS player, cover art in the bar and a drawer that opens from the icon
+	pkgver = 0.1.0
+	pkgrel = 1
+	url = https://github.com/NathanielInman/tannoy
+	arch = x86_64
+	arch = aarch64
+	license = MIT
+	depends = gtk4
+	depends = gtk4-layer-shell
+	depends = glib2
+	depends = gcc-libs
+	depends = glibc
+	optdepends = waybar: the bar the modules are made for
+	optdepends = hyprland: open the drawer from the clicked icon and hide titles while sharing the screen
+	optdepends = swaync: hide titles while do not disturb is on
+	optdepends = wireplumber: show the output device in the drawer (wpctl)
+	provides = tannoy
+	conflicts = tannoy
+	source_x86_64 = tannoy-0.1.0-x86_64.tar.gz::https://github.com/NathanielInman/tannoy/releases/download/v0.1.0/tannoy-x86_64-unknown-linux-gnu.tar.gz
+	sha256sums_x86_64 = cfdf215e729c544049da72b426ed1c245b6ba7bbf7e89f6a4f2957923a760be7
+	source_aarch64 = tannoy-0.1.0-aarch64.tar.gz::https://github.com/NathanielInman/tannoy/releases/download/v0.1.0/tannoy-aarch64-unknown-linux-gnu.tar.gz
+	sha256sums_aarch64 = b11acdde62f8e90826dd5808c3b63dc7da74e13be54b7a1c12c61b85c13e3780
+
+pkgname = tannoy-bin

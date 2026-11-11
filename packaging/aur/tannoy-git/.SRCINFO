@@ -1,0 +1,26 @@
+pkgbase = tannoy-git
+	pkgdesc = Now playing for waybar: every MPRIS player, cover art in the bar and a drawer that opens from the icon (git)
+	pkgver = 0.1.0.r11.g17af2d4
+	pkgrel = 1
+	url = https://github.com/NathanielInman/tannoy
+	arch = x86_64
+	arch = aarch64
+	license = MIT
+	makedepends = cargo
+	makedepends = git
+	depends = gtk4
+	depends = gtk4-layer-shell
+	depends = glib2
+	depends = gcc-libs
+	depends = glibc
+	optdepends = waybar: the bar the modules are made for
+	optdepends = hyprland: open the drawer from the clicked icon and hide titles while sharing the screen
+	optdepends = swaync: hide titles while do not disturb is on
+	optdepends = wireplumber: show the output device in the drawer (wpctl)
+	provides = tannoy
+	conflicts = tannoy
+	options = !lto
+	source = tannoy::git+https://github.com/NathanielInman/tannoy.git
+	sha256sums = SKIP
+
+pkgname = tannoy-git

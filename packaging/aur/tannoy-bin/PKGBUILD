@@ -1,0 +1,28 @@
+# Maintainer: Nathaniel Inman
+
+pkgname=tannoy-bin
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Now playing for waybar: every MPRIS player, cover art in the bar and a drawer that opens from the icon"
+arch=('x86_64' 'aarch64')
+url="https://github.com/NathanielInman/tannoy"
+license=('MIT')
+depends=('gtk4' 'gtk4-layer-shell' 'glib2' 'gcc-libs' 'glibc')
+optdepends=(
+  'waybar: the bar the modules are made for'
+  'hyprland: open the drawer from the clicked icon and hide titles while sharing the screen'
+  'swaync: hide titles while do not disturb is on'
+  'wireplumber: show the output device in the drawer (wpctl)'
+)
+provides=('tannoy')
+conflicts=('tannoy')
+source_x86_64=("tannoy-$pkgver-x86_64.tar.gz::$url/releases/download/v$pkgver/tannoy-x86_64-unknown-linux-gnu.tar.gz")
+source_aarch64=("tannoy-$pkgver-aarch64.tar.gz::$url/releases/download/v$pkgver/tannoy-aarch64-unknown-linux-gnu.tar.gz")
+sha256sums_x86_64=('cfdf215e729c544049da72b426ed1c245b6ba7bbf7e89f6a4f2957923a760be7')
+sha256sums_aarch64=('b11acdde62f8e90826dd5808c3b63dc7da74e13be54b7a1c12c61b85c13e3780')
+
+package() {
+  install -Dm755 tannoy tannoy-board -t "$pkgdir/usr/bin/"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+}
