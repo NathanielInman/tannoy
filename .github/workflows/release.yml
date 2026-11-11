@@ -39,6 +39,7 @@ jobs:
           mkdir dist
           for b in tannoy tannoy-board; do cp "target/${{ matrix.target }}/release/$b" dist/; done
           cp README.md LICENSE dist/
+          cp -r packaging/completions packaging/man packaging/systemd packaging/examples dist/
           tar -czf "tannoy-${{ matrix.target }}.tar.gz" -C dist .
       - uses: actions/upload-artifact@v4
         with:

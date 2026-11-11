@@ -1,0 +1,44 @@
+# ~/.config/tannoy/config.toml
+#
+# Every key is optional and every value here is the default, so this file
+# changes nothing until you edit it. A typo makes Tannoy use the defaults,
+# and the drawer and `tannoy doctor` say what is wrong. The daemon and the
+# drawer pick up a save on their own.
+
+[bar]
+max_chars = 40                # artist · title, cut at a word boundary with …
+separator = " · "
+icon_playing = ""             # a glyph before the text while playing, e.g. ""
+icon_paused = ""              # and while paused
+icon_hidden = "\U000F075A"    # what do not disturb leaves in the bar (md-music)
+namespace = "waybar"          # the bar's layer-shell namespace, for anchoring
+
+[dnd]
+hide = true                   # hide title and cover while do not disturb is on
+text = ""                     # text after icon_hidden, e.g. "hidden"
+screen_share = true           # also hide them while the screen is shared (Hyprland)
+mako_mode = "do-not-disturb"  # the mako mode that means do not disturb
+
+[art]
+enabled = true
+signal = 12                   # waybar gets SIGRTMIN+12 when the cover changes; 0 = never
+fallback = "none"             # no cover: "none" hides the module, "player" shows the app icon, or an image path
+timeout = 5                   # seconds for an https download
+
+[players]
+ignore = []                   # bus-name keys never tracked, e.g. ["firefox"]; playerctld always is
+
+[drawer]
+width = 400.0                 # logical pixels
+max_height = 0.85             # largest height, as a fraction of the monitor
+gap = 8.0                     # between the bar and the panel
+skip = 15                     # seconds the podcast buttons jump
+skips = "auto"                # "auto" (podcasts), "always" or "never"
+
+[output]
+command = "~/.config/waybar/scripts/audio-switch.sh output"  # run by the Change button; "" hides it
+
+[theme]
+from = "waybar"               # or "none" for the built-in theme
+# accent = "#88c0d0"
+# font = "JetBrains Mono"

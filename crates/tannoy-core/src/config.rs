@@ -236,6 +236,21 @@ mod tests {
     }
 
     #[test]
+    fn the_sample_config_is_the_defaults() {
+        let sample = include_str!("../../../packaging/examples/config.toml");
+        assert_eq!(Config::parse(sample), Ok(Config::default()));
+    }
+
+    #[test]
+    fn the_readme_config_is_the_defaults() {
+        let readme = include_str!("../../../README.md");
+        let config = &readme[readme.find("## Config").unwrap()..];
+        let start = config.find("```toml\n").unwrap() + "```toml\n".len();
+        let block = &config[start..start + config[start..].find("```").unwrap()];
+        assert_eq!(Config::parse(block), Ok(Config::default()));
+    }
+
+    #[test]
     fn typos_are_errors() {
         assert!(Config::parse("[bar]\nmax_char = 3\n").is_err());
     }

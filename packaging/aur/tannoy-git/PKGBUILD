@@ -57,4 +57,5 @@ package() {
   install -Dm644 packaging/completions/tannoy.fish -t "$pkgdir/usr/share/fish/vendor_completions.d/"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+  install -Dm644 packaging/examples/* -t "$pkgdir/usr/share/doc/$pkgname/examples/"
 }

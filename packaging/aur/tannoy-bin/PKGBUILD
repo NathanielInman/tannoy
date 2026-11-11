@@ -25,4 +25,14 @@ package() {
   install -Dm755 tannoy tannoy-board -t "$pkgdir/usr/bin/"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+  # Releases after 0.1.0 also carry the man page, completions, the user unit
+  # and examples.
+  if [[ -d man ]]; then
+    install -Dm644 man/tannoy.1 -t "$pkgdir/usr/share/man/man1/"
+    install -Dm644 completions/tannoy.bash "$pkgdir/usr/share/bash-completion/completions/tannoy"
+    install -Dm644 completions/_tannoy -t "$pkgdir/usr/share/zsh/site-functions/"
+    install -Dm644 completions/tannoy.fish -t "$pkgdir/usr/share/fish/vendor_completions.d/"
+    install -Dm644 systemd/tannoy.service -t "$pkgdir/usr/lib/systemd/user/"
+    install -Dm644 examples/* -t "$pkgdir/usr/share/doc/$pkgname/examples/"
+  fi
 }

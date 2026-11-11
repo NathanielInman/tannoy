@@ -82,8 +82,9 @@ over MPRIS (Spotify, mpv and VLC do; Chrome does not).
 
 Tannoy is at 0.1. It runs on Linux with Wayland, and Hyprland gets the
 exact-icon anchoring. Packages come later; for now grab a tarball from the
-[releases](https://github.com/NathanielInman/tannoy/releases) or build from
-source:
+[releases](https://github.com/NathanielInman/tannoy/releases) (each one also
+carries the man page, shell completions, the systemd user unit and example
+configs in `examples/`) or build from source:
 
 ```sh
 # Arch: the drawer's libraries
@@ -241,6 +242,8 @@ ignore = []            # bus-name keys never tracked, e.g. ["firefox"]; playerct
 
 [drawer]
 width = 400
+max_height = 0.85      # largest height, as a fraction of the monitor
+gap = 8                # between the bar and the panel
 skip = 15              # seconds the podcast buttons jump
 skips = "auto"         # "auto" (podcasts), "always" or "never"
 

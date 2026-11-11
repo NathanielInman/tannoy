@@ -1,0 +1,25 @@
+// Waybar modules for Tannoy, from the README. Merge them into your
+// ~/.config/waybar/config.jsonc and add "group/pill-media" to a modules list.
+"modules-right": ["group/pill-media", "..."],
+
+"group/pill-media": {
+  "orientation": "horizontal",
+  "modules": ["image#tannoy-art", "custom/tannoy"]
+},
+"image#tannoy-art": {
+  "exec": "~/.local/bin/tannoy art",
+  "size": 18,
+  "interval": "once",
+  "signal": 12,
+  "on-click": "~/.local/bin/tannoy toggle"
+},
+"custom/tannoy": {
+  "exec": "~/.local/bin/tannoy bar",
+  "return-type": "json",
+  "on-click": "~/.local/bin/tannoy toggle",
+  "on-click-right": "~/.local/bin/tannoy next",
+  "on-click-middle": "~/.local/bin/tannoy play-pause",
+  "on-scroll-up": "~/.local/bin/tannoy seek +5",
+  "on-scroll-down": "~/.local/bin/tannoy seek -5",
+  "tooltip": true
+}

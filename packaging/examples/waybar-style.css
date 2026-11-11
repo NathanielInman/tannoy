@@ -1,0 +1,9 @@
+/* Waybar styles for Tannoy's modules, from the README. Merge into
+   ~/.config/waybar/style.css and adjust the colors. */
+#custom-tannoy.playing { color: #ebcb8b; }
+#custom-tannoy.paused,
+#custom-tannoy.hidden { color: #616e88; }
+
+#custom-tannoy { background: #282a2e; border: 1px solid #4c566a; border-radius: 10px; padding: 0 12px; }
+#custom-tannoy.with-art { border-left: none; border-radius: 0 10px 10px 0; padding-left: 8px; }
+#image.tannoy-art image { background: #282a2e; border: 1px solid #4c566a; border-right: none; border-radius: 10px 0 0 10px; padding-left: 10px; }
