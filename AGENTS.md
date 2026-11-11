@@ -49,6 +49,8 @@ with `[art] signal = 0` keeps a dev daemon from signalling the real waybar.
   second and never start the daemon.
 - Do not disturb hides titles and covers everywhere they reach the screen.
   A new surface that shows track text checks `snapshot.hidden`.
+- Tannoy only turns do not disturb off when it turned it on for a screen
+  share and the user has not turned it off since.
 - swaync is optional. Its absence means do not disturb is off, never an
   error.
 

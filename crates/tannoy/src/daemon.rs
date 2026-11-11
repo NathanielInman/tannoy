@@ -4,7 +4,8 @@
 //!
 //! Nothing here polls for metadata. Players announce changes with
 //! PropertiesChanged, come and go with NameOwnerChanged, and report jumps
-//! with Seeked; swaync announces do not disturb with its Subscribe signals.
+//! with Seeked; swaync announces do not disturb with its Subscribe signals;
+//! Hyprland's event socket announces screen shares.
 //! The one thing MPRIS never signals is the position, so the daemon reads
 //! it about once a second while the drawer is open, and never otherwise.
 //! Every D-Bus call and download runs on a helper thread or a client's
@@ -41,6 +42,11 @@ struct State {
     owners: HashMap<String, String>,
     picked: Option<String>,
     dnd: bool,
+    /// A screen share is running.
+    sharing: bool,
+    /// Tannoy turned do not disturb on for this share, so it turns it off
+    /// when the share ends. Cleared when the user turns it off first.
+    auto_dnd: bool,
     visible: bool,
     /// The first scan of the bus is done; commands wait for it.
     ready: bool,
@@ -158,6 +164,7 @@ fn refresh(d: &Shared, st: &mut State) {
         picked: st.picked.clone(),
         dnd: st.dnd,
         hidden: st.dnd && cfg.dnd.hide,
+        sharing: st.sharing,
         art: st.art_path.clone(),
         config_error: st.cfg_error.clone(),
     };
@@ -293,6 +300,9 @@ fn watch_names(d: Shared) -> Result<()> {
                 };
                 let mut st = d.lock();
                 st.dnd = dnd;
+                if !dnd {
+                    st.auto_dnd = false;
+                }
                 refresh(&d, &mut st);
             });
         }
@@ -396,11 +406,68 @@ fn watch_dnd(d: Shared) -> Result<()> {
             let mut st = d.lock();
             if st.dnd != dnd {
                 st.dnd = dnd;
+                // Turned off during a share: the user wants it off, so the
+                // end of the share leaves it alone.
+                if !dnd {
+                    st.auto_dnd = false;
+                }
                 refresh(&d, &mut st);
             }
         }
     }
     Err(anyhow!("the session bus closed"))
+}
+
+/// A screen share started or ended. Do not disturb goes on when a share
+/// starts with it off, and off when the share ends, unless the user turned
+/// it off in between. A do not disturb the user turned on stays on.
+fn screen_shared(d: &Shared, on: bool) {
+    let mut st = d.lock();
+    st.sharing = on;
+    let set = if on {
+        (st.cfg.dnd.screen_share && !st.dnd).then(|| {
+            st.auto_dnd = true;
+            true
+        })
+    } else {
+        std::mem::take(&mut st.auto_dnd).then_some(false)
+    };
+    refresh(d, &mut st);
+    drop(st);
+    if let Some(dnd) = set {
+        let d = d.clone();
+        std::thread::spawn(move || {
+            // A share that ended before this ran has already asked for off.
+            if dnd && !d.lock().sharing {
+                return;
+            }
+            // Without swaync there is nothing to turn on, which is not an
+            // error.
+            if dbus::set_swaync_dnd(&d.conn, dnd).is_err() && dnd {
+                d.lock().auto_dnd = false;
+            }
+        });
+    }
+}
+
+/// Screen shares from Hyprland's event socket. Ends when Tannoy is not
+/// running under Hyprland or Hyprland goes away.
+fn watch_screencast(d: Shared) {
+    while let Some(path) = tannoy_core::screencast::socket() {
+        if let Ok(s) = std::os::unix::net::UnixStream::connect(&path) {
+            let mut shares = tannoy_core::screencast::Shares::default();
+            for line in BufReader::new(s).lines() {
+                let Ok(line) = line else { break };
+                if let Some(on) = shares.apply(&line) {
+                    screen_shared(&d, on);
+                }
+            }
+            if shares.sharing() {
+                screen_shared(&d, false);
+            }
+        }
+        std::thread::sleep(Duration::from_secs(2));
+    }
 }
 
 /// Keeps a watcher alive: if its stream ends, it starts again.
@@ -739,6 +806,8 @@ pub fn run() -> Result<i32> {
             owners: HashMap::new(),
             picked: load_pick(),
             dnd,
+            sharing: false,
+            auto_dnd: false,
             visible: false,
             ready: false,
             art_url: None,
@@ -760,6 +829,10 @@ pub fn run() -> Result<i32> {
     keep(&d, "properties", watch_properties);
     keep(&d, "seek", watch_seeked);
     keep(&d, "do not disturb", watch_dnd);
+    {
+        let d = d.clone();
+        std::thread::spawn(move || watch_screencast(d));
+    }
     {
         let d = d.clone();
         std::thread::spawn(move || {

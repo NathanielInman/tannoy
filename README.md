@@ -52,7 +52,9 @@ script is what Tannoy replaces.
   shows them. The daemon tells waybar when the cover changes; nothing polls.
 - **Private on a screen share.** While swaync's do not disturb is on, the bar
   shows a dim music glyph instead of the title, the cover goes away, and the
-  drawer says why. This is the rule the old script had, kept.
+  drawer says why. Under Hyprland you don't have to remember it: sharing the
+  screen turns do not disturb on, and the end of the share turns it off
+  again (unless it was already on, or you turned it off yourself).
 - **It opens from the icon you clicked.** The drawer springs out of the bar
   on whichever monitor you clicked, using the same anchoring code as
   Roundhouse and Switchyard, and it takes its font and colors from your
@@ -174,7 +176,7 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("~/.local/bin/tannoy previous"))
 | `tannoy toggle`, `show`, `hide` | The drawer, from the clicked icon (`--center` to center it) |
 | `tannoy bar`, `tannoy art` | The two waybar modules |
 | `tannoy status [--json]` | What is playing, on which players |
-| `tannoy doctor` | Checks D-Bus, swaync, waybar, the art signal and the drawer |
+| `tannoy doctor` | Checks D-Bus, swaync, screen shares, waybar, the art signal and the drawer |
 
 ## Config
 
@@ -192,6 +194,7 @@ namespace = "waybar"   # the bar's layer-shell namespace
 [dnd]
 hide = true            # hide title and cover while swaync's do not disturb is on
 text = ""              # text after icon_hidden, e.g. "hidden"
+screen_share = true    # turn do not disturb on while the screen is shared (Hyprland)
 
 [art]
 enabled = true

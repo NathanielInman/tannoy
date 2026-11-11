@@ -155,6 +155,8 @@ pub struct Snapshot {
     pub dnd: bool,
     /// Do not disturb is hiding titles (`dnd` and `dnd.hide`).
     pub hidden: bool,
+    /// A screen share is running (seen through Hyprland).
+    pub sharing: bool,
     /// The active track's cover, cached on disk.
     pub art: Option<String>,
     pub config_error: Option<String>,

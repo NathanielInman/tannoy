@@ -297,6 +297,9 @@ fn status(json: bool) -> Result<i32> {
             _ => "off",
         }
     );
+    if s.sharing {
+        println!("{:<10}the screen is shared", "share");
+    }
     if let Some(e) = &s.config_error {
         println!("\nconfig: {e}");
     }
@@ -381,6 +384,19 @@ fn doctor() -> Result<i32> {
             "not running (`tannoy bar` or a command starts it)"
         },
     );
+    match tannoy_core::screencast::socket() {
+        Some(_) if cfg.dnd.screen_share => check(
+            Some(true),
+            "screen share",
+            "do not disturb turns on while the screen is shared",
+        ),
+        Some(_) => check(None, "screen share", "dnd.screen_share is off"),
+        None => check(
+            None,
+            "screen share",
+            "not under Hyprland; shares are not seen",
+        ),
+    }
     match bar_anchor::hypr::socket() {
         Some(_) => check(
             Some(true),

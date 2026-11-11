@@ -34,6 +34,8 @@ this is the spec.
 flowchart LR
   P["MPRIS players"] -- "PropertiesChanged, Seeked" --> D["tannoy daemon"]
   S["swaync"] -- "SubscribeV2" --> D
+  D -- "SetDnd while sharing" --> S
+  Y["Hyprland event socket"] -- "screencast, screencastv2" --> D
   N["dbus-daemon"] -- "NameOwnerChanged" --> D
   D <-- "local socket, JSON lines" --> B["tannoy-board (GTK4 layer-shell)"]
   D -- socket --> W["tannoy bar<br/>waybar custom module"]
@@ -164,6 +166,33 @@ on, the title stays off screen. With `dnd.hide = true` (the default):
 Do not disturb is read with `GetDnd` at startup and whenever swaync's name
 appears, and follows `SubscribeV2` after that. Without swaync it is off.
 
+## Screen share
+
+Under Hyprland the daemon also reads Hyprland's event socket
+(`.socket2.sock` beside the IPC socket), on its own thread, for the lines
+Hyprland writes when a client starts or stops copying the screen:
+`screencast>>STATE,KIND`, and on newer versions `screencastv2>>STATE,KIND,TARGET`
+after each one. One recording can send a pair per monitor, so
+`tannoy_core::screencast::Shares` keeps the set of `KIND,TARGET` running
+(or, with no v2 lines, counts starts and stops) and the screen counts as
+shared from the first start to the last stop. A single screenshot sends
+nothing.
+
+With `dnd.screen_share = true` (the default), the share drives swaync's do
+not disturb, so the titles and the notifications go off screen together:
+
+- When a share starts and do not disturb is off, the daemon calls swaync's
+  `SetDnd(true)` on a helper thread and remembers it did.
+- When the last share ends, it calls `SetDnd(false)`, but only if it turned
+  do not disturb on and the user did not turn it off in between.
+- A do not disturb that was already on when the share started is left on.
+
+Without swaync there is nothing to turn on and nothing is logged. Without
+Hyprland the thread ends at once and shares are not seen. A daemon that
+starts in the middle of a share does not know about it, and one that stops
+during a share leaves do not disturb on. The snapshot's `sharing` says
+whether a share is running.
+
 ## Cover art
 
 The active track's `mpris:artUrl` is cached into `$XDG_CACHE_HOME/tannoy/art/`
@@ -264,7 +293,7 @@ subscribed, the daemon starts `tannoy-board` (next to `tannoy`, else on
 The snapshot (`tannoy status --json`) is `version`, `now`, `players` (each
 with `bus`, `key`, `name`, `desktop_entry`, `status`, `track`, `position`,
 `position_at`, `rate`, the `can_*` flags and `last_playing`), `active`,
-`picked`, `dnd`, `hidden`, `art` and `config_error`. Positions and lengths
+`picked`, `dnd`, `hidden`, `sharing`, `art` and `config_error`. Positions and lengths
 are microseconds, times are Unix seconds.
 
 ## Config keys
@@ -279,6 +308,7 @@ are microseconds, times are Unix seconds.
 | `bar.namespace` | `"waybar"` | The bar's layer-shell namespace, for anchoring |
 | `dnd.hide` | `true` | Hide title and cover while do not disturb is on |
 | `dnd.text` | `""` | Text after `icon_hidden` while hidden |
+| `dnd.screen_share` | `true` | Turn swaync's do not disturb on while the screen is shared (Hyprland), and off when the share ends |
 | `art.enabled` | `true` | Cache covers for `tannoy art` and the drawer |
 | `art.signal` | `12` | `SIGRTMIN+N` sent to waybar on a cover change; `0` sends nothing |
 | `art.fallback` | `"none"` | No cover: `none`, `player` (app icon) or an image path |

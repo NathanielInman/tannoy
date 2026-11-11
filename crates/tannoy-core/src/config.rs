@@ -54,6 +54,10 @@ pub struct DndConfig {
     pub hide: bool,
     /// Text after `bar.icon_hidden` while hidden.
     pub text: String,
+    /// Turn swaync's do not disturb on while the screen is shared (seen
+    /// through Hyprland), and off again when the share ends if Tannoy was
+    /// the one that turned it on.
+    pub screen_share: bool,
 }
 
 impl Default for DndConfig {
@@ -61,6 +65,7 @@ impl Default for DndConfig {
         DndConfig {
             hide: true,
             text: String::new(),
+            screen_share: true,
         }
     }
 }
@@ -224,6 +229,7 @@ mod tests {
         assert_eq!(c.art.signal, 9);
         assert_eq!(c.art.fallback, "none");
         assert!(c.dnd.hide);
+        assert!(c.dnd.screen_share);
     }
 
     #[test]
