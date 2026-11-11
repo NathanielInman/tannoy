@@ -177,10 +177,7 @@ fn start_daemon() -> Result<()> {
     let log = paths::daemon_log();
     std::fs::create_dir_all(paths::state_dir())?;
     let spawn = || -> Result<std::process::Child> {
-        let out = std::fs::OpenOptions::new()
-            .create(true)
-            .append(true)
-            .open(&log)?;
+        let out = paths::open_log(&log)?;
         let mut cmd = std::process::Command::new(&exe);
         cmd.arg("daemon")
             .stdin(std::process::Stdio::null())

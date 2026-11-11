@@ -553,16 +553,9 @@ fn spawn_board() {
         .map(|p| p.into_os_string())
         .unwrap_or_else(|| "tannoy-board".into());
     let log = paths::board_log();
-    if let Some(dir) = log.parent() {
-        let _ = std::fs::create_dir_all(dir);
-    }
     let mut cmd = std::process::Command::new(&bin);
     cmd.stdin(std::process::Stdio::null());
-    if let Ok(f) = std::fs::OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(&log)
-    {
+    if let Ok(f) = paths::open_log(&log) {
         if let Ok(f2) = f.try_clone() {
             cmd.stdout(f).stderr(f2);
         }

@@ -61,7 +61,7 @@ flowchart LR
 | Config | `~/.config/tannoy/config.toml` | `TANNOY_CONFIG_DIR` |
 | User stylesheet | `~/.config/tannoy/style.css` | `TANNOY_CONFIG_DIR` |
 | Picked player | `$XDG_STATE_HOME/tannoy/state.json` | `TANNOY_STATE_DIR` |
-| Logs | `$XDG_STATE_HOME/tannoy/daemon.log`, `board.log` | `TANNOY_STATE_DIR` |
+| Logs | `$XDG_STATE_HOME/tannoy/daemon.log`, `board.log` (over 1 MB, moved to `.1` when next opened) | `TANNOY_STATE_DIR` |
 | Cover cache | `$XDG_CACHE_HOME/tannoy/art/` | `TANNOY_CACHE_DIR` |
 | Socket | `$XDG_RUNTIME_DIR/tannoy/tannoy.sock` | `TANNOY_RUNTIME_DIR` |
 | Daemon lock | `$XDG_RUNTIME_DIR/tannoy/daemon.lock` | `TANNOY_RUNTIME_DIR` |

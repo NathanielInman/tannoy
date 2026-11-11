@@ -118,6 +118,27 @@ pub fn daemon_log() -> PathBuf {
     state_dir().join("daemon.log")
 }
 
+/// A log past this size is rolled over to `<name>.1` when it is opened.
+pub const LOG_MAX: u64 = 1024 * 1024;
+
+/// Opens a log for appending, first moving it to `<name>.1` (replacing the
+/// previous one) when it is over [`LOG_MAX`], so logs never grow without
+/// bound. Logs are opened each time the daemon or the drawer starts.
+pub fn open_log(path: &std::path::Path) -> std::io::Result<std::fs::File> {
+    if let Some(dir) = path.parent() {
+        std::fs::create_dir_all(dir)?;
+    }
+    if std::fs::metadata(path).is_ok_and(|m| m.len() > LOG_MAX) {
+        let mut old = path.as_os_str().to_owned();
+        old.push(".1");
+        std::fs::rename(path, old)?;
+    }
+    std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(path)
+}
+
 /// Waybar's config directory.
 pub fn waybar_dir() -> PathBuf {
     xdg_config().join("waybar")
@@ -174,5 +195,22 @@ mod tests {
             (PathBuf::from("/usr/bin/tannoy"), false)
         );
         assert!(!exe_replaced());
+    }
+
+    #[test]
+    fn logs_roll_over_past_the_limit() {
+        use std::io::Write;
+        let dir = std::env::temp_dir().join(format!("tannoy-log-test-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let log = dir.join("daemon.log");
+        open_log(&log).unwrap().write_all(b"small\n").unwrap();
+        open_log(&log).unwrap().write_all(b"kept\n").unwrap();
+        assert_eq!(std::fs::read_to_string(&log).unwrap(), "small\nkept\n");
+        std::fs::write(&log, vec![b'x'; LOG_MAX as usize + 1]).unwrap();
+        open_log(&log).unwrap().write_all(b"fresh\n").unwrap();
+        assert_eq!(std::fs::read_to_string(&log).unwrap(), "fresh\n");
+        let rolled = dir.join("daemon.log.1");
+        assert_eq!(std::fs::metadata(&rolled).unwrap().len(), LOG_MAX + 1);
+        let _ = std::fs::remove_dir_all(&dir);
     }
 }
