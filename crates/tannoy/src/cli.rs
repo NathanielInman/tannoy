@@ -164,22 +164,26 @@ fn daemon_answers() -> bool {
     tannoy_core::protocol::request_within(&Request::Ping, Duration::from_millis(500)).is_ok()
 }
 
-/// Starts a daemon in the background and waits until one answers. Another
-/// starter (the bar module) may win the lock; its daemon answers instead.
+/// Starts a daemon in the background and waits until one answers.
+///
+/// A new daemon gives up when another holds the lock. That one may be
+/// starting (it answers soon), or it may be the one that just quit: its
+/// socket closes a moment before the kernel releases its lock. So a daemon
+/// that gave up while nobody answers is started again.
 fn start_daemon() -> Result<()> {
     let exe = paths::exe().ok_or_else(|| anyhow!("cannot find the tannoy binary"))?;
     let log = paths::daemon_log();
     std::fs::create_dir_all(paths::state_dir())?;
-    let out = std::fs::OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(&log)?;
-    let mut cmd = std::process::Command::new(exe);
-    cmd.arg("daemon")
-        .stdin(std::process::Stdio::null())
-        .stdout(out.try_clone()?)
-        .stderr(out);
-    {
+    let spawn = || -> Result<std::process::Child> {
+        let out = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&log)?;
+        let mut cmd = std::process::Command::new(&exe);
+        cmd.arg("daemon")
+            .stdin(std::process::Stdio::null())
+            .stdout(out.try_clone()?)
+            .stderr(out);
         use std::os::unix::process::CommandExt;
         // Its own session, so restarting the bar does not take the daemon
         // with it.
@@ -189,17 +193,18 @@ fn start_daemon() -> Result<()> {
                 Ok(())
             });
         }
-    }
-    let mut child = cmd.spawn()?;
-    for _ in 0..40 {
+        Ok(cmd.spawn()?)
+    };
+    let mut child = spawn()?;
+    let deadline = std::time::Instant::now() + Duration::from_secs(3);
+    while std::time::Instant::now() < deadline {
         std::thread::sleep(Duration::from_millis(50));
         if daemon_answers() {
             std::thread::spawn(move || child.wait());
             return Ok(());
         }
-        // Lost the race to another starter: theirs will answer shortly.
         if let Ok(Some(_)) = child.try_wait() {
-            continue;
+            child = spawn()?;
         }
     }
     Err(anyhow!("the daemon did not start; see {}", log.display()))
