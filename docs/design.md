@@ -128,9 +128,31 @@ the track id is usable, else `Seek` with the difference.
 
 `tannoy bar` subscribes to the daemon and prints a waybar JSON line whenever
 it changes. If the daemon is not running it starts one (detached, in its own
-session), at most every 10 seconds, so a crash or an upgrade heals itself;
-while it cannot connect it prints an empty `offline` line and retries every
-2 seconds.
+session), at most every 10 seconds, so a crash heals itself; while it
+cannot connect it prints an empty `offline` line and retries every 2
+seconds.
+
+## Upgrades
+
+Installing a new `tannoy` replaces the file (`install` and `cargo install`
+write a new one), and Linux then shows a running copy's `/proc/self/exe` as
+`<path> (deleted)`. That is how each process knows it runs old code, and
+`tannoy_core::paths::exe` strips the suffix to find the new binary:
+
+- The daemon checks before every refresh, so the next player event after an
+  install makes it send the drawer `quit` and exit. Nothing polls for it.
+- `ping` replies `stale: true` from a replaced daemon. Commands (media keys,
+  clicks) ping first and swap a stale daemon for the new one before they
+  send, so the first key after an install already reaches new code.
+- `tannoy bar` re-executes itself in the same process (waybar keeps its
+  pipe) when its stream ends and its own binary was replaced, and the new
+  bar starts the new daemon.
+- The drawer exits on `quit`; the daemon starts the new one on the next
+  click.
+
+`tannoy restart` does the same by hand: it sends `quit`, waits for that
+daemon's end of the socket to close, and starts a new one. A 0.1 daemon does
+not know `quit` and has to be stopped once with `pkill -f 'tannoy daemon'`.
 
 | State | Text | Class |
 |---|---|---|
@@ -279,15 +301,16 @@ request. Shapes follow Roundhouse's and Switchyard's.
 {"cmd":"set_position","position":90.0}
 {"cmd":"pick","player":"spotify"}
 {"cmd":"pick","player":null}
+{"cmd":"quit"}
 ```
 
-Replies are `{"ok":true}` with optional `snapshot`, `version`, `art` or
-`error`. Commands wait up to 3 seconds for the daemon's first scan of the
+Replies are `{"ok":true}` with optional `snapshot`, `version`, `art`,
+`error` or `stale` (in a `ping` reply, see Upgrades). Commands wait up to 3 seconds for the daemon's first scan of the
 bus, so a media key that starts the daemon still reaches a player.
 
 A `board` subscription receives `{"event":"snapshot","snapshot":{...}}` on
-every change, plus `{"event":"show",...}`, `{"event":"toggle",...}` and
-`{"event":"hide"}`. A `bar` subscription receives waybar JSON lines, already
+every change, plus `{"event":"show",...}`, `{"event":"toggle",...}`,
+`{"event":"hide"}` and `{"event":"quit"}` (the drawer exits). A `bar` subscription receives waybar JSON lines, already
 formatted, only when they change. When a toggle arrives and no drawer is
 subscribed, the daemon starts `tannoy-board` (next to `tannoy`, else on
 `PATH`) and holds the show until it subscribes.

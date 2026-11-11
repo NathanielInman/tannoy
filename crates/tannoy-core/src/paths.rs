@@ -132,3 +132,47 @@ pub fn tilde(p: &std::path::Path) -> String {
         Err(_) => p.display().to_string(),
     }
 }
+
+/// Linux names a running program's replaced binary `<path> (deleted)`.
+const DELETED: &str = " (deleted)";
+
+/// A program path as `/proc/self/exe` reports it, without the ` (deleted)`
+/// Linux adds once the file was replaced, and whether it was.
+pub fn split_deleted(p: &std::path::Path) -> (PathBuf, bool) {
+    let s = p.to_string_lossy();
+    match s.strip_suffix(DELETED) {
+        Some(rest) => (PathBuf::from(rest), true),
+        None => (p.to_path_buf(), false),
+    }
+}
+
+/// This program's installed path, still right after an upgrade replaced
+/// the file (`current_exe` then ends in ` (deleted)`).
+pub fn exe() -> Option<PathBuf> {
+    std::env::current_exe().ok().map(|p| split_deleted(&p).0)
+}
+
+/// The binary this process runs was replaced on disk: an upgrade installed
+/// a new one, and this process is the old code.
+pub fn exe_replaced() -> bool {
+    std::fs::read_link("/proc/self/exe").is_ok_and(|p| split_deleted(&p).1)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::Path;
+
+    #[test]
+    fn replaced_binaries() {
+        assert_eq!(
+            split_deleted(Path::new("/home/n/.local/bin/tannoy (deleted)")),
+            (PathBuf::from("/home/n/.local/bin/tannoy"), true)
+        );
+        assert_eq!(
+            split_deleted(Path::new("/usr/bin/tannoy")),
+            (PathBuf::from("/usr/bin/tannoy"), false)
+        );
+        assert!(!exe_replaced());
+    }
+}

@@ -91,6 +91,12 @@ install -Dm755 target/release/tannoy target/release/tannoy-board -t ~/.local/bin
 tannoy doctor
 ```
 
+To upgrade, install the new binaries the same way. The running daemon,
+drawer and bar module notice that their binary was replaced and switch to
+the new one on the next media key or player event; `tannoy restart` does it
+at once. (Coming from 0.1, stop the old daemon once with
+`pkill -f 'tannoy daemon'`.)
+
 The drawer's output row reads the default device with `wpctl` (PipeWire).
 Do not disturb comes from [swaync](https://github.com/ErikReider/SwayNotificationCenter);
 without it, do not disturb counts as off.
@@ -176,6 +182,7 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("~/.local/bin/tannoy previous"))
 | `tannoy bar`, `tannoy art` | The two waybar modules |
 | `tannoy status [--json]` | What is playing, on which players |
 | `tannoy doctor` | Checks D-Bus, swaync, screen shares, waybar, the art signal and the drawer |
+| `tannoy restart` | Restarts the daemon and the drawer |
 
 ## Config
 

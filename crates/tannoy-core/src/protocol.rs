@@ -60,6 +60,9 @@ pub enum Request {
     },
     /// The cached cover for waybar's image module.
     Art,
+    /// Stops the daemon and the drawer, for `tannoy restart` and for
+    /// replacing a daemon whose binary was upgraded.
+    Quit,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
@@ -73,6 +76,10 @@ pub struct Reply {
     pub version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub art: Option<String>,
+    /// In a `ping` reply: the daemon's binary was replaced by an upgrade, so
+    /// it is running old code and should be restarted.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub stale: bool,
 }
 
 impl Reply {
@@ -107,6 +114,9 @@ pub enum Event {
         anchor: Option<Anchor>,
     },
     Hide,
+    /// The daemon is going away for good (a restart or an upgrade): the
+    /// drawer exits, and the daemon starts the new one when it is needed.
+    Quit,
 }
 
 /// The line a waybar `custom` module with `"return-type": "json"` reads.
@@ -183,5 +193,9 @@ mod tests {
     fn event_shapes() {
         let e = serde_json::to_string(&Event::Hide).unwrap();
         assert_eq!(e, r#"{"event":"hide"}"#);
+        let e = serde_json::to_string(&Event::Quit).unwrap();
+        assert_eq!(e, r#"{"event":"quit"}"#);
+        let r = serde_json::to_string(&Reply::ok()).unwrap();
+        assert_eq!(r, r#"{"ok":true}"#);
     }
 }

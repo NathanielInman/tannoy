@@ -25,6 +25,7 @@ Usage:
   tannoy status [--json]            what is playing, on which players
   tannoy doctor                     check the setup
   tannoy daemon                     run the daemon in the foreground
+  tannoy restart                    restart the daemon and the drawer
   tannoy --version
 
 Config: ~/.config/tannoy/config.toml
@@ -46,6 +47,7 @@ pub fn run(args: &[String]) -> Result<i32> {
             Ok(0)
         }
         Some("daemon") => crate::daemon::run(),
+        Some("restart") => restart(),
         Some("bar") => bar(),
         Some("art") => art(),
         Some(cmd @ ("toggle" | "show")) => open(cmd == "toggle", rest),
@@ -105,13 +107,67 @@ fn command(req: Request) -> Result<i32> {
     Ok(0)
 }
 
+/// Asks the daemon to quit and waits until that daemon is gone (its end of
+/// the socket closes). Another may already be starting: the bar module
+/// starts one as soon as its stream ends. False when the daemon refused (a
+/// 0.1 daemon does not know `quit`).
+fn stop_daemon() -> bool {
+    use std::io::{BufRead, BufReader};
+    let Ok(mut s) =
+        tannoy_core::transport::connect_to(&paths::socket_path(), Some(Duration::from_secs(2)))
+    else {
+        return true;
+    };
+    let line = serde_json::to_string(&Request::Quit).unwrap_or_default();
+    if writeln!(s, "{line}").is_err() {
+        return true;
+    }
+    let mut lines = BufReader::new(s).lines();
+    let ok = match lines.next() {
+        Some(Ok(reply)) => {
+            serde_json::from_str::<tannoy_core::protocol::Reply>(&reply).is_ok_and(|r| r.ok)
+        }
+        _ => true,
+    };
+    // The daemon exits right after its reply; wait for the close.
+    ok && lines.all(|l| l.is_ok())
+}
+
+fn restart() -> Result<i32> {
+    if tannoy_core::transport::daemon_alive() && !stop_daemon() {
+        return Err(anyhow!(
+            "the running daemon did not quit; stop it with `pkill -f 'tannoy daemon'`"
+        ));
+    }
+    start_daemon()?;
+    println!("tannoy: daemon restarted; the drawer starts on the next click");
+    Ok(0)
+}
+
 /// Starts the daemon in the background when it is not running, and waits
-/// for its socket.
+/// for its socket. A daemon whose binary an upgrade replaced is swapped for
+/// the new one first, so the command does not reach old code.
 fn ensure_daemon() -> Result<()> {
     if tannoy_core::transport::daemon_alive() {
-        return Ok(());
+        let stale = tannoy_core::protocol::request_within(&Request::Ping, Duration::from_secs(1))
+            .is_ok_and(|r| r.stale);
+        if !stale || !stop_daemon() {
+            return Ok(());
+        }
     }
-    let exe = std::env::current_exe()?;
+    start_daemon()
+}
+
+/// A daemon answers a ping. A bare connect is not enough: a daemon that is
+/// exiting can still accept for a moment.
+fn daemon_answers() -> bool {
+    tannoy_core::protocol::request_within(&Request::Ping, Duration::from_millis(500)).is_ok()
+}
+
+/// Starts a daemon in the background and waits until one answers. Another
+/// starter (the bar module) may win the lock; its daemon answers instead.
+fn start_daemon() -> Result<()> {
+    let exe = paths::exe().ok_or_else(|| anyhow!("cannot find the tannoy binary"))?;
     let log = paths::daemon_log();
     std::fs::create_dir_all(paths::state_dir())?;
     let out = std::fs::OpenOptions::new()
@@ -137,7 +193,7 @@ fn ensure_daemon() -> Result<()> {
     let mut child = cmd.spawn()?;
     for _ in 0..40 {
         std::thread::sleep(Duration::from_millis(50));
-        if tannoy_core::transport::daemon_alive() {
+        if daemon_answers() {
             std::thread::spawn(move || child.wait());
             return Ok(());
         }
@@ -162,6 +218,16 @@ fn open(toggle: bool, args: &[String]) -> Result<i32> {
     Ok(0)
 }
 
+/// Runs the new `tannoy bar` in this process (same pid, same stdout to
+/// waybar) after an upgrade replaced the binary.
+fn reexec_bar() {
+    use std::os::unix::process::CommandExt;
+    if let Some(exe) = paths::exe() {
+        let err = std::process::Command::new(exe).arg("bar").exec();
+        eprintln!("tannoy: cannot restart the bar module: {err}");
+    }
+}
+
 fn bar() -> Result<i32> {
     let offline = serde_json::to_string(&crate::bar::offline())?;
     let mut out = std::io::stdout().lock();
@@ -170,6 +236,11 @@ fn bar() -> Result<i32> {
     // upgrade), at most every 10 seconds.
     let mut started: Option<std::time::Instant> = None;
     loop {
+        // An upgrade: the old daemon retired and ended the stream. Become the
+        // new bar, which starts the new daemon.
+        if paths::exe_replaced() {
+            reexec_bar();
+        }
         match tannoy_core::protocol::subscribe_raw(SubKind::Bar) {
             Ok(lines) => {
                 for line in lines {
@@ -179,6 +250,9 @@ fn bar() -> Result<i32> {
                         out.flush()?;
                         last = line;
                     }
+                }
+                if paths::exe_replaced() {
+                    continue;
                 }
             }
             Err(_) if started.is_none_or(|t| t.elapsed() > Duration::from_secs(10)) => {
@@ -456,8 +530,7 @@ fn doctor() -> Result<i32> {
         "art cache",
         &paths::tilde(&paths::art_dir()).to_string(),
     );
-    let board = std::env::current_exe()
-        .ok()
+    let board = paths::exe()
         .and_then(|e| e.parent().map(|d| d.join("tannoy-board")))
         .filter(|p| p.exists());
     match board {

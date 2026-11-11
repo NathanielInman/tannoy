@@ -129,10 +129,24 @@ fn signal_waybar(n: u8) {
     }
 }
 
+/// Tells the drawer to exit and exits: a restart, or an upgrade replaced
+/// this binary. Bars see their stream end and start the new daemon.
+fn retire(st: &mut State) -> ! {
+    broadcast(&mut st.boards, &event_line(&Event::Quit));
+    eprintln!("tannoy: exiting");
+    std::process::exit(0)
+}
+
 /// Recomputes the snapshot and pushes whatever changed: the bar line to bar
 /// subscribers, the snapshot to the drawer, a signal to waybar when the art
 /// path changed.
+///
+/// An upgrade that replaced this binary is noticed here, on the next thing
+/// that happens, and the old daemon retires instead of serving old code.
 fn refresh(d: &Shared, st: &mut State) {
+    if paths::exe_replaced() {
+        retire(st);
+    }
     let players: Vec<Player> = st.players.values().cloned().collect();
     let active = pick::choose(&players, st.picked.as_deref()).map(|i| players[i].bus.clone());
     let cfg = st.cfg.clone();
@@ -516,7 +530,7 @@ fn rescan(d: &Shared) -> Vec<std::thread::JoinHandle<()>> {
 
 /// Starts `tannoy-board`, preferring the one installed next to `tannoy`.
 fn spawn_board() {
-    let exe = std::env::current_exe().ok();
+    let exe = paths::exe();
     let local = exe
         .as_ref()
         .and_then(|e| e.parent())
@@ -671,8 +685,16 @@ fn handle(d: Shared, stream: Stream) {
         let reply = match req {
             Request::Ping => Reply {
                 version: Some(env!("CARGO_PKG_VERSION").into()),
+                stale: paths::exe_replaced(),
                 ..Reply::ok()
             },
+            Request::Quit => {
+                let _ = send_line(
+                    &mut writer,
+                    &serde_json::to_string(&Reply::ok()).unwrap_or_default(),
+                );
+                retire(&mut d.lock());
+            }
             Request::Snapshot => Reply {
                 snapshot: Some(Box::new(d.lock().snap.clone())),
                 ..Reply::ok()
