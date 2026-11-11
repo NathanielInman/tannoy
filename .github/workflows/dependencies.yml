@@ -1,0 +1,62 @@
+# Weekly dependency check without a bot in the history: no Dependabot or
+# Renovate PRs (their commits would make a bot a contributor). New RustSec
+# advisories fail the advisories job, which GitHub reports by email. Crate
+# updates are listed in one issue that this keeps current and closes when
+# everything is up to date; run `cargo update` locally to take them.
+name: Dependencies
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  advisories:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          command: check advisories
+
+  updates:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - name: List available updates
+        run: |
+          cargo update --dry-run --verbose 2>&1 \
+            | grep -E '^\s+(Updating|Adding|Removing|Downgrading|Unchanged) [A-Za-z0-9_-]+ v' \
+            | sed 's/^ *//' > updates.txt || true
+          cat updates.txt
+      - name: Keep one issue current
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Dependency updates available"
+          num=$(gh issue list --state open --search "in:title \"$title\"" --json number,title \
+            -q ".[] | select(.title == \"$title\") | .number" | head -1)
+          if [ -s updates.txt ]; then
+            {
+              echo "\`cargo update --dry-run\` on $(date -u +%F):"
+              echo
+              echo '```'
+              cat updates.txt
+              echo '```'
+              echo
+              echo "Compatible updates: \`cargo update\`, then test and commit."
+              echo "\"Unchanged ... (available: ...)\" lines are new major versions to move to by hand."
+            } > body.md
+            if [ -n "$num" ]; then
+              gh issue edit "$num" --body-file body.md
+            else
+              gh issue create --title "$title" --body-file body.md
+            fi
+          elif [ -n "$num" ]; then
+            gh issue close "$num" --comment "Everything is up to date."
+          fi
