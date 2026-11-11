@@ -135,7 +135,19 @@ pub struct BarLine {
 /// Sends one request and reads one reply, waiting at most `timeout`.
 pub fn request_within(req: &Request, timeout: Duration) -> Result<Reply> {
     let path = crate::paths::socket_path();
-    let mut s = crate::transport::connect_to(&path, Some(timeout))?;
+    exchange(crate::transport::connect_to(&path, Some(timeout))?, req)
+}
+
+/// Sends one request and reads one reply, with the friendly error when the
+/// daemon is not running.
+pub fn request(req: &Request) -> Result<Reply> {
+    let s = crate::transport::connect()?;
+    s.set_read_timeout(Some(Duration::from_secs(5)))?;
+    s.set_write_timeout(Some(Duration::from_secs(5)))?;
+    exchange(s, req)
+}
+
+fn exchange(mut s: crate::transport::Stream, req: &Request) -> Result<Reply> {
     let mut line = serde_json::to_string(req)?;
     line.push('\n');
     s.write_all(line.as_bytes())?;
@@ -143,12 +155,6 @@ pub fn request_within(req: &Request, timeout: Duration) -> Result<Reply> {
     let mut out = String::new();
     reader.read_line(&mut out)?;
     serde_json::from_str(&out).map_err(|e| anyhow!("bad reply from daemon: {e}"))
-}
-
-/// Sends one request and reads one reply.
-pub fn request(req: &Request) -> Result<Reply> {
-    crate::transport::connect()?;
-    request_within(req, Duration::from_secs(5))
 }
 
 /// Subscribes and yields raw lines until the daemon goes away.
