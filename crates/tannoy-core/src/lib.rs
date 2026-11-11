@@ -5,6 +5,7 @@
 pub mod art;
 pub mod audio;
 pub mod config;
+pub mod dnd;
 pub mod model;
 pub mod mpris;
 pub mod paths;
