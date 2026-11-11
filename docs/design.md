@@ -71,6 +71,12 @@ The runtime directory is mode 0700 and the socket 0600. The daemon holds an
 both start a daemon at the same moment, and the loser exits instead of
 unlinking the winner's socket.
 
+A `tannoy daemon` that finds the lock taken exits with status 75, not 1:
+`packaging/systemd/tannoy.service` uses `Restart=always` with
+`RestartPreventExitStatus=75` and `SuccessExitStatus=75`, so whichever
+daemon starts first (the unit, the bar, a media key) is the one, and the
+unit neither loops nor reports a failure when it is not.
+
 ## MPRIS
 
 The daemon keeps one session-bus connection (zbus 6, each call and each

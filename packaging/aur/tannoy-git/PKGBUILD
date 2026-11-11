@@ -50,6 +50,7 @@ check() {
 package() {
   cd tannoy
   install -Dm755 target/release/tannoy target/release/tannoy-board -t "$pkgdir/usr/bin/"
+  install -Dm644 packaging/systemd/tannoy.service -t "$pkgdir/usr/lib/systemd/user/"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
 }

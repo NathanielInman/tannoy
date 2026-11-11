@@ -1,0 +1,29 @@
+# Optional: starts the Tannoy daemon with the graphical session. Without it,
+# `tannoy bar` starts the daemon the first time waybar runs it.
+#
+#   systemctl --user enable --now tannoy.service
+#
+# Installed by the packages to /usr/lib/systemd/user. For a ~/.local/bin
+# install, copy it to ~/.config/systemd/user/ and set
+# ExecStart=%h/.local/bin/tannoy daemon.
+
+[Unit]
+Description=Tannoy: now playing for waybar
+Documentation=https://github.com/NathanielInman/tannoy
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/tannoy daemon
+# Back after a crash, and after an upgrade or `tannoy restart` retires the
+# old daemon (exit 0).
+Restart=always
+RestartSec=2
+# 75: another daemon (one the bar, a media key or `tannoy restart` started)
+# holds the lock. One daemon is running, so stop trying, and do not call it
+# a failure.
+RestartPreventExitStatus=75
+SuccessExitStatus=75
+
+[Install]
+WantedBy=graphical-session.target

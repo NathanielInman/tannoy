@@ -102,6 +102,20 @@ the new one on the next media key or player event; `tannoy restart` does it
 at once. (Coming from 0.1, stop the old daemon once with
 `pkill -f 'tannoy daemon'`.)
 
+To have the daemon start with your session instead of the first time waybar
+runs `tannoy bar` (optional), enable the user unit. The packages install it;
+for a `~/.local/bin` install, copy
+[`packaging/systemd/tannoy.service`](packaging/systemd/tannoy.service) to
+`~/.config/systemd/user/` and point `ExecStart` at `%h/.local/bin/tannoy`.
+
+```sh
+systemctl --user enable --now tannoy.service
+```
+
+systemd restarts it after a crash, an upgrade or `tannoy restart`. If the
+bar or a command starts a daemon first, the unit's own start finds it
+running and stops without an error: either way one daemon runs.
+
 The drawer's output row reads the default device with `wpctl` (PipeWire).
 Do not disturb comes from whichever notification daemon runs:
 [swaync](https://github.com/ErikReider/SwayNotificationCenter),

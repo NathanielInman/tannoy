@@ -28,6 +28,27 @@ pub fn daemon_alive() -> bool {
     connect().is_ok()
 }
 
+/// Another daemon holds the lock. Not a failure: `tannoy daemon` exits with
+/// [`ALREADY_RUNNING`] so a systemd unit does not keep restarting it.
+#[derive(Debug)]
+pub struct AlreadyRunning(pub std::path::PathBuf);
+
+impl std::fmt::Display for AlreadyRunning {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "a Tannoy daemon is already running ({})",
+            self.0.display()
+        )
+    }
+}
+
+impl std::error::Error for AlreadyRunning {}
+
+/// The exit status of a daemon that found another one running (EX_TEMPFAIL);
+/// `packaging/systemd/tannoy.service` names it in `RestartPreventExitStatus`.
+pub const ALREADY_RUNNING: i32 = 75;
+
 pub struct Listener {
     inner: std::os::unix::net::UnixListener,
     /// Held for the daemon's lifetime; the kernel drops the lock if it dies.
@@ -50,10 +71,7 @@ impl Listener {
         // Two daemons started at once (the bar and the art module) must not
         // both bind: the second would unlink the first one's socket.
         if unsafe { libc::flock(lock.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) } != 0 {
-            return Err(anyhow!(
-                "a Tannoy daemon is already running ({})",
-                path.display()
-            ));
+            return Err(AlreadyRunning(path).into());
         }
         let _ = std::fs::remove_file(&path);
         let inner = std::os::unix::net::UnixListener::bind(&path)

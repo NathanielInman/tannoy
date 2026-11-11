@@ -785,7 +785,14 @@ fn handle(d: Shared, stream: Stream) {
 }
 
 pub fn run() -> Result<i32> {
-    let listener = Listener::bind()?;
+    let listener = match Listener::bind() {
+        Ok(l) => l,
+        Err(e) if e.is::<tannoy_core::transport::AlreadyRunning>() => {
+            eprintln!("tannoy: {e}");
+            return Ok(tannoy_core::transport::ALREADY_RUNNING);
+        }
+        Err(e) => return Err(e),
+    };
     let conn = dbus::connect()?;
     let (cfg, cfg_error) = Config::load();
     if let Some(e) = &cfg_error {
