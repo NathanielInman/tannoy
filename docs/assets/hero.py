@@ -510,7 +510,7 @@ add(f'<rect x="18" y="{cy0}" width="{DW - 36}" height="{CARD_H}" rx="10" fill="{
 text(30, cy0 + 21, "HIDDEN", 10.5, AMBER, 700, spacing=1)
 text(DW - 30, cy0 + 21, "DO NOT DISTURB IS ON", 10.5, DIM, 700, "end", 1)
 for i, line in enumerate(["The title and cover stay off the bar while do not",
-                          "disturb is on, so they stay off screen shares. The",
+                          "disturb is on or the screen is shared. The",
                           "controls still work."]):
     text(30, cy0 + 45 + i * 18, line, 12.5, FG)
 add("</g></g>")

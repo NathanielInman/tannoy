@@ -49,7 +49,8 @@ pub fn line(snap: &Snapshot, cfg: &Config) -> BarLine {
             class: vec!["hidden".into()],
             alt: "hidden".into(),
             tooltip: format!(
-                "Hidden while do not disturb is on\n{} is {}",
+                "Hidden while {}\n{} is {}",
+                snap.hidden_reason(cfg),
                 escape(&p.name),
                 p.status.as_str()
             ),
@@ -194,6 +195,20 @@ mod tests {
         assert_eq!(l.class, vec!["hidden"]);
         assert!(!l.tooltip.contains("StarTalk"));
         assert!(!l.tooltip.contains("Superintelligence"));
+        assert_eq!(art_path(&s, &cfg), None);
+        assert!(l.tooltip.starts_with("Hidden while do not disturb is on"));
+    }
+
+    #[test]
+    fn a_screen_share_hides_like_do_not_disturb() {
+        let mut s = chrome();
+        s.sharing = true;
+        s.hidden = true;
+        let cfg = Config::default();
+        let l = line(&s, &cfg);
+        assert_eq!(l.class, vec!["hidden"]);
+        assert!(l.tooltip.starts_with("Hidden while the screen is shared"));
+        assert!(!l.tooltip.contains("StarTalk"));
         assert_eq!(art_path(&s, &cfg), None);
     }
 

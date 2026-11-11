@@ -153,7 +153,8 @@ pub struct Snapshot {
     pub picked: Option<String>,
     /// swaync's do not disturb.
     pub dnd: bool,
-    /// Do not disturb is hiding titles (`dnd` and `dnd.hide`).
+    /// Titles are hidden: do not disturb with `dnd.hide`, or a screen share
+    /// with `dnd.screen_share`.
     pub hidden: bool,
     /// A screen share is running (seen through Hyprland).
     pub sharing: bool,
@@ -166,6 +167,15 @@ impl Snapshot {
     pub fn active_player(&self) -> Option<&Player> {
         let bus = self.active.as_deref()?;
         self.players.iter().find(|p| p.bus == bus)
+    }
+
+    /// Why titles are hidden, to finish "hidden while ...".
+    pub fn hidden_reason(&self, cfg: &crate::config::Config) -> &'static str {
+        if self.sharing && cfg.dnd.screen_share {
+            "the screen is shared"
+        } else {
+            "do not disturb is on"
+        }
     }
 }
 

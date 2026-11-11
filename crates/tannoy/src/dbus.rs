@@ -142,12 +142,6 @@ pub fn name_owner(conn: &Connection, name: &str) -> Option<String> {
         .ok()
 }
 
-/// Turns swaync's do not disturb on or off.
-pub fn set_swaync_dnd(conn: &Connection, on: bool) -> Result<()> {
-    conn.call_method(Some(SWAYNC), SWAYNC_PATH, Some(SWAYNC), "SetDnd", &(on,))?;
-    Ok(())
-}
-
 /// swaync's do not disturb; `None` when swaync is not running.
 pub fn swaync_dnd(conn: &Connection) -> Option<bool> {
     conn.call_method(Some(SWAYNC), SWAYNC_PATH, Some(SWAYNC), "GetDnd", &())

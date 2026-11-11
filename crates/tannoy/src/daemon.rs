@@ -44,9 +44,6 @@ struct State {
     dnd: bool,
     /// A screen share is running.
     sharing: bool,
-    /// Tannoy turned do not disturb on for this share, so it turns it off
-    /// when the share ends. Cleared when the user turns it off first.
-    auto_dnd: bool,
     visible: bool,
     /// The first scan of the bus is done; commands wait for it.
     ready: bool,
@@ -163,7 +160,7 @@ fn refresh(d: &Shared, st: &mut State) {
         active,
         picked: st.picked.clone(),
         dnd: st.dnd,
-        hidden: st.dnd && cfg.dnd.hide,
+        hidden: (st.dnd && cfg.dnd.hide) || (st.sharing && cfg.dnd.screen_share),
         sharing: st.sharing,
         art: st.art_path.clone(),
         config_error: st.cfg_error.clone(),
@@ -300,9 +297,6 @@ fn watch_names(d: Shared) -> Result<()> {
                 };
                 let mut st = d.lock();
                 st.dnd = dnd;
-                if !dnd {
-                    st.auto_dnd = false;
-                }
                 refresh(&d, &mut st);
             });
         }
@@ -406,11 +400,6 @@ fn watch_dnd(d: Shared) -> Result<()> {
             let mut st = d.lock();
             if st.dnd != dnd {
                 st.dnd = dnd;
-                // Turned off during a share: the user wants it off, so the
-                // end of the share leaves it alone.
-                if !dnd {
-                    st.auto_dnd = false;
-                }
                 refresh(&d, &mut st);
             }
         }
@@ -418,36 +407,13 @@ fn watch_dnd(d: Shared) -> Result<()> {
     Err(anyhow!("the session bus closed"))
 }
 
-/// A screen share started or ended. Do not disturb goes on when a share
-/// starts with it off, and off when the share ends, unless the user turned
-/// it off in between. A do not disturb the user turned on stays on.
+/// A screen share started or ended: titles hide while one runs, as they
+/// do for do not disturb. Tannoy reads the share and changes nothing
+/// outside itself.
 fn screen_shared(d: &Shared, on: bool) {
     let mut st = d.lock();
     st.sharing = on;
-    let set = if on {
-        (st.cfg.dnd.screen_share && !st.dnd).then(|| {
-            st.auto_dnd = true;
-            true
-        })
-    } else {
-        std::mem::take(&mut st.auto_dnd).then_some(false)
-    };
     refresh(d, &mut st);
-    drop(st);
-    if let Some(dnd) = set {
-        let d = d.clone();
-        std::thread::spawn(move || {
-            // A share that ended before this ran has already asked for off.
-            if dnd && !d.lock().sharing {
-                return;
-            }
-            // Without swaync there is nothing to turn on, which is not an
-            // error.
-            if dbus::set_swaync_dnd(&d.conn, dnd).is_err() && dnd {
-                d.lock().auto_dnd = false;
-            }
-        });
-    }
 }
 
 /// Screen shares from Hyprland's event socket. Ends when Tannoy is not
@@ -807,7 +773,6 @@ pub fn run() -> Result<i32> {
             picked: load_pick(),
             dnd,
             sharing: false,
-            auto_dnd: false,
             visible: false,
             ready: false,
             art_url: None,

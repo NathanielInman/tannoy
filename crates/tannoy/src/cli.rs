@@ -242,7 +242,8 @@ fn status(json: bool) -> Result<i32> {
             let tr = &p.track;
             println!("{:<10}{} ({})", "player", p.name, p.status.as_str());
             if s.hidden {
-                println!("{:<10}hidden while do not disturb is on", "track");
+                let (cfg, _) = Config::load();
+                println!("{:<10}hidden while {}", "track", s.hidden_reason(&cfg));
             } else {
                 println!("{:<10}{}", "title", tr.title);
                 println!("{:<10}{}", "artist", tr.artist());
@@ -388,7 +389,7 @@ fn doctor() -> Result<i32> {
         Some(_) if cfg.dnd.screen_share => check(
             Some(true),
             "screen share",
-            "do not disturb turns on while the screen is shared",
+            "titles hide while the screen is shared",
         ),
         Some(_) => check(None, "screen share", "dnd.screen_share is off"),
         None => check(

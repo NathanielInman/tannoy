@@ -14,10 +14,13 @@ this is the spec.
 2. **The player you meant.** Commands and the bar follow the user's pick,
    else the most recently playing player, so two open players never fight
    over the media keys.
-3. **Private by default.** Do not disturb hides the title and the cover
-   everywhere they would show on screen.
+3. **Private by default.** Do not disturb and screen shares hide the title
+   and the cover everywhere they would show on screen.
 4. **Zero setup.** Every MPRIS player is found on its own; the theme comes
    from the bar.
+5. **Hands off.** Tannoy reads other programs (players, swaync, Hyprland,
+   waybar's stylesheet) and changes none of them except through the player
+   controls the user presses.
 
 ## Non-goals
 
@@ -34,7 +37,6 @@ this is the spec.
 flowchart LR
   P["MPRIS players"] -- "PropertiesChanged, Seeked" --> D["tannoy daemon"]
   S["swaync"] -- "SubscribeV2" --> D
-  D -- "SetDnd while sharing" --> S
   Y["Hyprland event socket"] -- "screencast, screencastv2" --> D
   N["dbus-daemon"] -- "NameOwnerChanged" --> D
   D <-- "local socket, JSON lines" --> B["tannoy-board (GTK4 layer-shell)"]
@@ -149,7 +151,7 @@ shortened by `tannoy_core::text::ellipsize`: at most `bar.max_chars`
 characters, cut at the last word boundary with `…`, with a dangling
 separator dropped. Only a single word longer than the limit is cut inside
 itself. The tooltip is the full title, artist, album and player; while
-hidden it only says that do not disturb hides the title. Text and tooltip
+hidden it only says why: do not disturb or a screen share. Text and tooltip
 are escaped for Pango markup.
 
 ## Do not disturb
@@ -162,6 +164,8 @@ on, the title stays off screen. With `dnd.hide = true` (the default):
 - the drawer shows a "Hidden" card instead of the cover and title, and keeps
   the controls, players and output row;
 - `tannoy status` prints "hidden while do not disturb is on".
+
+Tannoy only reads do not disturb; it never sets it.
 
 Do not disturb is read with `GetDnd` at startup and whenever swaync's name
 appears, and follows `SubscribeV2` after that. Without swaync it is off.
@@ -178,20 +182,18 @@ after each one. One recording can send a pair per monitor, so
 shared from the first start to the last stop. A single screenshot sends
 nothing.
 
-With `dnd.screen_share = true` (the default), the share drives swaync's do
-not disturb, so the titles and the notifications go off screen together:
+With `dnd.screen_share = true` (the default), a share hides titles exactly
+as do not disturb does (the bar, `tannoy art`, the drawer and
+`tannoy status`), and they come back when the last share stops. The
+snapshot's `sharing` says whether a share is running, and `hidden` covers
+both reasons. The bar's tooltip, the drawer's card and `tannoy status` say
+which one is hiding the title. Notifications are left to the notification
+daemon: Tannoy does not turn on do not disturb for a share.
 
-- When a share starts and do not disturb is off, the daemon calls swaync's
-  `SetDnd(true)` on a helper thread and remembers it did.
-- When the last share ends, it calls `SetDnd(false)`, but only if it turned
-  do not disturb on and the user did not turn it off in between.
-- A do not disturb that was already on when the share started is left on.
-
-Without swaync there is nothing to turn on and nothing is logged. Without
-Hyprland the thread ends at once and shares are not seen. A daemon that
-starts in the middle of a share does not know about it, and one that stops
-during a share leaves do not disturb on. The snapshot's `sharing` says
-whether a share is running.
+Hyprland reports a share once the client is already copying frames, so the
+first few frames of a share can still show the title. Without Hyprland the
+thread ends at once and shares are not seen. A daemon that starts in the
+middle of a share does not know about it until the next one.
 
 ## Cover art
 
@@ -308,7 +310,7 @@ are microseconds, times are Unix seconds.
 | `bar.namespace` | `"waybar"` | The bar's layer-shell namespace, for anchoring |
 | `dnd.hide` | `true` | Hide title and cover while do not disturb is on |
 | `dnd.text` | `""` | Text after `icon_hidden` while hidden |
-| `dnd.screen_share` | `true` | Turn swaync's do not disturb on while the screen is shared (Hyprland), and off when the share ends |
+| `dnd.screen_share` | `true` | Hide title and cover while the screen is shared (Hyprland) |
 | `art.enabled` | `true` | Cache covers for `tannoy art` and the drawer |
 | `art.signal` | `12` | `SIGRTMIN+N` sent to waybar on a cover change; `0` sends nothing |
 | `art.fallback` | `"none"` | No cover: `none`, `player` (app icon) or an image path |

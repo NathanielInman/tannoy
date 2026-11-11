@@ -54,9 +54,8 @@ pub struct DndConfig {
     pub hide: bool,
     /// Text after `bar.icon_hidden` while hidden.
     pub text: String,
-    /// Turn swaync's do not disturb on while the screen is shared (seen
-    /// through Hyprland), and off again when the share ends if Tannoy was
-    /// the one that turned it on.
+    /// Hide the title and cover while the screen is shared (seen through
+    /// Hyprland), as do not disturb does.
     pub screen_share: bool,
 }
 

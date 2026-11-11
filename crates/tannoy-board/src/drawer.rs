@@ -1,6 +1,6 @@
 //! The drawer: the cover, the track, a scrub bar, the controls, the
-//! players to pick from and the output device. While do not disturb hides
-//! titles it says so and keeps only the controls.
+//! players to pick from and the output device. While do not disturb or a
+//! screen share hides titles it says which and keeps only the controls.
 
 use crate::anim::{Motion, Spring};
 use crate::cover::Cover;
@@ -161,6 +161,8 @@ pub struct Drawer {
     out_icon: gtk::Label,
     out_name: gtk::Label,
     out_btn: gtk::Button,
+    /// Why the hidden card shows: do not disturb or a screen share.
+    hidden_why: gtk::Label,
 }
 
 impl Drawer {
@@ -250,7 +252,7 @@ impl Drawer {
         track.append(&scale);
         track.append(&times);
 
-        // ---- hidden by do not disturb
+        // ---- hidden by do not disturb or a screen share
         let hidden = gtk::Box::new(gtk::Orientation::Vertical, 6);
         hidden.add_css_class("card");
         hidden.add_css_class("hidden");
@@ -258,10 +260,11 @@ impl Drawer {
         let hl = label("HIDDEN", &["t-label", "head"]);
         hl.set_hexpand(true);
         hrow.append(&hl);
-        hrow.append(&label("DO NOT DISTURB IS ON", &["t-label"]));
+        let hidden_why = label("DO NOT DISTURB IS ON", &["t-label"]);
+        hrow.append(&hidden_why);
         hidden.append(&hrow);
         let htext = label(
-            "The title and cover stay off the bar while do not disturb is on, so they stay off screen shares. The controls still work.",
+            "The title and cover stay off the bar while do not disturb is on or the screen is shared. The controls still work.",
             &[],
         );
         htext.set_wrap(true);
@@ -400,6 +403,7 @@ impl Drawer {
             out_icon,
             out_name,
             out_btn,
+            hidden_why,
         });
         d.connect();
         d
@@ -705,6 +709,8 @@ impl Drawer {
             Some(p) => {
                 self.controls.set_visible(true);
                 if s.hidden {
+                    self.hidden_why
+                        .set_label(&s.hidden_reason(&cfg).to_uppercase());
                     self.now.set_visible_child_name("hidden");
                 } else {
                     self.now.set_visible_child_name("track");
