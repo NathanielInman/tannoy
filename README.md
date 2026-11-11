@@ -1,4 +1,12 @@
+<p align="center">
+  <img src="docs/assets/mark.svg" width="46" alt="">
+</p>
+
 <h1 align="center">Tannoy</h1>
+
+<p align="center">
+  <img src="docs/assets/hero.svg" width="100%" alt="A floating waybar whose media pill shows a small podcast cover and Slow Signals · Where the Night Trains…, cut at a word with a real ellipsis. A click on the cover opens the Tannoy drawer out of it: the podcast playing in Chrome with its scrub bar moving, play and pause, previous and next, and 15 second skips. A click on +15 jumps ahead. A click on the Spotify chip swaps the cover, the title and the bar pill to a song, the skips go away, and play starts it. Do not disturb turns on: the bell turns amber, the bar keeps only a dim music glyph, and the drawer says the title is hidden while its controls stay. Do not disturb turns off again, and a click outside closes the drawer.">
+</p>
 
 <p align="center">
   <b>Now playing in your bar, with the cover beside it. Click it and the player slides out of that icon.</b><br>
@@ -8,9 +16,10 @@
 
 <p align="center">
   <a href="https://github.com/NathanielInman/tannoy/actions/workflows/ci.yml"><img src="https://github.com/NathanielInman/tannoy/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/NathanielInman/tannoy/releases/latest"><img src="https://img.shields.io/github/v/release/NathanielInman/tannoy?color=88c0d0&amp;label=release" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/status-early%20(0.1)-ebcb8b" alt="Early, version 0.1">
   <img src="https://img.shields.io/badge/Arch%20%2B%20Hyprland%20first-Linux%20%C2%B7%20Wayland-a3be8c" alt="Arch and Hyprland first; Linux with Wayland">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-88c0d0" alt="MIT license"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-b48ead" alt="MIT license"></a>
 </p>
 
 A tannoy is the station loudspeaker that tells the platform what is arriving.
