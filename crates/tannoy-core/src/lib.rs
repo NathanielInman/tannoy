@@ -4,6 +4,7 @@
 
 pub mod art;
 pub mod audio;
+pub mod bar;
 pub mod config;
 pub mod dnd;
 pub mod model;
@@ -13,6 +14,7 @@ pub mod pick;
 pub mod proc;
 pub mod protocol;
 pub mod screencast;
+pub mod state;
 pub mod swaync;
 pub mod text;
 pub mod transport;

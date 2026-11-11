@@ -50,8 +50,8 @@ flowchart LR
 | Crate | Role |
 |---|---|
 | `bar-anchor` | Hyprland anchoring and panel placement. A copy of Roundhouse's; its `Anchor` JSON is the same as Roundhouse's and Switchyard's. |
-| `tannoy-core` | The model, MPRIS parsing, the player pick, config, cover art, the socket protocol, the waybar reader and the swaync, dunst, mako and wpctl parsers. No D-Bus, no UI. |
-| `tannoy` | The `tannoy` binary: daemon, CLI and waybar module. Owns the zbus connection. |
+| `tannoy-core` | The model, MPRIS parsing, the player pick, the daemon's state (`state::Model`: events in, effects out), the bar line, config, cover art, the socket protocol, the waybar reader and the swaync, dunst, mako and wpctl parsers. No D-Bus, no UI. |
+| `tannoy` | The `tannoy` binary: daemon, CLI and waybar module. Owns the zbus connection, the threads and the sockets, and carries out the model's effects (fetch a cover, send a bar line, signal waybar). |
 | `tannoy-board` | The Linux drawer: GTK4 on `gtk4-layer-shell`, overlay layer, namespace `tannoy`, keyboard exclusive while open. |
 
 ## Paths

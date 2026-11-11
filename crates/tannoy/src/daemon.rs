@@ -13,16 +13,17 @@
 
 use crate::dbus;
 use anyhow::{anyhow, Result};
-use std::collections::{BTreeMap, HashMap};
+use std::collections::HashMap;
 use std::io::{BufRead, BufReader, Write};
 use std::sync::{Arc, Condvar, Mutex, MutexGuard};
 use std::time::{Duration, Instant};
 use tannoy_core::config::Config;
-use tannoy_core::model::{Player, Snapshot};
+use tannoy_core::model::Player;
 use tannoy_core::mpris::{self, PATH, PLAYER_IFACE, ROOT_IFACE};
 use tannoy_core::protocol::{Event, Reply, Request, SubKind};
+use tannoy_core::state::{Effect, Model};
 use tannoy_core::transport::{Listener, Stream};
-use tannoy_core::{art, dnd, paths, pick};
+use tannoy_core::{art, dnd, paths};
 use zbus::blocking::{Connection, MessageIterator};
 use zbus::message::Type as MsgType;
 use zbus::zvariant::OwnedValue;
@@ -32,27 +33,14 @@ use zbus::MatchRule;
 const POSITION_EVERY: Duration = Duration::from_secs(1);
 
 struct State {
-    cfg: Config,
-    cfg_error: Option<String>,
-    players: BTreeMap<String, Player>,
-    /// Unique name (`:1.39`) to well-known name. Signals carry the former.
-    owners: HashMap<String, String>,
-    picked: Option<String>,
-    dnd: bool,
-    /// A screen share is running.
-    sharing: bool,
+    /// Players, pick, do not disturb, config and art: everything that is
+    /// not a connection, kept testable in tannoy-core.
+    m: Model,
     visible: bool,
     /// The first scan of the bus is done; commands wait for it.
     ready: bool,
-    /// The art URL of the active track and its cached copy.
-    art_url: Option<String>,
-    art_path: Option<String>,
-    /// What `tannoy art` prints; a change signals waybar.
-    art_line: Option<String>,
-    snap: Snapshot,
     boards: Vec<Sub>,
     bars: Vec<Sub>,
-    bar_line: String,
     /// A show the drawer has not received yet because it is still starting.
     pending: Option<Event>,
     board_started: Option<Instant>,
@@ -180,54 +168,26 @@ fn refresh(d: &Shared, st: &mut State) {
     if paths::exe_replaced() {
         retire(st);
     }
-    let players: Vec<Player> = st.players.values().cloned().collect();
-    let active = pick::choose(&players, st.picked.as_deref()).map(|i| players[i].bus.clone());
-    let cfg = st.cfg.clone();
-
-    let want = active
-        .as_ref()
-        .and_then(|b| st.players.get(b))
-        .and_then(|p| p.track.art_url.clone())
-        .filter(|_| cfg.art.enabled);
-    if want != st.art_url {
-        st.art_url = want.clone();
-        st.art_path = None;
-        if let Some(url) = want {
-            match art::cached(&paths::art_dir(), &url) {
-                Some(p) => st.art_path = Some(p.display().to_string()),
-                None => fetch_art(d.clone(), url, cfg.art.timeout),
+    let dir = paths::art_dir();
+    let effects = st.m.refresh(tannoy_core::now(), |url| {
+        art::cached(&dir, url).map(|p| p.display().to_string())
+    });
+    for e in effects {
+        match e {
+            Effect::FetchArt(url) => fetch_art(d.clone(), url, st.m.cfg.art.timeout),
+            Effect::Bar(line) => {
+                broadcast(&mut st.bars, &line);
+            }
+            Effect::SignalWaybar => {
+                let n = st.m.cfg.art.signal;
+                std::thread::spawn(move || signal_waybar(n));
             }
         }
     }
-
-    let snap = Snapshot {
-        version: env!("CARGO_PKG_VERSION").into(),
-        now: tannoy_core::now(),
-        players,
-        active,
-        picked: st.picked.clone(),
-        dnd: st.dnd,
-        hidden: (st.dnd && cfg.dnd.hide) || (st.sharing && cfg.dnd.screen_share),
-        sharing: st.sharing,
-        art: st.art_path.clone(),
-        config_error: st.cfg_error.clone(),
-    };
-    let bar = serde_json::to_string(&crate::bar::line(&snap, &cfg)).unwrap_or_default();
-    if bar != st.bar_line {
-        st.bar_line = bar.clone();
-        broadcast(&mut st.bars, &bar);
-    }
-    let art_line = crate::bar::art_path(&snap, &cfg);
-    if art_line != st.art_line {
-        st.art_line = art_line;
-        let n = cfg.art.signal;
-        std::thread::spawn(move || signal_waybar(n));
-    }
     let ev = event_line(&Event::Snapshot {
-        snapshot: Box::new(snap.clone()),
+        snapshot: Box::new(st.m.snap.clone()),
     });
     broadcast(&mut st.boards, &ev);
-    st.snap = snap;
 }
 
 /// Copies or downloads the art on a helper thread. A local file may be
@@ -247,14 +207,12 @@ fn fetch_art(d: Shared, url: String, timeout: u64) {
                 break;
             }
         }
-        let mut st = d.lock();
-        if st.art_url.as_deref() != Some(url.as_str()) {
-            return;
-        }
         match result {
             Ok(p) => {
-                st.art_path = Some(p.display().to_string());
-                refresh(&d, &mut st);
+                let mut st = d.lock();
+                if st.m.art_fetched(&url, p.display().to_string()) {
+                    refresh(&d, &mut st);
+                }
             }
             Err(e) => eprintln!("tannoy: no art from {url}: {e:#}"),
         }
@@ -265,42 +223,35 @@ fn fetch_art(d: Shared, url: String, timeout: u64) {
 /// interfaces on this helper thread.
 fn load(d: Shared, bus: String) -> std::thread::JoinHandle<()> {
     std::thread::spawn(move || {
-        if d.lock().cfg.ignored(mpris::suffix(&bus)) {
+        // Skip the bus calls for a player the config ignores.
+        if d.lock().m.cfg.ignored(mpris::suffix(&bus)) {
             return;
         }
         let Some(owner) = dbus::name_owner(&d.conn, &bus) else {
             return;
         };
-        {
-            let mut st = d.lock();
-            st.owners.insert(owner, bus.clone());
-            st.players
-                .entry(bus.clone())
-                .or_insert_with(|| Player::new(&bus));
+        if !d.lock().m.track(&bus, &owner) {
+            return;
         }
         let player = dbus::get_all(&d.conn, &bus, PLAYER_IFACE);
         let root = dbus::get_all(&d.conn, &bus, ROOT_IFACE);
-        let mut st = d.lock();
-        let now = tannoy_core::now();
-        if let Some(p) = st.players.get_mut(&bus) {
-            match player {
-                Ok(props) => {
-                    mpris::apply_player(p, &props, now);
-                }
-                Err(e) => eprintln!("tannoy: reading {bus}: {e:#}"),
-            }
-            if let Ok(props) = root {
-                mpris::apply_root(p, &props);
-            }
+        if let Err(e) = &player {
+            eprintln!("tannoy: reading {bus}: {e:#}");
         }
+        let mut st = d.lock();
+        st.m.loaded(
+            &bus,
+            player.as_ref().ok(),
+            root.as_ref().ok(),
+            tannoy_core::now(),
+        );
         refresh(&d, &mut st);
     })
 }
 
 fn forget(d: &Shared, bus: &str) {
     let mut st = d.lock();
-    st.owners.retain(|_, b| b != bus);
-    if st.players.remove(bus).is_some() {
+    if st.m.forget(bus) {
         refresh(d, &mut st);
     }
 }
@@ -364,21 +315,11 @@ fn watch_properties(d: Shared) -> Result<()> {
         else {
             continue;
         };
-        let mut st = d.lock();
-        let Some(bus) = st.owners.get(&sender).cloned() else {
-            continue;
-        };
-        let Some(p) = st.players.get_mut(&bus) else {
-            continue;
-        };
         let props = dbus::props(&changed);
-        if iface == PLAYER_IFACE {
-            mpris::apply_player(p, &props, tannoy_core::now());
-        } else if iface == ROOT_IFACE {
-            mpris::apply_root(p, &props);
-        } else {
+        let mut st = d.lock();
+        let Some(bus) = st.m.properties(&sender, &iface, &props, tannoy_core::now()) else {
             continue;
-        }
+        };
         refresh(&d, &mut st);
         drop(st);
         // A player may announce a change without the new value; read it.
@@ -402,12 +343,7 @@ fn watch_seeked(d: Shared) -> Result<()> {
             continue;
         };
         let mut st = d.lock();
-        let Some(bus) = st.owners.get(&sender).cloned() else {
-            continue;
-        };
-        if let Some(p) = st.players.get_mut(&bus) {
-            p.position = pos.max(0) as u64;
-            p.position_at = tannoy_core::now();
+        if st.m.seeked(&sender, pos, tannoy_core::now()) {
             refresh(&d, &mut st);
         }
     }
@@ -467,7 +403,7 @@ fn watch_notifier(d: Shared, path: &str) -> Result<()> {
         } else if dnd::mako_modes_changed(&iface, &props, &invalidated) {
             let d = d.clone();
             std::thread::spawn(move || {
-                let mode = d.lock().cfg.dnd.mako_mode.clone();
+                let mode = d.lock().m.cfg.dnd.mako_mode.clone();
                 if let Some(modes) = dbus::mako_modes(&d.conn) {
                     set_dnd(&d, dnd::mako_dnd(&modes, &mode));
                 }
@@ -487,8 +423,7 @@ fn watch_mako(d: Shared) -> Result<()> {
 
 fn set_dnd(d: &Shared, dnd: bool) {
     let mut st = d.lock();
-    if st.dnd != dnd {
-        st.dnd = dnd;
+    if st.m.set_dnd(dnd) {
         refresh(d, &mut st);
     }
 }
@@ -496,7 +431,7 @@ fn set_dnd(d: &Shared, dnd: bool) {
 /// Reads do not disturb from whichever notification daemon runs. Call it on
 /// a helper thread.
 fn reread_dnd(d: &Shared) {
-    let mode = d.lock().cfg.dnd.mako_mode.clone();
+    let mode = d.lock().m.cfg.dnd.mako_mode.clone();
     let dnd = dbus::read_dnd(&d.conn, &mode).is_some_and(|(_, on)| on);
     set_dnd(d, dnd);
 }
@@ -506,8 +441,9 @@ fn reread_dnd(d: &Shared) {
 /// outside itself.
 fn screen_shared(d: &Shared, on: bool) {
     let mut st = d.lock();
-    st.sharing = on;
-    refresh(d, &mut st);
+    if st.m.set_sharing(on) {
+        refresh(d, &mut st);
+    }
 }
 
 /// Screen shares from Hyprland's event socket. Ends when Tannoy is not
@@ -560,17 +496,17 @@ fn ticker(d: Shared) {
                 .map(|(g, _)| g)
                 .unwrap_or_else(|e| e.into_inner().0);
         if st.visible && !st.position_busy {
-            if let Some(bus) = st.snap.active.clone() {
+            if let Some(bus) = st.m.snap.active.clone() {
                 st.position_busy = true;
                 let d = d.clone();
                 std::thread::spawn(move || {
                     let pos = dbus::position(&d.conn, &bus);
                     let mut st = d.lock();
                     st.position_busy = false;
-                    if let (Ok(pos), Some(p)) = (pos, st.players.get_mut(&bus)) {
-                        p.position = pos.max(0) as u64;
-                        p.position_at = tannoy_core::now();
-                        refresh(&d, &mut st);
+                    if let Ok(pos) = pos {
+                        if st.m.position(&bus, pos, tannoy_core::now()) {
+                            refresh(&d, &mut st);
+                        }
                     }
                 });
             }
@@ -583,20 +519,8 @@ fn ticker(d: Shared) {
 fn reload_config(d: &Shared) {
     let (cfg, err) = Config::load();
     let mut st = d.lock();
-    if cfg == st.cfg && err == st.cfg_error {
+    if !st.m.reload(cfg, err) {
         return;
-    }
-    st.cfg = cfg;
-    st.cfg_error = err;
-    let ignored: Vec<String> = st
-        .players
-        .keys()
-        .filter(|b| st.cfg.ignored(mpris::suffix(b)))
-        .cloned()
-        .collect();
-    for b in ignored {
-        st.players.remove(&b);
-        st.owners.retain(|_, v| *v != b);
     }
     refresh(d, &mut st);
     let d2 = d.clone();
@@ -609,7 +533,7 @@ fn reload_config(d: &Shared) {
 /// Loads every player on the bus that is not tracked yet.
 fn rescan(d: &Shared) -> Vec<std::thread::JoinHandle<()>> {
     let names = dbus::list_players(&d.conn).unwrap_or_default();
-    let known: Vec<String> = d.lock().players.keys().cloned().collect();
+    let known: Vec<String> = d.lock().m.players.keys().cloned().collect();
     names
         .into_iter()
         .filter(|n| !known.contains(n))
@@ -695,7 +619,7 @@ fn active(d: &Shared) -> Result<Player> {
                 .map(|(g, _)| g)
                 .unwrap_or_else(|e| e.into_inner().0);
     }
-    st.snap
+    st.m.snap
         .active_player()
         .cloned()
         .ok_or_else(|| anyhow!("no player is running"))
@@ -717,10 +641,7 @@ fn seek_to(d: &Shared, p: &Player, current: u64, target: i64) -> Result<()> {
         dbus::seek(&d.conn, &p.bus, target - current as i64)?;
     }
     let mut st = d.lock();
-    if let Some(q) = st.players.get_mut(&p.bus) {
-        q.position = target as u64;
-        q.position_at = tannoy_core::now();
-    }
+    st.m.position(&p.bus, target, tannoy_core::now());
     refresh(d, &mut st);
     Ok(())
 }
@@ -789,11 +710,11 @@ fn handle(d: Shared, stream: Stream) {
                 retire(&mut d.lock());
             }
             Request::Snapshot => Reply {
-                snapshot: Some(Box::new(d.lock().snap.clone())),
+                snapshot: Some(Box::new(d.lock().m.snap.clone())),
                 ..Reply::ok()
             },
             Request::Art => Reply {
-                art: d.lock().art_line.clone(),
+                art: d.lock().m.art_line().map(String::from),
                 ..Reply::ok()
             },
             Request::Subscribe { kind } => {
@@ -803,7 +724,7 @@ fn handle(d: Shared, stream: Stream) {
                     SubKind::Board => {
                         let sub = Sub::new(writer);
                         let mut ok = sub.send(&event_line(&Event::Snapshot {
-                            snapshot: Box::new(st.snap.clone()),
+                            snapshot: Box::new(st.m.snap.clone()),
                         }));
                         if let Some(p) = st.pending.take() {
                             ok &= sub.send(&event_line(&p));
@@ -814,7 +735,8 @@ fn handle(d: Shared, stream: Stream) {
                     }
                     SubKind::Bar => {
                         let sub = Sub::new(writer);
-                        if st.bar_line.is_empty() || sub.send(&st.bar_line) {
+                        let line = st.m.bar_line().to_string();
+                        if line.is_empty() || sub.send(&line) {
                             st.bars.push(sub);
                         }
                     }
@@ -843,11 +765,9 @@ fn handle(d: Shared, stream: Stream) {
             }
             Request::Pick { player } => {
                 let mut st = d.lock();
-                let players: Vec<Player> = st.players.values().cloned().collect();
-                match tannoy_core::pick::resolve(&players, player.as_deref().unwrap_or("auto")) {
+                match st.m.pick(player.as_deref()) {
                     Ok(key) => {
                         save_pick(key.as_deref());
-                        st.picked = key;
                         refresh(&d, &mut st);
                         Reply::ok()
                     }
@@ -878,22 +798,11 @@ pub fn run() -> Result<i32> {
     let dnd = dbus::read_dnd(&conn, &cfg.dnd.mako_mode).is_some_and(|(_, on)| on);
     let d: Shared = Arc::new(Daemon {
         state: Mutex::new(State {
-            cfg,
-            cfg_error,
-            players: BTreeMap::new(),
-            owners: HashMap::new(),
-            picked: load_pick(),
-            dnd,
-            sharing: false,
+            m: Model::new(cfg, cfg_error, load_pick(), dnd),
             visible: false,
             ready: false,
-            art_url: None,
-            art_path: None,
-            art_line: None,
-            snap: Snapshot::default(),
             boards: vec![],
             bars: vec![],
-            bar_line: String::new(),
             pending: None,
             board_started: None,
             position_busy: false,

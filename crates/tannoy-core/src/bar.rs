@@ -6,10 +6,10 @@
 //! waybar cannot style a group by what its modules show, so the text module
 //! is a whole pill on its own and gives up its left end to the cover.
 
-use tannoy_core::config::Config;
-use tannoy_core::model::{Snapshot, Status};
-use tannoy_core::protocol::BarLine;
-use tannoy_core::text::{ellipsize, escape};
+use crate::config::Config;
+use crate::model::{Snapshot, Status};
+use crate::protocol::BarLine;
+use crate::text::{ellipsize, escape};
 
 /// `artist · title`, or whichever of the two exists.
 pub fn label(artist: &str, title: &str, sep: &str) -> String {
@@ -124,11 +124,11 @@ pub fn art_path(snap: &Snapshot, cfg: &Config) -> Option<String> {
     match cfg.art.fallback.as_str() {
         "" | "none" => None,
         "player" => {
-            let names = tannoy_core::art::icon_names(p.desktop_entry.as_deref(), &p.key, &p.name);
-            tannoy_core::art::player_icon(&names).map(|p| p.display().to_string())
+            let names = crate::art::icon_names(p.desktop_entry.as_deref(), &p.key, &p.name);
+            crate::art::player_icon(&names).map(|p| p.display().to_string())
         }
         path => {
-            let p = tannoy_core::paths::expand(path);
+            let p = crate::paths::expand(path);
             p.exists().then(|| p.display().to_string())
         }
     }
@@ -137,21 +137,19 @@ pub fn art_path(snap: &Snapshot, cfg: &Config) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tannoy_core::model::Player;
-    use tannoy_core::mpris::{apply_player, apply_root, props_from_busctl};
+    use crate::model::Player;
+    use crate::mpris::{apply_player, apply_root, props_from_busctl};
 
     fn chrome() -> Snapshot {
         let mut p = Player::new("org.mpris.MediaPlayer2.chromium.instance910");
         apply_player(
             &mut p,
-            &props_from_busctl(include_str!(
-                "../../tannoy-core/fixtures/chrome-player.json"
-            )),
+            &props_from_busctl(include_str!("../fixtures/chrome-player.json")),
             10.0,
         );
         apply_root(
             &mut p,
-            &props_from_busctl(include_str!("../../tannoy-core/fixtures/chrome-root.json")),
+            &props_from_busctl(include_str!("../fixtures/chrome-root.json")),
         );
         Snapshot {
             active: Some(p.bus.clone()),

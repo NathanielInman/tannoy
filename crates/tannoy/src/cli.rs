@@ -236,7 +236,7 @@ fn reexec_bar() {
 }
 
 fn bar() -> Result<i32> {
-    let offline = serde_json::to_string(&crate::bar::offline())?;
+    let offline = serde_json::to_string(&tannoy_core::bar::offline())?;
     let mut out = std::io::stdout().lock();
     let mut last = String::new();
     // Starts the daemon when it is missing (first run, a crash, an

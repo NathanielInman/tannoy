@@ -1,6 +1,5 @@
 //! `tannoy`: the Tannoy daemon, CLI and waybar module.
 
-mod bar;
 mod cli;
 mod daemon;
 mod dbus;

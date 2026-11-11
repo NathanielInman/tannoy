@@ -9,10 +9,14 @@ for whatever you change.
   Roundhouse's; its `Anchor` JSON must stay identical to Roundhouse's and
   Switchyard's.
 - `tannoy-core`: the model, MPRIS parsing (`mpris.rs`), the player pick
-  (`pick.rs`), config, cover art, the socket protocol, the waybar reader and
-  the swaync, dunst, mako and wpctl parsers. No D-Bus, no UI.
-- `tannoy`: the daemon (`daemon.rs`), the zbus glue (`dbus.rs`), the CLI and
-  the waybar module (one binary, `tannoy`).
+  (`pick.rs`), the daemon's state and its transitions (`state.rs`: what
+  happened in, effects out), the bar line (`bar.rs`), config, cover art, the
+  socket protocol, the waybar reader and the swaync, dunst, mako and wpctl
+  parsers. No D-Bus, no UI.
+- `tannoy`: the daemon (`daemon.rs`: threads, sockets and D-Bus calls around
+  `state::Model`), the zbus glue (`dbus.rs`), the CLI and the waybar module
+  (one binary, `tannoy`). A new rule about what the daemon shows belongs in
+  `state.rs` with a test, not here.
 - `tannoy-board`: the Linux GTK4 layer-shell drawer. `anim.rs` and
   `stage.rs` came from Roundhouse's board.
 
