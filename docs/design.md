@@ -318,7 +318,10 @@ bus, so a media key that starts the daemon still reaches a player.
 A `board` subscription receives `{"event":"snapshot","snapshot":{...}}` on
 every change, plus `{"event":"show",...}`, `{"event":"toggle",...}`,
 `{"event":"hide"}` and `{"event":"quit"}` (the drawer exits). A `bar` subscription receives waybar JSON lines, already
-formatted, only when they change. When a toggle arrives and no drawer is
+formatted, only when they change. Each subscriber has its own writer
+thread and a queue of 64 lines, so a reader that stops reading never holds
+up the daemon or the other subscribers; one that falls that far behind is
+dropped (a bar reconnects). When a toggle arrives and no drawer is
 subscribed, the daemon starts `tannoy-board` (next to `tannoy`, else on
 `PATH`) and holds the show until it subscribes.
 

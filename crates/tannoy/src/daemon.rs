@@ -50,8 +50,8 @@ struct State {
     /// What `tannoy art` prints; a change signals waybar.
     art_line: Option<String>,
     snap: Snapshot,
-    boards: Vec<Stream>,
-    bars: Vec<Stream>,
+    boards: Vec<Sub>,
+    bars: Vec<Sub>,
     bar_line: String,
     /// A show the drawer has not received yet because it is still starting.
     pending: Option<Event>,
@@ -80,10 +80,48 @@ fn send_line(s: &mut Stream, line: &str) -> bool {
         .is_ok()
 }
 
-/// Writes to every subscriber and drops the ones that went away. Returns how
-/// many received it.
-fn broadcast(subs: &mut Vec<Stream>, line: &str) -> usize {
-    subs.retain_mut(|s| send_line(s, line));
+/// Lines a subscriber may fall behind by before it counts as stuck.
+const SUB_QUEUE: usize = 64;
+
+/// A bar or drawer subscription. Its own thread writes to the socket, so a
+/// reader that stops reading never holds up the state lock (and with it
+/// every other bar and the drawer).
+struct Sub {
+    tx: std::sync::mpsc::SyncSender<String>,
+    writer: std::thread::JoinHandle<()>,
+}
+
+impl Sub {
+    fn new(mut s: Stream) -> Sub {
+        let (tx, rx) = std::sync::mpsc::sync_channel::<String>(SUB_QUEUE);
+        let writer = std::thread::spawn(move || {
+            for line in rx {
+                if !send_line(&mut s, &line) {
+                    break;
+                }
+            }
+        });
+        Sub { tx, writer }
+    }
+
+    /// Queues a line; false when the subscriber is gone or stuck.
+    fn send(&self, line: &str) -> bool {
+        self.tx.try_send(line.to_string()).is_ok()
+    }
+
+    /// Waits until everything queued is written, or the socket gave up.
+    fn finish(self) {
+        let Sub { tx, writer } = self;
+        drop(tx);
+        let _ = writer.join();
+    }
+}
+
+/// Queues a line for every subscriber and drops the ones that went away or
+/// fell too far behind (their socket closes; a bar reconnects). Returns how
+/// many took it.
+fn broadcast(subs: &mut Vec<Sub>, line: &str) -> usize {
+    subs.retain(|s| s.send(line));
     subs.len()
 }
 
@@ -123,7 +161,11 @@ fn signal_waybar(n: u8) {
 /// Tells the drawer to exit and exits: a restart, or an upgrade replaced
 /// this binary. Bars see their stream end and start the new daemon.
 fn retire(st: &mut State) -> ! {
-    broadcast(&mut st.boards, &event_line(&Event::Quit));
+    let quit = event_line(&Event::Quit);
+    for b in std::mem::take(&mut st.boards) {
+        b.send(&quit);
+        b.finish();
+    }
     eprintln!("tannoy: exiting");
     std::process::exit(0)
 }
@@ -705,23 +747,21 @@ fn handle(d: Shared, stream: Stream) {
                 let mut st = d.lock();
                 match kind {
                     SubKind::Board => {
-                        let mut ok = send_line(
-                            &mut writer,
-                            &event_line(&Event::Snapshot {
-                                snapshot: Box::new(st.snap.clone()),
-                            }),
-                        );
+                        let sub = Sub::new(writer);
+                        let mut ok = sub.send(&event_line(&Event::Snapshot {
+                            snapshot: Box::new(st.snap.clone()),
+                        }));
                         if let Some(p) = st.pending.take() {
-                            ok &= send_line(&mut writer, &event_line(&p));
+                            ok &= sub.send(&event_line(&p));
                         }
                         if ok {
-                            st.boards.push(writer);
+                            st.boards.push(sub);
                         }
                     }
                     SubKind::Bar => {
-                        let line = st.bar_line.clone();
-                        if line.is_empty() || send_line(&mut writer, &line) {
-                            st.bars.push(writer);
+                        let sub = Sub::new(writer);
+                        if st.bar_line.is_empty() || sub.send(&st.bar_line) {
+                            st.bars.push(sub);
                         }
                     }
                 }
@@ -857,6 +897,44 @@ pub fn run() -> Result<i32> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn pair() -> (Stream, Stream) {
+        let (a, b) = Stream::pair().unwrap();
+        a.set_write_timeout(Some(Duration::from_secs(2))).unwrap();
+        (a, b)
+    }
+
+    #[test]
+    fn subscribers_get_lines_in_order() {
+        let (a, b) = pair();
+        let mut subs = vec![Sub::new(a)];
+        assert_eq!(broadcast(&mut subs, "one"), 1);
+        assert_eq!(broadcast(&mut subs, "two"), 1);
+        subs.pop().unwrap().finish();
+        let lines: Vec<String> = BufReader::new(b).lines().map(|l| l.unwrap()).collect();
+        assert_eq!(lines, vec!["one", "two"]);
+    }
+
+    #[test]
+    fn a_stuck_subscriber_never_blocks_a_broadcast() {
+        // Nobody reads `unread`: the socket buffer fills, the writer thread
+        // blocks, the queue fills, and the subscriber is dropped, while
+        // every broadcast returns at once.
+        let (a, unread) = pair();
+        let mut subs = vec![Sub::new(a)];
+        let big = "x".repeat(64 * 1024);
+        let start = Instant::now();
+        for _ in 0..(SUB_QUEUE + 40) {
+            broadcast(&mut subs, &big);
+        }
+        assert!(
+            start.elapsed() < Duration::from_millis(500),
+            "broadcast waited on a stuck reader: {:?}",
+            start.elapsed()
+        );
+        assert!(subs.is_empty(), "the stuck subscriber was kept");
+        drop(unread);
+    }
 
     #[test]
     fn track_ids() {
