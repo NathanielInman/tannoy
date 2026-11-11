@@ -86,7 +86,7 @@ method call limited to 3 seconds) and six signal streams:
 | Signal | Match | Effect |
 |---|---|---|
 | `NameOwnerChanged` | `org.freedesktop.DBus` | A name under `org.mpris.MediaPlayer2.` gaining an owner is loaded; losing one forgets the player. `org.erikreider.swaync.cc` or `org.freedesktop.Notifications` coming or going rereads do not disturb. |
-| `PropertiesChanged` | path `/org/mpris/MediaPlayer2` | `Metadata`, `PlaybackStatus`, `Rate`, `Can*` on the Player interface; `Identity`, `DesktopEntry` and `CanRaise` on the root interface. An invalidated property makes the daemon read the player again. |
+| `PropertiesChanged` | path `/org/mpris/MediaPlayer2` | `Metadata`, `PlaybackStatus`, `Rate`, `Shuffle`, `LoopStatus`, `Can*` on the Player interface; `Identity`, `DesktopEntry` and `CanRaise` on the root interface. An invalidated property makes the daemon read the player again. |
 | `Seeked` | `org.mpris.MediaPlayer2.Player` | The new position. |
 | `SubscribeV2`, `Subscribe` | `org.erikreider.swaync.cc` | swaync's do not disturb (the second argument). |
 | `PropertiesChanged` | path `/org/freedesktop/Notifications` | dunst's `paused` on `org.dunstproject.cmd0`. |
@@ -326,6 +326,8 @@ request. Shapes follow Roundhouse's and Switchyard's.
 {"cmd":"next"}
 {"cmd":"previous"}
 {"cmd":"raise"}
+{"cmd":"shuffle","on":null}
+{"cmd":"loop","status":"Playlist"}
 {"cmd":"seek","offset":-15.0}
 {"cmd":"set_position","position":90.0}
 {"cmd":"pick","player":"spotify"}
@@ -351,6 +353,7 @@ subscribed, the daemon starts `tannoy-board` (next to `tannoy`, else on
 
 The snapshot (`tannoy status --json`) is `version`, `now`, `players` (each
 with `bus`, `key`, `name`, `desktop_entry`, `status`, `track`, `position`,
+`shuffle` and `loop_status` (null when the player has neither),
 `position_at`, `rate`, the `can_*` flags and `last_playing`), `active`,
 `picked`, `dnd`, `hidden`, `sharing`, `art` and `config_error`. Positions and lengths
 are microseconds, times are Unix seconds.

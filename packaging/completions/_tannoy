@@ -15,6 +15,8 @@ _tannoy() {
         'previous:skip to the previous track'
         'seek:seek relative (+5, -15) or to a position (90)'
         'raise:bring the picked player'"'"'s window forward'
+        'shuffle:shuffle the picked player (no argument: flip it)'
+        'loop:set the picked player'"'"'s repeat (no argument: next)'
         'pick:send commands to this player'
         'toggle:open or close the drawer from the clicked icon'
         'show:open the drawer'
@@ -38,6 +40,8 @@ _tannoy() {
             _describe -t special 'pick' special
             _tannoy_players
             ;;
+        shuffle) _values 'shuffle' on off ;;
+        loop) _values 'repeat' none track playlist ;;
         toggle|show) _arguments '--center[open centered instead of from the icon]' ;;
         status) _arguments '--json[print the snapshot as JSON]' ;;
         seek) _message 'seconds: +N or -N relative, N absolute' ;;

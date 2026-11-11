@@ -107,6 +107,10 @@ pub struct Player {
     pub can_go_previous: bool,
     /// The player can bring its own window forward (`Raise`).
     pub can_raise: bool,
+    /// `Shuffle`, when the player has it.
+    pub shuffle: Option<bool>,
+    /// `LoopStatus` (`None`, `Track` or `Playlist`), when the player has it.
+    pub loop_status: Option<String>,
     /// Unix seconds when this player was last seen playing (0: never).
     pub last_playing: f64,
 }
@@ -124,6 +128,16 @@ impl Player {
             can_play: true,
             can_pause: true,
             ..Default::default()
+        }
+    }
+
+    /// The loop status after this one, in the order players cycle it: off,
+    /// the whole playlist, one track.
+    pub fn next_loop_status(&self) -> &'static str {
+        match self.loop_status.as_deref() {
+            Some("Playlist") => "Track",
+            Some("Track") => "None",
+            _ => "Playlist",
         }
     }
 

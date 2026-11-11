@@ -654,6 +654,24 @@ fn control(d: &Shared, req: Request) -> Result<()> {
             Err(anyhow!("{} cannot bring its window forward", p.name))
         }
         Request::Raise => dbus::raise(&d.conn, &p.bus),
+        Request::Shuffle { on } => {
+            let Some(cur) = p.shuffle else {
+                return Err(anyhow!("{} has no shuffle", p.name));
+            };
+            let on = on.unwrap_or(!cur);
+            dbus::set_player_prop(&d.conn, &p.bus, "Shuffle", on.into())
+        }
+        Request::Loop { status } => {
+            if p.loop_status.is_none() {
+                return Err(anyhow!("{} has no loop setting", p.name));
+            }
+            let next = match status.as_deref() {
+                Some(s) => mpris::loop_status(s)
+                    .ok_or_else(|| anyhow!("`{s}` is not none, track or playlist"))?,
+                None => p.next_loop_status(),
+            };
+            dbus::set_player_prop(&d.conn, &p.bus, "LoopStatus", next.into())
+        }
         Request::Seek { offset } => {
             // Read the position fresh: it is only polled while the drawer
             // is open.

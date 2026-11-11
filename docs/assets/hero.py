@@ -36,7 +36,8 @@ ALT = (
     "cut at a word with a real ellipsis. A click on the cover opens the Tannoy drawer out of it: the podcast "
     "playing in Chrome with its scrub bar moving, play and pause, previous and next, and 15 second skips. "
     "A click on +15 jumps ahead. A click on the Spotify chip swaps the cover, the title and the bar pill to a song, "
-    "the skips go away, and play starts it. Do not disturb turns on: the bell turns amber, the bar keeps only a dim "
+    "the skips give way to shuffle and repeat toggles, and play starts it. Do not disturb turns on: the bell turns "
+    "amber, the bar keeps only a dim "
     "music glyph, and the drawer says the title is hidden while its controls stay. Do not disturb turns off again, "
     "and a click outside closes the drawer."
 )
@@ -188,6 +189,21 @@ def g_skip(cx, cy, c, fwd):
     x, y = p0
     add(f'<path d="M{x + 4.2 * s:.1f},{y:.1f} L{x - 0.6 * s:.1f},{y - 3.6:.1f} L{x - 0.6 * s:.1f},{y + 3.6:.1f} Z" fill="{c}"/>')
     text(cx, cy + 3.2, "15", 8.5, c, 700, "middle")
+
+
+def g_shuffle(cx, cy, c):
+    """Two crossing arrows."""
+    for y0, y1 in ((-4.5, 4.5), (4.5, -4.5)):
+        add(f'<path d="M{cx - 7},{cy + y0} C{cx - 1},{cy + y0} {cx + 1},{cy + y1} {cx + 6},{cy + y1}" fill="none" stroke="{c}" stroke-width="1.6" stroke-linecap="round"/>')
+        add(f'<path d="M{cx + 8.5},{cy + y1} L{cx + 5},{cy + y1 - 2.6} L{cx + 5},{cy + y1 + 2.6} Z" fill="{c}"/>')
+
+
+def g_repeat(cx, cy, c):
+    """A loop of two arrows."""
+    add(f'<path d="M{cx - 7},{cy + 1} L{cx - 7},{cy - 4} L{cx + 5},{cy - 4}" fill="none" stroke="{c}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>')
+    add(f'<path d="M{cx + 8},{cy - 4} L{cx + 4.5},{cy - 6.6} L{cx + 4.5},{cy - 1.4} Z" fill="{c}"/>')
+    add(f'<path d="M{cx + 7},{cy - 1} L{cx + 7},{cy + 4} L{cx - 5},{cy + 4}" fill="none" stroke="{c}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>')
+    add(f'<path d="M{cx - 8},{cy + 4} L{cx - 4.5},{cy + 1.4} L{cx - 4.5},{cy + 6.6} Z" fill="{c}"/>')
 
 
 def g_bell(cx, cy, c, off=False):
@@ -539,6 +555,14 @@ group(fade(S_POD, SNAP))
 g_skip(*button(0), FG, False)
 SKIP = button(4, flash=press(CLICK_SKIP))
 g_skip(*SKIP, FG, True)
+add("</g>")
+# Spotify has shuffle and repeat, both off (dim): their toggles take the
+# outer slots once the skips go. They are bare glyphs, no tile.
+group(fade([(CLICK_CHIP + LAG, T)], SNAP), False)
+x, w = BTN[0]
+g_shuffle(x + w / 2, CY0 + CBH / 2, DIM)
+x, w = BTN[4]
+g_repeat(x + w / 2, CY0 + CBH / 2, DIM)
 add("</g>")
 g_track(*button(1), FG, False)
 PLAY = button(2, primary=True, flash=press(CLICK_PLAY))

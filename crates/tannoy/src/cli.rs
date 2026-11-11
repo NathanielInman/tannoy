@@ -17,6 +17,10 @@ Usage:
   tannoy next | previous            skip
   tannoy seek <+secs|-secs|secs>    seek relative (+5, -15) or to a position (90)
   tannoy raise                      bring the picked player's window forward
+  tannoy shuffle [on|off]           shuffle the picked player (no argument: flip it)
+  tannoy loop [none|track|playlist]
+                                    what the picked player repeats (no
+                                    argument: the next setting)
   tannoy pick <player|auto>         send commands to this player (auto: the
                                     one that most recently started playing)
   tannoy toggle [--center]          open or close the drawer from the clicked icon
@@ -61,6 +65,19 @@ pub fn run(args: &[String]) -> Result<i32> {
         Some("play-pause" | "toggle-play" | "pp") => command(Request::PlayPause),
         Some("next") => command(Request::Next),
         Some("raise") => command(Request::Raise),
+        Some("shuffle") => command(Request::Shuffle {
+            on: match rest.first().map(String::as_str) {
+                None => None,
+                Some("on") => Some(true),
+                Some("off") => Some(false),
+                Some(other) => {
+                    return Err(anyhow!("usage: tannoy shuffle [on|off], not `{other}`"));
+                }
+            },
+        }),
+        Some("loop") => command(Request::Loop {
+            status: rest.first().cloned(),
+        }),
         Some("previous" | "prev") => command(Request::Previous),
         Some("seek") => {
             let arg = rest

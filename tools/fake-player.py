@@ -37,6 +37,7 @@ XML = """
     </method>
     <signal name="Seeked"><arg name="Position" type="x"/></signal>
     <property name="PlaybackStatus" type="s" access="read"/>
+    <!--modes-->
     <property name="Rate" type="d" access="read"/>
     <property name="Metadata" type="a{sv}" access="read"/>
     <property name="Volume" type="d" access="read"/>
@@ -61,6 +62,8 @@ class Fake:
         self.a = args
         self.index = 0
         self.status = args.status
+        self.shuffle = False
+        self.loop = "None"
         self.pos = 0  # microseconds at self.at
         self.at = time.monotonic()
         self.conn = None
@@ -115,6 +118,9 @@ class Fake:
             "CanSeek": GLib.Variant("b", True),
             "CanControl": GLib.Variant("b", True),
         }
+        if self.a.modes:
+            player["Shuffle"] = GLib.Variant("b", self.shuffle)
+            player["LoopStatus"] = GLib.Variant("s", self.loop)
         table = root if iface == "org.mpris.MediaPlayer2" else player
         return table.get(name)
 
@@ -154,6 +160,17 @@ class Fake:
         print(f"{method} {params.unpack() if params else ''}", flush=True)
         inv.return_value(None)
 
+    def set(self, conn, sender, path, iface, name, value):
+        if name == "Shuffle":
+            self.shuffle = value.unpack()
+        elif name == "LoopStatus" and value.unpack() in ("None", "Track", "Playlist"):
+            self.loop = value.unpack()
+        else:
+            return False
+        print(f"Set {name} {value.unpack()}", flush=True)
+        self.changed([name])
+        return True
+
     def get(self, conn, sender, path, iface, name):
         return self.prop(iface, name)
 
@@ -171,18 +188,23 @@ def main():
     ap.add_argument("--length", type=int, default=240, help="seconds")
     ap.add_argument("--trackid", default="/org/tannoy/fake/track")
     ap.add_argument("--can-raise", action="store_true", help="answer Raise")
+    ap.add_argument("--modes", action="store_true", help="have Shuffle and LoopStatus")
     ap.add_argument("--status", default="Playing", choices=["Playing", "Paused", "Stopped"])
     args = ap.parse_args()
     args.title = args.title or ["Fake Track"]
     args.artist = args.artist or ["Fake Artist"]
 
     fake = Fake(args)
-    node = Gio.DBusNodeInfo.new_for_xml(XML)
+    modes = (
+        '<property name="Shuffle" type="b" access="readwrite"/>'
+        '<property name="LoopStatus" type="s" access="readwrite"/>'
+    )
+    node = Gio.DBusNodeInfo.new_for_xml(XML.replace("<!--modes-->", modes if args.modes else ""))
 
     def on_bus(conn, name):
         fake.conn = conn
         for iface in node.interfaces:
-            conn.register_object(PATH, iface, fake.call, fake.get, None)
+            conn.register_object(PATH, iface, fake.call, fake.get, fake.set)
 
     Gio.bus_own_name(
         Gio.BusType.SESSION, f"org.mpris.MediaPlayer2.{args.name}",

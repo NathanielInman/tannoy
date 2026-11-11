@@ -39,6 +39,14 @@ or to a position in seconds
 .B raise
 Bring the picked player's window forward, for players that offer it.
 .TP
+.BR shuffle " [" on | off ]
+Turn the picked player's shuffle on or off, or flip it.
+.TP
+.BR loop " [" none | track | playlist ]
+Set what the picked player repeats, or move to the next setting (off, the
+playlist, one track).
+Both work only for players that offer them.
+.TP
 .BI pick " player"
 Send the bar, the media keys and the drawer to this player: a bus name
 key, suffix or name, whole or as a prefix

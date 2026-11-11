@@ -5,7 +5,7 @@
 <h1 align="center">Tannoy</h1>
 
 <p align="center">
-  <img src="docs/assets/hero.svg" width="100%" alt="A floating waybar whose media pill shows a small podcast cover and Slow Signals · Where the Night Trains…, cut at a word with a real ellipsis. A click on the cover opens the Tannoy drawer out of it: the podcast playing in Chrome with its scrub bar moving, play and pause, previous and next, and 15 second skips. A click on +15 jumps ahead. A click on the Spotify chip swaps the cover, the title and the bar pill to a song, the skips go away, and play starts it. Do not disturb turns on: the bell turns amber, the bar keeps only a dim music glyph, and the drawer says the title is hidden while its controls stay. Do not disturb turns off again, and a click outside closes the drawer.">
+  <img src="docs/assets/hero.svg" width="100%" alt="A floating waybar whose media pill shows a small podcast cover and Slow Signals · Where the Night Trains…, cut at a word with a real ellipsis. A click on the cover opens the Tannoy drawer out of it: the podcast playing in Chrome with its scrub bar moving, play and pause, previous and next, and 15 second skips. A click on +15 jumps ahead. A click on the Spotify chip swaps the cover, the title and the bar pill to a song, the skips give way to shuffle and repeat toggles, and play starts it. Do not disturb turns on: the bell turns amber, the bar keeps only a dim music glyph, and the drawer says the title is hidden while its controls stay. Do not disturb turns off again, and a click outside closes the drawer.">
 </p>
 
 <p align="center">
@@ -62,18 +62,19 @@ script is what Tannoy replaces.
 
 ## What's in the drawer
 
-The cover, the title, artist and album, and a scrub bar you can drag to seek,
-with the position and length under it. Previous, play/pause and next, plus
--15s and +15s when the track looks like a podcast (a Spotify episode, a
-podcast genre, or over 20 minutes with no album, which is what a podcast in a
-browser tab looks like). A chip per player: click one to pick it. The default
-output device with a button that runs your switcher. <kbd>Space</kbd> plays
-and pauses, <kbd>←</kbd>/<kbd>→</kbd> seek 5 seconds, <kbd>n</kbd>/<kbd>p</kbd>
-skip, and <kbd>Esc</kbd> or a click outside closes it. A control that
-cannot work (a player with no next track, or one that cannot seek) says why
-at the top of the drawer for a few seconds. A click on the cover closes the
-drawer and brings the player's window forward, for players that offer it
-over MPRIS (Spotify, mpv and VLC do; Chrome does not).
+The cover, the title, artist and album, and a scrub bar you can drag to
+seek, with the position and length under it. Previous, play/pause and next,
+shuffle and repeat toggles for players that have them, plus -15s and +15s
+when the track looks like a podcast (a Spotify episode, a podcast genre, or
+over 20 minutes with no album, which is what a podcast in a browser tab
+looks like). A chip per player: click one to pick it. The default output
+device with a button that runs your switcher. <kbd>Space</kbd> plays and
+pauses, <kbd>←</kbd>/<kbd>→</kbd> seek 5 seconds, <kbd>n</kbd>/<kbd>p</kbd>
+skip, and <kbd>Esc</kbd> or a click outside closes it. A control that cannot
+work (a player with no next track, or one that cannot seek) says why at the
+top of the drawer for a few seconds. A click on the cover closes the drawer
+and brings the player's window forward, for players that offer it over MPRIS
+(Spotify, mpv and VLC do; Chrome does not).
 
 `tannoy status` prints the same thing in a terminal, and `tannoy status
 --json` gives it to scripts.
@@ -200,6 +201,7 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("~/.local/bin/tannoy previous"))
 |---|---|
 | `tannoy play-pause`, `next`, `previous` | Sent to the picked player |
 | `tannoy raise` | Brings the picked player's window forward, if it can |
+| `tannoy shuffle [on\|off]`, `loop [none\|track\|playlist]` | Shuffle and repeat, for players that have them; no argument flips or steps |
 | `tannoy seek +5`, `seek -15`, `seek 90` | Relative with a sign, else to that second |
 | `tannoy pick spotify`, `pick auto` | Pick by name, key or prefix; `auto` follows whichever started playing last |
 | `tannoy toggle`, `show`, `hide` | The drawer, from the clicked icon (`--center` to center it) |

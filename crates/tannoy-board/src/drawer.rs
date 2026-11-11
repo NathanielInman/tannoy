@@ -33,6 +33,10 @@ const PAUSE: &str = "\u{f03e4}";
 const PREV: &str = "\u{f04ae}";
 const NEXT: &str = "\u{f04ad}";
 const MUSIC: &str = "\u{f075a}";
+// Shuffle and repeat are dim while off and take the accent while on.
+const SHUFFLE: &str = "\u{f049d}";
+const REPEAT: &str = "\u{f0456}";
+const REPEAT_ONE: &str = "\u{f0458}";
 const SPEAKER: &str = "\u{f04c3}";
 const SPEAKER_BT: &str = "\u{f00af}";
 
@@ -98,6 +102,14 @@ fn find_monitor(name: &str) -> Option<gdk::Monitor> {
     (0..list.n_items())
         .filter_map(|i| list.item(i).and_downcast::<gdk::Monitor>())
         .find(|m| m.connector().is_some_and(|c| c == name))
+}
+
+fn set_on(w: &impl IsA<gtk::Widget>, on: bool) {
+    if on {
+        w.add_css_class("on");
+    } else {
+        w.remove_css_class("on");
+    }
 }
 
 fn set_state_class(w: &impl IsA<gtk::Widget>, state: &str) {
@@ -175,6 +187,8 @@ pub struct Drawer {
     play: gtk::Button,
     next: gtk::Button,
     fwd: gtk::Button,
+    shuffle: gtk::Button,
+    repeat: gtk::Button,
 
     players_label: gtk::Label,
     players_aside: gtk::Label,
@@ -323,10 +337,15 @@ impl Drawer {
         let next = glyph_button(NEXT, "Next");
         let fwd = glyph_button(&f15, &format!("Forward {} seconds", cfg.drawer.skip));
         fwd.add_css_class("skip");
+        // Shown only for players that have them.
+        let shuffle = glyph_button(SHUFFLE, "Shuffle");
+        shuffle.add_css_class("mode");
+        let repeat = glyph_button(REPEAT, "Repeat");
+        repeat.add_css_class("mode");
         let controls = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         controls.add_css_class("controls");
         controls.set_halign(gtk::Align::Center);
-        for b in [&back, &prev, &play, &next, &fwd] {
+        for b in [&shuffle, &back, &prev, &play, &next, &fwd, &repeat] {
             controls.append(b);
         }
 
@@ -421,6 +440,8 @@ impl Drawer {
             play,
             next,
             fwd,
+            shuffle,
+            repeat,
             players_label,
             players_aside,
             players,
@@ -481,6 +502,14 @@ impl Drawer {
         bind(&self.prev, Box::new(|d| d.send(Request::Previous)));
         bind(&self.next, Box::new(|d| d.send(Request::Next)));
         bind(&self.play, Box::new(|d| d.send(Request::PlayPause)));
+        bind(
+            &self.shuffle,
+            Box::new(|d| d.send(Request::Shuffle { on: None })),
+        );
+        bind(
+            &self.repeat,
+            Box::new(|d| d.send(Request::Loop { status: None })),
+        );
         bind(&self.out_btn, Box::new(|d| d.change_output()));
         {
             let w = Rc::downgrade(self);
@@ -860,6 +889,23 @@ impl Drawer {
             b.set_visible(skips);
             b.set_sensitive(p.can_seek);
         }
+        self.shuffle.set_visible(p.shuffle.is_some());
+        let on = p.shuffle == Some(true);
+        self.shuffle.set_tooltip_text(Some(if on {
+            "Shuffle is on"
+        } else {
+            "Shuffle is off"
+        }));
+        set_on(&self.shuffle, on);
+        self.repeat.set_visible(p.loop_status.is_some());
+        let (glyph, tip, on) = match p.loop_status.as_deref() {
+            Some("Playlist") => (REPEAT, "Repeating the playlist", true),
+            Some("Track") => (REPEAT_ONE, "Repeating this track", true),
+            _ => (REPEAT, "Not repeating", false),
+        };
+        self.repeat.set_label(glyph);
+        self.repeat.set_tooltip_text(Some(tip));
+        set_on(&self.repeat, on);
     }
 
     fn render_players(&self, s: &Snapshot) {

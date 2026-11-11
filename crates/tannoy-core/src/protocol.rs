@@ -62,6 +62,17 @@ pub enum Request {
     Art,
     /// Brings the active player's window forward, when it can.
     Raise,
+    /// Sets the active player's shuffle; `null` flips it.
+    Shuffle {
+        #[serde(default)]
+        on: Option<bool>,
+    },
+    /// Sets the active player's loop status (`None`, `Track`, `Playlist`);
+    /// `null` moves to the next one.
+    Loop {
+        #[serde(default)]
+        status: Option<String>,
+    },
     /// Stops the daemon and the drawer, for `tannoy restart` and for
     /// replacing a daemon whose binary was upgraded.
     Quit,

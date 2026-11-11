@@ -125,6 +125,8 @@ scale.scrub:disabled highlight { background: @tn_idle; }
 }
 .controls button.primary:hover { background: shade(@tn_accent, 1.08); }
 .controls button.skip { font-size: 15px; }
+.controls button.mode { font-size: 15px; color: @tn_dim; background: transparent; }
+.controls button.mode.on { color: @tn_accent; }
 
 /* ---- cards ---- */
 .card {

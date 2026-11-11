@@ -74,7 +74,7 @@ png += chunk(b"IDAT", zlib.compress(b"\x00\x88\xc0\xd0")) + chunk(b"IEND", b"")
 open(sys.argv[1], "wb").write(png)
 EOF
 
-fake --name daft --identity Daft --title "Get Lucky" --title "Instant Crush" \
+fake --name daft --identity Daft --modes --title "Get Lucky" --title "Instant Crush" \
   --artist "Daft Punk" --art "file://$root/cover.png"
 "$tannoy" bar > "$root/bar.out" 2>&1 &
 pids+=($!)
@@ -96,6 +96,14 @@ expect "seek sets the position" \
 run seek -30
 expect "a relative seek moves back" \
   'status | jq -e "[.players[] | select(.key == \"daft\")][0].position | . >= 59000000 and . < 61000000"'
+
+run shuffle
+expect "shuffle flips" 'status | jq -e "[.players[] | select(.key == \"daft\")][0].shuffle == true"'
+run loop
+run loop
+expect "loop steps to one track" 'status | jq -e "[.players[] | select(.key == \"daft\")][0].loop_status == \"Track\""'
+run loop none
+expect "loop takes a setting" 'status | jq -e "[.players[] | select(.key == \"daft\")][0].loop_status == \"None\""'
 
 fake --name other --identity Other --title "Somewhere Else" --artist "Someone"
 expect "a player that starts playing takes the bar" \

@@ -5,7 +5,7 @@ _tannoy_players() {
 
 _tannoy() {
     local cur=${COMP_WORDS[COMP_CWORD]}
-    local commands="play-pause next previous seek raise pick toggle show hide bar art status doctor daemon restart help --version"
+    local commands="play-pause next previous seek raise shuffle loop pick toggle show hide bar art status doctor daemon restart help --version"
     if [[ $COMP_CWORD -eq 1 ]]; then
         COMPREPLY=($(compgen -W "$commands" -- "$cur"))
         return
@@ -14,6 +14,8 @@ _tannoy() {
         pick) COMPREPLY=($(compgen -W "auto $(_tannoy_players)" -- "$cur")) ;;
         toggle | show) COMPREPLY=($(compgen -W "--center" -- "$cur")) ;;
         status) COMPREPLY=($(compgen -W "--json" -- "$cur")) ;;
+        shuffle) COMPREPLY=($(compgen -W "on off" -- "$cur")) ;;
+        loop) COMPREPLY=($(compgen -W "none track playlist" -- "$cur")) ;;
         seek) COMPREPLY=($(compgen -W "+5 -5 +15 -15 +30 -30" -- "$cur")) ;;
     esac
 }

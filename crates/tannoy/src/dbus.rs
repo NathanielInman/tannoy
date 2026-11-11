@@ -150,6 +150,19 @@ pub fn raise(conn: &Connection, bus: &str) -> Result<()> {
     Ok(())
 }
 
+/// Sets a writable Player property (`Shuffle`, `LoopStatus`).
+pub fn set_player_prop(conn: &Connection, bus: &str, name: &str, value: Variant) -> Result<()> {
+    call(
+        conn,
+        bus,
+        PATH,
+        PROPERTIES,
+        "Set",
+        &(PLAYER_IFACE, name, value),
+    )?;
+    Ok(())
+}
+
 pub fn seek(conn: &Connection, bus: &str, offset_us: i64) -> Result<()> {
     call(conn, bus, PATH, PLAYER_IFACE, "Seek", &(offset_us,))?;
     Ok(())

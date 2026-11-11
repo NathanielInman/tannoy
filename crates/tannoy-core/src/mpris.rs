@@ -191,6 +191,14 @@ pub fn apply_player(p: &mut Player, props: &Props, now: f64) -> Changed {
     if let Some(r) = props.get("Rate").and_then(MValue::as_f64) {
         p.rate = r;
     }
+    if let Some(b) = props.get("Shuffle").and_then(MValue::as_bool) {
+        p.shuffle = Some(b);
+    }
+    if let Some(s) = props.get("LoopStatus").and_then(MValue::as_str)
+        && let Some(s) = loop_status(s)
+    {
+        p.loop_status = Some(s.to_string());
+    }
     let flag = |k: &str, slot: &mut bool| {
         if let Some(b) = props.get(k).and_then(MValue::as_bool) {
             *slot = b;
@@ -203,6 +211,14 @@ pub fn apply_player(p: &mut Player, props: &Props, now: f64) -> Changed {
     flag("CanGoNext", &mut p.can_go_next);
     flag("CanGoPrevious", &mut p.can_go_previous);
     changed
+}
+
+/// A `LoopStatus` value spelled the way MPRIS does, matched without case
+/// (`tannoy loop track`); `None` for anything else.
+pub fn loop_status(s: &str) -> Option<&'static str> {
+    ["None", "Track", "Playlist"]
+        .into_iter()
+        .find(|v| v.eq_ignore_ascii_case(s.trim()))
 }
 
 /// Applies `org.mpris.MediaPlayer2` properties: the player's name and its
@@ -321,6 +337,23 @@ mod tests {
         assert_eq!(p.key, "chromium");
         // Chrome cannot bring its window forward over MPRIS.
         assert!(!p.can_raise);
+    }
+
+    #[test]
+    fn shuffle_and_loop_only_when_the_player_has_them() {
+        let mut chrome = Player::new("org.mpris.MediaPlayer2.chromium.instance910");
+        apply_player(&mut chrome, &props_from_busctl(CHROME_PLAYER), 1.0);
+        assert_eq!(
+            (chrome.shuffle, chrome.loop_status.as_deref()),
+            (None, None)
+        );
+        let mut spotify = Player::new("org.mpris.MediaPlayer2.spotify");
+        apply_player(&mut spotify, &props_from_busctl(SPOTIFY_PLAYER), 1.0);
+        assert_eq!(spotify.shuffle, Some(false));
+        assert_eq!(spotify.loop_status.as_deref(), Some("None"));
+        assert_eq!(spotify.next_loop_status(), "Playlist");
+        assert_eq!(loop_status("track"), Some("Track"));
+        assert_eq!(loop_status("forever"), None);
     }
 
     #[test]
