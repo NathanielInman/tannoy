@@ -10,7 +10,7 @@ for whatever you change.
   Switchyard's.
 - `tannoy-core`: the model, MPRIS parsing (`mpris.rs`), the player pick
   (`pick.rs`), config, cover art, the socket protocol, the waybar reader and
-  the swaync and wpctl parsers. No D-Bus, no UI.
+  the swaync, dunst, mako and wpctl parsers. No D-Bus, no UI.
 - `tannoy`: the daemon (`daemon.rs`), the zbus glue (`dbus.rs`), the CLI and
   the waybar module (one binary, `tannoy`).
 - `tannoy-board`: the Linux GTK4 layer-shell drawer. `anim.rs` and
@@ -24,7 +24,7 @@ gtk4-layer-shell; `.github/scripts/gtk4-layer-shell.sh` is how CI gets it.
 
 Parsers are pure functions over plain data and are tested against real
 samples in `crates/tannoy-core/fixtures/` (busctl `GetAll` dumps, a busctl
-monitor capture of swaync, wpctl output, waybar CSS). D-Bus values become
+monitor captures of swaync, dunst and mako, wpctl output, waybar CSS). D-Bus values become
 `MValue`s in `dbus.rs`; everything after that is testable without a bus.
 Add a recorded sample when you touch a parser.
 
@@ -50,13 +50,14 @@ with `[art] signal = 0` keeps a dev daemon from signalling the real waybar.
 - Do not disturb and screen shares hide titles and covers everywhere they
   reach the screen. A new surface that shows track text checks
   `snapshot.hidden`.
-- Hands off other programs: Tannoy reads swaync, Hyprland and waybar but
-  never changes their state (no `SetDnd`, no compositor commands). Users
+- Hands off other programs: Tannoy reads notification daemons, Hyprland
+  and waybar but never changes their state (no `SetDnd`, no compositor
+  commands), and never calls a name nobody owns (the bus could start it). Users
   run different tools alongside it; the only things it sends are the player
   controls the user asks for, waybar's redraw signal and the user's own
   `output.command`.
-- swaync is optional. Its absence means do not disturb is off, never an
-  error.
+- The notification daemon (swaync, dunst, mako) is optional. None running
+  means do not disturb is off, never an error.
 
 ## When behavior changes
 

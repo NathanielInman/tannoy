@@ -22,7 +22,7 @@ use tannoy_core::model::{Player, Snapshot};
 use tannoy_core::mpris::{self, PATH, PLAYER_IFACE, ROOT_IFACE};
 use tannoy_core::protocol::{Event, Reply, Request, SubKind};
 use tannoy_core::transport::{Listener, Stream};
-use tannoy_core::{art, paths, pick};
+use tannoy_core::{art, dnd, paths, pick};
 use zbus::blocking::{Connection, MessageIterator};
 use zbus::message::Type as MsgType;
 use zbus::zvariant::OwnedValue;
@@ -333,18 +333,16 @@ fn watch_names(d: Shared) -> Result<()> {
             if !new.is_empty() {
                 load(d.clone(), name);
             }
-        } else if name == dbus::SWAYNC {
+        } else if name == dbus::SWAYNC || name == dnd::NOTIFICATIONS {
+            // A notification daemon started or stopped.
             let d = d.clone();
             std::thread::spawn(move || {
-                let dnd = if new.is_empty() {
-                    false
+                if new.is_empty() {
+                    set_dnd(&d, false);
                 } else {
                     std::thread::sleep(Duration::from_millis(300));
-                    dbus::swaync_dnd(&d.conn).unwrap_or(false)
-                };
-                let mut st = d.lock();
-                st.dnd = dnd;
-                refresh(&d, &mut st);
+                    reread_dnd(&d);
+                }
             });
         }
     }
@@ -444,14 +442,63 @@ fn watch_dnd(d: Shared) -> Result<()> {
         };
         let dnd = args.and_then(|a| tannoy_core::swaync::dnd_from_signal(&member, &a));
         if let Some(dnd) = dnd {
-            let mut st = d.lock();
-            if st.dnd != dnd {
-                st.dnd = dnd;
-                refresh(&d, &mut st);
-            }
+            set_dnd(&d, dnd);
         }
     }
     Err(anyhow!("the session bus closed"))
+}
+
+/// dunst's pause or mako's modes, from PropertiesChanged on `path`. mako
+/// sends only the name of what changed, so its modes are read again on a
+/// helper thread, never while this stream waits.
+fn watch_notifier(d: Shared, path: &str) -> Result<()> {
+    let r = rule("org.freedesktop.DBus.Properties", "PropertiesChanged", path)?;
+    for msg in MessageIterator::for_match_rule(r, &d.conn, Some(64))? {
+        let Ok(msg) = msg else { continue };
+        let Ok((iface, changed, invalidated)) =
+            msg.body()
+                .deserialize::<(String, HashMap<String, OwnedValue>, Vec<String>)>()
+        else {
+            continue;
+        };
+        let props = dbus::props(&changed);
+        if let Some(paused) = dnd::dunst_paused(&iface, &props) {
+            set_dnd(&d, paused);
+        } else if dnd::mako_modes_changed(&iface, &props, &invalidated) {
+            let d = d.clone();
+            std::thread::spawn(move || {
+                let mode = d.lock().cfg.dnd.mako_mode.clone();
+                if let Some(modes) = dbus::mako_modes(&d.conn) {
+                    set_dnd(&d, dnd::mako_dnd(&modes, &mode));
+                }
+            });
+        }
+    }
+    Err(anyhow!("the session bus closed"))
+}
+
+fn watch_dunst(d: Shared) -> Result<()> {
+    watch_notifier(d, dnd::DUNST_PATH)
+}
+
+fn watch_mako(d: Shared) -> Result<()> {
+    watch_notifier(d, dnd::MAKO_PATH)
+}
+
+fn set_dnd(d: &Shared, dnd: bool) {
+    let mut st = d.lock();
+    if st.dnd != dnd {
+        st.dnd = dnd;
+        refresh(d, &mut st);
+    }
+}
+
+/// Reads do not disturb from whichever notification daemon runs. Call it on
+/// a helper thread.
+fn reread_dnd(d: &Shared) {
+    let mode = d.lock().cfg.dnd.mako_mode.clone();
+    let dnd = dbus::read_dnd(&d.conn, &mode).is_some_and(|(_, on)| on);
+    set_dnd(d, dnd);
 }
 
 /// A screen share started or ended: titles hide while one runs, as they
@@ -554,6 +601,9 @@ fn reload_config(d: &Shared) {
     refresh(d, &mut st);
     let d2 = d.clone();
     std::thread::spawn(move || rescan(&d2));
+    // `dnd.mako_mode` may have changed.
+    let d3 = d.clone();
+    std::thread::spawn(move || reread_dnd(&d3));
 }
 
 /// Loads every player on the bus that is not tracked yet.
@@ -821,7 +871,7 @@ pub fn run() -> Result<i32> {
     if let Some(e) = &cfg_error {
         eprintln!("tannoy: {e}");
     }
-    let dnd = dbus::swaync_dnd(&conn).unwrap_or(false);
+    let dnd = dbus::read_dnd(&conn, &cfg.dnd.mako_mode).is_some_and(|(_, on)| on);
     let d: Shared = Arc::new(Daemon {
         state: Mutex::new(State {
             cfg,
@@ -852,6 +902,8 @@ pub fn run() -> Result<i32> {
     keep(&d, "properties", watch_properties);
     keep(&d, "seek", watch_seeked);
     keep(&d, "do not disturb", watch_dnd);
+    keep(&d, "dunst", watch_dunst);
+    keep(&d, "mako", watch_mako);
     {
         let d = d.clone();
         std::thread::spawn(move || watch_screencast(d));

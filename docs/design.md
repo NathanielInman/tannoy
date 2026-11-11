@@ -18,7 +18,8 @@ this is the spec.
    and the cover everywhere they would show on screen.
 4. **Zero setup.** Every MPRIS player is found on its own; the theme comes
    from the bar.
-5. **Hands off.** Tannoy reads other programs (players, swaync, Hyprland,
+5. **Hands off.** Tannoy reads other programs (players, the notification
+   daemon, Hyprland,
    waybar's stylesheet) and changes none of them except through the player
    controls the user presses.
 
@@ -36,7 +37,7 @@ this is the spec.
 ```mermaid
 flowchart LR
   P["MPRIS players"] -- "PropertiesChanged, Seeked" --> D["tannoy daemon"]
-  S["swaync"] -- "SubscribeV2" --> D
+  S["swaync, dunst or mako"] -- "SubscribeV2, PropertiesChanged" --> D
   Y["Hyprland event socket"] -- "screencast, screencastv2" --> D
   N["dbus-daemon"] -- "NameOwnerChanged" --> D
   D <-- "local socket, JSON lines" --> B["tannoy-board (GTK4 layer-shell)"]
@@ -49,7 +50,7 @@ flowchart LR
 | Crate | Role |
 |---|---|
 | `bar-anchor` | Hyprland anchoring and panel placement. A copy of Roundhouse's; its `Anchor` JSON is the same as Roundhouse's and Switchyard's. |
-| `tannoy-core` | The model, MPRIS parsing, the player pick, config, cover art, the socket protocol, the waybar reader and the swaync and wpctl parsers. No D-Bus, no UI. |
+| `tannoy-core` | The model, MPRIS parsing, the player pick, config, cover art, the socket protocol, the waybar reader and the swaync, dunst, mako and wpctl parsers. No D-Bus, no UI. |
 | `tannoy` | The `tannoy` binary: daemon, CLI and waybar module. Owns the zbus connection. |
 | `tannoy-board` | The Linux drawer: GTK4 on `gtk4-layer-shell`, overlay layer, namespace `tannoy`, keyboard exclusive while open. |
 
@@ -77,10 +78,12 @@ method call limited to 3 seconds) and four signal streams:
 
 | Signal | Match | Effect |
 |---|---|---|
-| `NameOwnerChanged` | `org.freedesktop.DBus` | A name under `org.mpris.MediaPlayer2.` gaining an owner is loaded; losing one forgets the player. `org.erikreider.swaync.cc` coming or going rereads do not disturb. |
+| `NameOwnerChanged` | `org.freedesktop.DBus` | A name under `org.mpris.MediaPlayer2.` gaining an owner is loaded; losing one forgets the player. `org.erikreider.swaync.cc` or `org.freedesktop.Notifications` coming or going rereads do not disturb. |
 | `PropertiesChanged` | path `/org/mpris/MediaPlayer2` | `Metadata`, `PlaybackStatus`, `Rate`, `Can*` on the Player interface; `Identity` and `DesktopEntry` on the root interface. An invalidated property makes the daemon read the player again. |
 | `Seeked` | `org.mpris.MediaPlayer2.Player` | The new position. |
-| `SubscribeV2`, `Subscribe` | `org.erikreider.swaync.cc` | Do not disturb (the second argument). |
+| `SubscribeV2`, `Subscribe` | `org.erikreider.swaync.cc` | swaync's do not disturb (the second argument). |
+| `PropertiesChanged` | path `/org/freedesktop/Notifications` | dunst's `paused` on `org.dunstproject.cmd0`. |
+| `PropertiesChanged` | path `/fr/emersion/Mako` | mako's `Modes` invalidated: read again on a helper thread. |
 
 Signals carry the sender's unique name (`:1.39`), so loading a player first
 asks `GetNameOwner` and records the mapping, then calls `GetAll` on both
@@ -183,8 +186,8 @@ are escaped for Pango markup.
 
 ## Do not disturb
 
-The rule from the script Tannoy replaced: while swaync's do not disturb is
-on, the title stays off screen. With `dnd.hide = true` (the default):
+The rule from the script Tannoy replaced: while do not disturb is on, the
+title stays off screen. With `dnd.hide = true` (the default):
 
 - the bar shows only the hidden glyph, with no title in the tooltip;
 - `tannoy art` prints no cover, so the image module hides;
@@ -194,8 +197,19 @@ on, the title stays off screen. With `dnd.hide = true` (the default):
 
 Tannoy only reads do not disturb; it never sets it.
 
-Do not disturb is read with `GetDnd` at startup and whenever swaync's name
-appears, and follows `SubscribeV2` after that. Without swaync it is off.
+Do not disturb comes from whichever notification daemon runs; they all own
+`org.freedesktop.Notifications`, so only one does at a time, and each is
+told apart by its own interface (`tannoy_core::swaync`, `tannoy_core::dnd`):
+
+| Daemon | Read at startup and when it appears | Then follows |
+|---|---|---|
+| swaync | `GetDnd` on `org.erikreider.swaync.cc` | `SubscribeV2` (or `Subscribe`), the second argument |
+| dunst | `paused` on `org.dunstproject.cmd0` | PropertiesChanged with `paused` |
+| mako | `Modes` on `fr.emersion.Mako`: on when it has `dnd.mako_mode` | PropertiesChanged invalidating `Modes`, then `Modes` again |
+
+Before calling any of them the daemon asks `NameHasOwner`: a call to a name
+nobody owns can make the bus start that service, and Tannoy never starts
+other programs. With none running, do not disturb is off.
 
 ## Screen share
 
@@ -344,6 +358,7 @@ are microseconds, times are Unix seconds.
 | `dnd.hide` | `true` | Hide title and cover while do not disturb is on |
 | `dnd.text` | `""` | Text after `icon_hidden` while hidden |
 | `dnd.screen_share` | `true` | Hide title and cover while the screen is shared (Hyprland) |
+| `dnd.mako_mode` | `"do-not-disturb"` | The mako mode that means do not disturb |
 | `art.enabled` | `true` | Cache covers for `tannoy art` and the drawer |
 | `art.signal` | `12` | `SIGRTMIN+N` sent to waybar on a cover change; `0` sends nothing |
 | `art.fallback` | `"none"` | No cover: `none`, `player` (app icon) or an image path |

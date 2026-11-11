@@ -57,6 +57,9 @@ pub struct DndConfig {
     /// Hide the title and cover while the screen is shared (seen through
     /// Hyprland), as do not disturb does.
     pub screen_share: bool,
+    /// The mako mode that means do not disturb (mako has no switch of its
+    /// own; users define a mode in its config).
+    pub mako_mode: String,
 }
 
 impl Default for DndConfig {
@@ -65,6 +68,7 @@ impl Default for DndConfig {
             hide: true,
             text: String::new(),
             screen_share: true,
+            mako_mode: "do-not-disturb".into(),
         }
     }
 }

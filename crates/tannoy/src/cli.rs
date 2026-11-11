@@ -432,12 +432,12 @@ fn doctor() -> Result<i32> {
                     shown.join(", ")
                 },
             );
-            match crate::dbus::swaync_dnd(&conn) {
-                Some(d) => check(
+            match crate::dbus::read_dnd(&conn, &cfg.dnd.mako_mode) {
+                Some((who, d)) => check(
                     Some(true),
-                    "swaync",
+                    "do not disturb",
                     &format!(
-                        "do not disturb is {}{}",
+                        "{who}: {}{}",
                         if d { "on" } else { "off" },
                         if d && cfg.dnd.hide {
                             ", titles hidden"
@@ -446,7 +446,11 @@ fn doctor() -> Result<i32> {
                         }
                     ),
                 ),
-                None => check(None, "swaync", "not running; do not disturb counts as off"),
+                None => check(
+                    None,
+                    "do not disturb",
+                    "no swaync, dunst or mako running; counts as off",
+                ),
             }
         }
         Err(e) => {

@@ -50,7 +50,8 @@ script is what Tannoy replaces.
 - **Cover art in the bar.** `file://` covers (Chrome, local players) and
   `https://` ones (Spotify) are cached on disk, and a waybar `image` module
   shows them. The daemon tells waybar when the cover changes; nothing polls.
-- **Private on a screen share.** While swaync's do not disturb is on, the bar
+- **Private on a screen share.** While do not disturb is on (swaync, dunst
+  or mako), the bar
   shows a dim music glyph instead of the title, the cover goes away, and the
   drawer says why. Under Hyprland a screen share does the same on its own,
   so you don't have to remember do not disturb before you share.
@@ -100,8 +101,11 @@ at once. (Coming from 0.1, stop the old daemon once with
 `pkill -f 'tannoy daemon'`.)
 
 The drawer's output row reads the default device with `wpctl` (PipeWire).
-Do not disturb comes from [swaync](https://github.com/ErikReider/SwayNotificationCenter);
-without it, do not disturb counts as off.
+Do not disturb comes from whichever notification daemon runs:
+[swaync](https://github.com/ErikReider/SwayNotificationCenter),
+[dunst](https://dunst-project.org) (paused) or
+[mako](https://github.com/emersion/mako) (a `do-not-disturb` mode, or the
+one `dnd.mako_mode` names). With none of them, do not disturb counts as off.
 
 ## Put it in your bar
 
@@ -183,7 +187,7 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("~/.local/bin/tannoy previous"))
 | `tannoy toggle`, `show`, `hide` | The drawer, from the clicked icon (`--center` to center it) |
 | `tannoy bar`, `tannoy art` | The two waybar modules |
 | `tannoy status [--json]` | What is playing, on which players |
-| `tannoy doctor` | Checks D-Bus, swaync, screen shares, waybar, the art signal and the drawer |
+| `tannoy doctor` | Checks D-Bus, the notification daemon, screen shares, waybar, the art signal and the drawer |
 | `tannoy restart` | Restarts the daemon and the drawer |
 
 ## Config
@@ -200,9 +204,10 @@ icon_hidden = "\U000F075A"  # what do not disturb leaves in the bar (md-music)
 namespace = "waybar"   # the bar's layer-shell namespace
 
 [dnd]
-hide = true            # hide title and cover while swaync's do not disturb is on
+hide = true            # hide title and cover while do not disturb is on
 text = ""              # text after icon_hidden, e.g. "hidden"
 screen_share = true    # also hide title and cover while the screen is shared (Hyprland)
+mako_mode = "do-not-disturb"  # the mako mode that means do not disturb
 
 [art]
 enabled = true
@@ -244,8 +249,8 @@ JSON, so one could hand another a click. None of them needs the others.
 
 ## Cost
 
-The daemon holds one D-Bus connection and sleeps until a player or swaync
-sends a signal. It starts no processes to sample anything. Cover downloads
+The daemon holds one D-Bus connection and sleeps until a player or the
+notification daemon sends a signal. It starts no processes to sample anything. Cover downloads
 run on a helper thread with a timeout and never hold up the bar. With the
 drawer open it adds one `Position` read a second.
 

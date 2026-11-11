@@ -148,11 +148,66 @@ pub fn name_owner(conn: &Connection, name: &str) -> Option<String> {
         .ok()
 }
 
+/// Someone owns the name. Asked before calling a notification daemon,
+/// because a call to a name nobody owns can make the bus start the service,
+/// and Tannoy never starts other programs.
+fn has_owner(conn: &Connection, name: &str) -> bool {
+    dbus_call(conn, "NameHasOwner", &(name,))
+        .ok()
+        .and_then(|m| m.body().deserialize::<bool>().ok())
+        .unwrap_or(false)
+}
+
 /// swaync's do not disturb; `None` when swaync is not running.
 pub fn swaync_dnd(conn: &Connection) -> Option<bool> {
+    if !has_owner(conn, SWAYNC) {
+        return None;
+    }
     conn.call_method(Some(SWAYNC), SWAYNC_PATH, Some(SWAYNC), "GetDnd", &())
         .ok()?
         .body()
         .deserialize()
         .ok()
+}
+
+fn get_prop(conn: &Connection, bus: &str, path: &str, iface: &str, name: &str) -> Option<MValue> {
+    let reply = conn
+        .call_method(
+            Some(bus),
+            path,
+            Some("org.freedesktop.DBus.Properties"),
+            "Get",
+            &(iface, name),
+        )
+        .ok()?;
+    let v: OwnedValue = reply.body().deserialize().ok()?;
+    Some(mvalue(&v))
+}
+
+/// dunst's pause; `None` when the notification daemon is not dunst.
+pub fn dunst_paused(conn: &Connection) -> Option<bool> {
+    use tannoy_core::dnd::{DUNST_IFACE, DUNST_PATH, NOTIFICATIONS};
+    get_prop(conn, NOTIFICATIONS, DUNST_PATH, DUNST_IFACE, "paused")?.as_bool()
+}
+
+/// mako's modes that are on; `None` when the notification daemon is not
+/// mako.
+pub fn mako_modes(conn: &Connection) -> Option<MValue> {
+    use tannoy_core::dnd::{MAKO_IFACE, MAKO_PATH, NOTIFICATIONS};
+    get_prop(conn, NOTIFICATIONS, MAKO_PATH, MAKO_IFACE, "Modes")
+}
+
+/// The running notification daemon and its do not disturb: swaync, dunst
+/// or mako, whichever answers. `None` when none of them runs.
+pub fn read_dnd(conn: &Connection, mako_mode: &str) -> Option<(&'static str, bool)> {
+    if let Some(d) = swaync_dnd(conn) {
+        return Some(("swaync", d));
+    }
+    if !has_owner(conn, tannoy_core::dnd::NOTIFICATIONS) {
+        return None;
+    }
+    if let Some(d) = dunst_paused(conn) {
+        return Some(("dunst", d));
+    }
+    mako_modes(conn).map(|m| ("mako", tannoy_core::dnd::mako_dnd(&m, mako_mode)))
 }
