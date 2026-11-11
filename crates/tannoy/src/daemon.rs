@@ -16,7 +16,7 @@ use anyhow::{anyhow, Result};
 use std::collections::{BTreeMap, HashMap};
 use std::io::{BufRead, BufReader, Write};
 use std::sync::{Arc, Condvar, Mutex, MutexGuard};
-use std::time::{Duration, Instant, SystemTime};
+use std::time::{Duration, Instant};
 use tannoy_core::config::Config;
 use tannoy_core::model::{Player, Snapshot};
 use tannoy_core::mpris::{self, PATH, PLAYER_IFACE, ROOT_IFACE};
@@ -30,13 +30,10 @@ use zbus::MatchRule;
 
 /// How often the position is read while the drawer is open.
 const POSITION_EVERY: Duration = Duration::from_secs(1);
-/// How often the config file is checked for changes.
-const CONFIG_EVERY: Duration = Duration::from_secs(2);
 
 struct State {
     cfg: Config,
     cfg_error: Option<String>,
-    cfg_mtime: Option<SystemTime>,
     players: BTreeMap<String, Player>,
     /// Unique name (`:1.39`) to well-known name. Signals carry the former.
     owners: HashMap<String, String>,
@@ -92,12 +89,6 @@ fn broadcast(subs: &mut Vec<Stream>, line: &str) -> usize {
 
 fn event_line(e: &Event) -> String {
     serde_json::to_string(e).unwrap_or_default()
-}
-
-fn config_mtime() -> Option<SystemTime> {
-    std::fs::metadata(paths::config_file())
-        .and_then(|m| m.modified())
-        .ok()
 }
 
 fn load_pick() -> Option<String> {
@@ -467,43 +458,18 @@ fn keep(d: &Shared, name: &'static str, f: fn(Shared) -> Result<()>) {
     });
 }
 
-/// Reads the position while the drawer is open and picks up config changes.
+/// Reads the position about once a second while the drawer is open, and
+/// sleeps until it opens otherwise.
 fn ticker(d: Shared) {
-    let mut config_at = Instant::now();
     loop {
         let mut st = d.lock();
-        let wait = if st.visible {
-            POSITION_EVERY
-        } else {
-            CONFIG_EVERY
-        };
+        while !st.visible {
+            st = d.cv.wait(st).unwrap_or_else(|e| e.into_inner());
+        }
         st =
-            d.cv.wait_timeout(st, wait)
+            d.cv.wait_timeout(st, POSITION_EVERY)
                 .map(|(g, _)| g)
                 .unwrap_or_else(|e| e.into_inner().0);
-        if config_at.elapsed() >= CONFIG_EVERY {
-            config_at = Instant::now();
-            let m = config_mtime();
-            if m != st.cfg_mtime {
-                st.cfg_mtime = m;
-                let (cfg, err) = Config::load();
-                st.cfg = cfg;
-                st.cfg_error = err;
-                let ignored: Vec<String> = st
-                    .players
-                    .keys()
-                    .filter(|b| st.cfg.ignored(mpris::suffix(b)))
-                    .cloned()
-                    .collect();
-                for b in ignored {
-                    st.players.remove(&b);
-                    st.owners.retain(|_, v| *v != b);
-                }
-                refresh(&d, &mut st);
-                let d2 = d.clone();
-                std::thread::spawn(move || rescan(&d2));
-            }
-        }
         if st.visible && !st.position_busy {
             if let Some(bus) = st.snap.active.clone() {
                 st.position_busy = true;
@@ -521,6 +487,31 @@ fn ticker(d: Shared) {
             }
         }
     }
+}
+
+/// Rereads the config after inotify saw it change. One save can arrive as
+/// several events; only a config that really changed is applied.
+fn reload_config(d: &Shared) {
+    let (cfg, err) = Config::load();
+    let mut st = d.lock();
+    if cfg == st.cfg && err == st.cfg_error {
+        return;
+    }
+    st.cfg = cfg;
+    st.cfg_error = err;
+    let ignored: Vec<String> = st
+        .players
+        .keys()
+        .filter(|b| st.cfg.ignored(mpris::suffix(b)))
+        .cloned()
+        .collect();
+    for b in ignored {
+        st.players.remove(&b);
+        st.owners.retain(|_, v| *v != b);
+    }
+    refresh(d, &mut st);
+    let d2 = d.clone();
+    std::thread::spawn(move || rescan(&d2));
 }
 
 /// Loads every player on the bus that is not tracked yet.
@@ -795,7 +786,6 @@ pub fn run() -> Result<i32> {
         state: Mutex::new(State {
             cfg,
             cfg_error,
-            cfg_mtime: config_mtime(),
             players: BTreeMap::new(),
             owners: HashMap::new(),
             picked: load_pick(),
@@ -841,6 +831,13 @@ pub fn run() -> Result<i32> {
     {
         let d = d.clone();
         std::thread::spawn(move || ticker(d));
+    }
+    {
+        let d = d.clone();
+        std::thread::spawn(move || {
+            crate::watch::watch_file(&paths::config_file(), || reload_config(&d));
+            eprintln!("tannoy: cannot watch the config; restart to pick up changes");
+        });
     }
     eprintln!("tannoy: listening on {}", paths::socket_path().display());
     loop {

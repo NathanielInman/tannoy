@@ -4,6 +4,7 @@ mod bar;
 mod cli;
 mod daemon;
 mod dbus;
+mod watch;
 
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();

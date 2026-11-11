@@ -355,8 +355,11 @@ are microseconds, times are Unix seconds.
 | `theme.font` | none | Overrides the font family |
 
 Unknown keys are errors: the defaults are used and the drawer and
-`tannoy doctor` say what is wrong. The daemon rereads the config within 2
-seconds of a change.
+`tannoy doctor` say what is wrong. The daemon rereads the config when
+inotify reports a change in its directory (the directory, not the file, so
+an editor that saves by renaming a new file over the old one is seen), and
+applies it only if it parses to something different. If the directory does
+not exist yet, the daemon waits for it to be created.
 
 ## Keyboard
 
