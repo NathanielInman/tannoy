@@ -437,6 +437,22 @@ impl Drawer {
 
     fn connect(self: &Rc<Self>) {
         {
+            // A click on the cover brings the player forward. The drawer
+            // closes first, since it holds the keyboard. A player that
+            // cannot raise says so in the notice line instead.
+            let click = gtk::GestureClick::new();
+            let w = Rc::downgrade(self);
+            click.connect_released(move |_, _, _, _| {
+                let Some(d) = w.upgrade() else { return };
+                let can = d.active().is_some_and(|p| p.can_raise);
+                if can {
+                    d.hide();
+                }
+                d.send(Request::Raise);
+            });
+            self.art_slot.add_controller(click);
+        }
+        {
             let w = Rc::downgrade(self);
             self.stage.connect_outside(move || {
                 if let Some(d) = w.upgrade() {
@@ -813,6 +829,10 @@ impl Drawer {
         self.album.set_visible(!t.album.is_empty());
         self.len.set_label(&t.length.map(clock).unwrap_or_default());
         self.scale.set_sensitive(p.can_seek && t.length.is_some());
+        self.art_slot
+            .set_cursor_from_name(p.can_raise.then_some("pointer"));
+        self.art_slot
+            .set_tooltip_text(p.can_raise.then(|| format!("Show {}", p.name)).as_deref());
 
         if *self.art_path.borrow() != s.art {
             let shown = self.art.set_path(s.art.as_deref());

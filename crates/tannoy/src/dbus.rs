@@ -93,6 +93,18 @@ pub fn player_call(conn: &Connection, bus: &str, method: &str) -> Result<()> {
     Ok(())
 }
 
+/// Asks the player to bring its window forward.
+pub fn raise(conn: &Connection, bus: &str) -> Result<()> {
+    conn.call_method(
+        Some(bus),
+        PATH,
+        Some(tannoy_core::mpris::ROOT_IFACE),
+        "Raise",
+        &(),
+    )?;
+    Ok(())
+}
+
 pub fn seek(conn: &Connection, bus: &str, offset_us: i64) -> Result<()> {
     conn.call_method(Some(bus), PATH, Some(PLAYER_IFACE), "Seek", &(offset_us,))?;
     Ok(())

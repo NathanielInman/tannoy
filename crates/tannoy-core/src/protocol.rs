@@ -60,6 +60,8 @@ pub enum Request {
     },
     /// The cached cover for waybar's image module.
     Art,
+    /// Brings the active player's window forward, when it can.
+    Raise,
     /// Stops the daemon and the drawer, for `tannoy restart` and for
     /// replacing a daemon whose binary was upgraded.
     Quit,

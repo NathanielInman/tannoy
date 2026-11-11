@@ -79,7 +79,7 @@ method call limited to 3 seconds) and four signal streams:
 | Signal | Match | Effect |
 |---|---|---|
 | `NameOwnerChanged` | `org.freedesktop.DBus` | A name under `org.mpris.MediaPlayer2.` gaining an owner is loaded; losing one forgets the player. `org.erikreider.swaync.cc` or `org.freedesktop.Notifications` coming or going rereads do not disturb. |
-| `PropertiesChanged` | path `/org/mpris/MediaPlayer2` | `Metadata`, `PlaybackStatus`, `Rate`, `Can*` on the Player interface; `Identity` and `DesktopEntry` on the root interface. An invalidated property makes the daemon read the player again. |
+| `PropertiesChanged` | path `/org/mpris/MediaPlayer2` | `Metadata`, `PlaybackStatus`, `Rate`, `Can*` on the Player interface; `Identity`, `DesktopEntry` and `CanRaise` on the root interface. An invalidated property makes the daemon read the player again. |
 | `Seeked` | `org.mpris.MediaPlayer2.Player` | The new position. |
 | `SubscribeV2`, `Subscribe` | `org.erikreider.swaync.cc` | swaync's do not disturb (the second argument). |
 | `PropertiesChanged` | path `/org/freedesktop/Notifications` | dunst's `paused` on `org.dunstproject.cmd0`. |
@@ -316,6 +316,7 @@ request. Shapes follow Roundhouse's and Switchyard's.
 {"cmd":"play_pause"}
 {"cmd":"next"}
 {"cmd":"previous"}
+{"cmd":"raise"}
 {"cmd":"seek","offset":-15.0}
 {"cmd":"set_position","position":90.0}
 {"cmd":"pick","player":"spotify"}

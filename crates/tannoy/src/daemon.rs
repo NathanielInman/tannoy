@@ -733,6 +733,10 @@ fn control(d: &Shared, req: Request) -> Result<()> {
         Request::Next => dbus::player_call(&d.conn, &p.bus, "Next"),
         Request::Previous if !p.can_go_previous => Err(anyhow!("{} has no previous track", p.name)),
         Request::Previous => dbus::player_call(&d.conn, &p.bus, "Previous"),
+        Request::Raise if !p.can_raise => {
+            Err(anyhow!("{} cannot bring its window forward", p.name))
+        }
+        Request::Raise => dbus::raise(&d.conn, &p.bus),
         Request::Seek { offset } => {
             // Read the position fresh: it is only polled while the drawer
             // is open.

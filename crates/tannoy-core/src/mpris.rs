@@ -214,6 +214,9 @@ pub fn apply_root(p: &mut Player, props: &Props) {
     if let Some(e) = non_empty(props.get("DesktopEntry")) {
         p.desktop_entry = Some(e);
     }
+    if let Some(b) = props.get("CanRaise").and_then(MValue::as_bool) {
+        p.can_raise = b;
+    }
 }
 
 /// Converts `busctl --json` output into [`MValue`]s, so recorded property
@@ -312,9 +315,12 @@ mod tests {
         // Over an hour with no album: a podcast.
         assert!(p.track.is_podcast());
         assert_eq!(p.last_playing, 0.0);
+        p.can_raise = true;
         apply_root(&mut p, &props_from_busctl(CHROME_ROOT));
         assert_eq!(p.name, "Chrome");
         assert_eq!(p.key, "chromium");
+        // Chrome cannot bring its window forward over MPRIS.
+        assert!(!p.can_raise);
     }
 
     #[test]

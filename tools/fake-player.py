@@ -95,7 +95,7 @@ class Fake:
             "Identity": GLib.Variant("s", self.a.identity),
             "DesktopEntry": GLib.Variant("s", self.a.desktop_entry),
             "CanQuit": GLib.Variant("b", False),
-            "CanRaise": GLib.Variant("b", False),
+            "CanRaise": GLib.Variant("b", self.a.can_raise),
             "HasTrackList": GLib.Variant("b", False),
             "SupportedUriSchemes": GLib.Variant("as", []),
             "SupportedMimeTypes": GLib.Variant("as", []),
@@ -170,6 +170,7 @@ def main():
     ap.add_argument("--art", action="append", help="mpris:artUrl, one per title")
     ap.add_argument("--length", type=int, default=240, help="seconds")
     ap.add_argument("--trackid", default="/org/tannoy/fake/track")
+    ap.add_argument("--can-raise", action="store_true", help="answer Raise")
     ap.add_argument("--status", default="Playing", choices=["Playing", "Paused", "Stopped"])
     args = ap.parse_args()
     args.title = args.title or ["Fake Track"]

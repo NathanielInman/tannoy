@@ -71,7 +71,9 @@ output device with a button that runs your switcher. <kbd>Space</kbd> plays
 and pauses, <kbd>←</kbd>/<kbd>→</kbd> seek 5 seconds, <kbd>n</kbd>/<kbd>p</kbd>
 skip, and <kbd>Esc</kbd> or a click outside closes it. A control that
 cannot work (a player with no next track, or one that cannot seek) says why
-at the top of the drawer for a few seconds.
+at the top of the drawer for a few seconds. A click on the cover closes the
+drawer and brings the player's window forward, for players that offer it
+over MPRIS (Spotify, mpv and VLC do; Chrome does not).
 
 `tannoy status` prints the same thing in a terminal, and `tannoy status
 --json` gives it to scripts.
@@ -182,6 +184,7 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("~/.local/bin/tannoy previous"))
 | Command | What it does |
 |---|---|
 | `tannoy play-pause`, `next`, `previous` | Sent to the picked player |
+| `tannoy raise` | Brings the picked player's window forward, if it can |
 | `tannoy seek +5`, `seek -15`, `seek 90` | Relative with a sign, else to that second |
 | `tannoy pick spotify`, `pick auto` | Pick by name, key or prefix; `auto` follows whichever started playing last |
 | `tannoy toggle`, `show`, `hide` | The drawer, from the clicked icon (`--center` to center it) |

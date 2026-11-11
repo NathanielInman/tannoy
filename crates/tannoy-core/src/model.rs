@@ -105,6 +105,8 @@ pub struct Player {
     pub can_seek: bool,
     pub can_go_next: bool,
     pub can_go_previous: bool,
+    /// The player can bring its own window forward (`Raise`).
+    pub can_raise: bool,
     /// Unix seconds when this player was last seen playing (0: never).
     pub last_playing: f64,
 }

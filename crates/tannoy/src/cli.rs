@@ -16,6 +16,7 @@ Usage:
   tannoy play-pause                 play or pause the picked player
   tannoy next | previous            skip
   tannoy seek <+secs|-secs|secs>    seek relative (+5, -15) or to a position (90)
+  tannoy raise                      bring the picked player's window forward
   tannoy pick <player|auto>         send commands to this player (auto: the
                                     one that most recently started playing)
   tannoy toggle [--center]          open or close the drawer from the clicked icon
@@ -59,6 +60,7 @@ pub fn run(args: &[String]) -> Result<i32> {
         }
         Some("play-pause" | "toggle-play" | "pp") => command(Request::PlayPause),
         Some("next") => command(Request::Next),
+        Some("raise") => command(Request::Raise),
         Some("previous" | "prev") => command(Request::Previous),
         Some("seek") => {
             let arg = rest
