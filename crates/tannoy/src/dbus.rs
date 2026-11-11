@@ -1,40 +1,89 @@
-//! The session bus: MPRIS players and swaync's do not disturb. Everything
-//! here is zbus's blocking API with a method timeout, so a player that hangs
-//! cannot hold up anything but the helper thread that asked it.
+//! The session bus: MPRIS players and the notification daemons' do not
+//! disturb. zbus is async; every function here drives its call to the end on
+//! the calling thread (`zbus::block_on`) with a 3 second method timeout, so a
+//! player that hangs holds up only the helper thread that asked it. Signal
+//! streams are plain iterators ([`Signals`]) for the daemon's watcher
+//! threads.
 
 use anyhow::{Result, anyhow};
+use futures_core::Stream;
 use std::collections::HashMap;
+use std::num::NonZeroUsize;
+use std::pin::Pin;
 use std::time::Duration;
 use tannoy_core::mpris::{MValue, PATH, PLAYER_IFACE, Props};
-use zbus::blocking::Connection;
-use zbus::zvariant::{OwnedValue, Value};
+use zbus::{Connection, DynamicType, MatchRule, Message, MessageStream, OwnedVariant, Variant};
+
+const PROPERTIES: &str = "org.freedesktop.DBus.Properties";
 
 pub const SWAYNC: &str = "org.erikreider.swaync.cc";
 pub const SWAYNC_PATH: &str = "/org/erikreider/swaync/cc";
 
 /// A session-bus connection whose method calls give up after 3 seconds.
 pub fn connect() -> Result<Connection> {
-    Ok(zbus::blocking::connection::Builder::session()?
-        .method_timeout(Duration::from_secs(3))
-        .build()?)
+    Ok(zbus::block_on(
+        zbus::connection::Builder::session()
+            .method_timeout(Duration::from_secs(3))
+            .build(),
+    )?)
+}
+
+/// One method call, waited for on this thread.
+fn call<B>(
+    conn: &Connection,
+    bus: &str,
+    path: &str,
+    iface: &str,
+    method: &str,
+    body: &B,
+) -> zbus::Result<Message>
+where
+    B: serde::ser::Serialize + DynamicType,
+{
+    zbus::block_on(conn.call_method(Some(bus), path, Some(iface), method, body))
+}
+
+/// The signals a match rule selects, as a blocking iterator: each `next`
+/// waits on this thread for the next one. Ends when the connection does.
+pub struct Signals(MessageStream);
+
+impl Iterator for Signals {
+    type Item = zbus::Result<Message>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let stream = &mut self.0;
+        zbus::block_on(std::future::poll_fn(|cx| {
+            Pin::new(&mut *stream).poll_next(cx)
+        }))
+    }
+}
+
+/// Subscribes to the signals `rule` selects, keeping at most `queued` that
+/// have not been read yet.
+pub fn signals(conn: &Connection, rule: MatchRule<'static>, queued: usize) -> Result<Signals> {
+    Ok(Signals(zbus::block_on(MessageStream::for_match_rule(
+        rule,
+        conn,
+        NonZeroUsize::new(queued),
+    ))?))
 }
 
 /// A D-Bus value as the parsers' [`MValue`].
-pub fn mvalue(v: &Value) -> MValue {
+pub fn mvalue(v: &Variant) -> MValue {
     match v {
-        Value::Bool(b) => MValue::Bool(*b),
-        Value::U8(x) => MValue::UInt(*x as u64),
-        Value::U16(x) => MValue::UInt(*x as u64),
-        Value::U32(x) => MValue::UInt(*x as u64),
-        Value::U64(x) => MValue::UInt(*x),
-        Value::I16(x) => MValue::Int(*x as i64),
-        Value::I32(x) => MValue::Int(*x as i64),
-        Value::I64(x) => MValue::Int(*x),
-        Value::F64(x) => MValue::Float(*x),
-        Value::Str(s) => MValue::Str(s.to_string()),
-        Value::ObjectPath(p) => MValue::Str(p.to_string()),
-        Value::Value(inner) => mvalue(inner),
-        Value::Array(a) => MValue::Strs(
+        Variant::Bool(b) => MValue::Bool(*b),
+        Variant::U8(x) => MValue::UInt(*x as u64),
+        Variant::U16(x) => MValue::UInt(*x as u64),
+        Variant::U32(x) => MValue::UInt(*x as u64),
+        Variant::U64(x) => MValue::UInt(*x),
+        Variant::I16(x) => MValue::Int(*x as i64),
+        Variant::I32(x) => MValue::Int(*x as i64),
+        Variant::I64(x) => MValue::Int(*x),
+        Variant::F64(x) => MValue::Float(*x),
+        Variant::Str(s) => MValue::Str(s.to_string()),
+        Variant::ObjectPath(p) => MValue::Str(p.to_string()),
+        Variant::Variant(inner) => mvalue(inner),
+        Variant::Array(a) => MValue::Strs(
             a.inner()
                 .iter()
                 .filter_map(|x| match mvalue(x) {
@@ -43,10 +92,10 @@ pub fn mvalue(v: &Value) -> MValue {
                 })
                 .collect(),
         ),
-        Value::Dict(d) => MValue::Dict(
+        Variant::Dict(d) => MValue::Dict(
             d.iter()
                 .filter_map(|(k, v)| match k {
-                    Value::Str(k) => Some((k.to_string(), mvalue(v))),
+                    Variant::Str(k) => Some((k.to_string(), mvalue(v))),
                     _ => None,
                 })
                 .collect(),
@@ -55,33 +104,28 @@ pub fn mvalue(v: &Value) -> MValue {
     }
 }
 
-pub fn props(map: &HashMap<String, OwnedValue>) -> Props {
+pub fn props(map: &HashMap<String, OwnedVariant>) -> Props {
     map.iter().map(|(k, v)| (k.clone(), mvalue(v))).collect()
 }
 
 pub fn get_all(conn: &Connection, bus: &str, iface: &str) -> Result<Props> {
-    let reply = conn.call_method(
-        Some(bus),
-        PATH,
-        Some("org.freedesktop.DBus.Properties"),
-        "GetAll",
-        &(iface,),
-    )?;
-    let map: HashMap<String, OwnedValue> = reply.body().deserialize()?;
+    let reply = call(conn, bus, PATH, PROPERTIES, "GetAll", &(iface,))?;
+    let map: HashMap<String, OwnedVariant> = reply.body().deserialize()?;
     Ok(props(&map))
 }
 
 /// The player's position in microseconds. MPRIS never signals it, so the
 /// daemon asks while the drawer is open.
 pub fn position(conn: &Connection, bus: &str) -> Result<i64> {
-    let reply = conn.call_method(
-        Some(bus),
+    let reply = call(
+        conn,
+        bus,
         PATH,
-        Some("org.freedesktop.DBus.Properties"),
+        PROPERTIES,
         "Get",
         &(PLAYER_IFACE, "Position"),
     )?;
-    let v: OwnedValue = reply.body().deserialize()?;
+    let v: OwnedVariant = reply.body().deserialize()?;
     mvalue(&v)
         .as_i64()
         .ok_or_else(|| anyhow!("{bus} sent a position that is not a number"))
@@ -89,16 +133,17 @@ pub fn position(conn: &Connection, bus: &str) -> Result<i64> {
 
 /// Calls a Player method with no arguments (PlayPause, Next, Previous).
 pub fn player_call(conn: &Connection, bus: &str, method: &str) -> Result<()> {
-    conn.call_method(Some(bus), PATH, Some(PLAYER_IFACE), method, &())?;
+    call(conn, bus, PATH, PLAYER_IFACE, method, &())?;
     Ok(())
 }
 
 /// Asks the player to bring its window forward.
 pub fn raise(conn: &Connection, bus: &str) -> Result<()> {
-    conn.call_method(
-        Some(bus),
+    call(
+        conn,
+        bus,
         PATH,
-        Some(tannoy_core::mpris::ROOT_IFACE),
+        tannoy_core::mpris::ROOT_IFACE,
         "Raise",
         &(),
     )?;
@@ -106,30 +151,32 @@ pub fn raise(conn: &Connection, bus: &str) -> Result<()> {
 }
 
 pub fn seek(conn: &Connection, bus: &str, offset_us: i64) -> Result<()> {
-    conn.call_method(Some(bus), PATH, Some(PLAYER_IFACE), "Seek", &(offset_us,))?;
+    call(conn, bus, PATH, PLAYER_IFACE, "Seek", &(offset_us,))?;
     Ok(())
 }
 
 pub fn set_position(conn: &Connection, bus: &str, track: &str, pos_us: i64) -> Result<()> {
-    let track = zbus::zvariant::ObjectPath::try_from(track)?;
-    conn.call_method(
-        Some(bus),
+    let track = zbus::ObjectPath::try_from(track)?;
+    call(
+        conn,
+        bus,
         PATH,
-        Some(PLAYER_IFACE),
+        PLAYER_IFACE,
         "SetPosition",
         &(track, pos_us),
     )?;
     Ok(())
 }
 
-fn dbus_call<B>(conn: &Connection, method: &str, body: &B) -> Result<zbus::Message>
+fn dbus_call<B>(conn: &Connection, method: &str, body: &B) -> Result<Message>
 where
-    B: serde::ser::Serialize + zbus::zvariant::DynamicType,
+    B: serde::ser::Serialize + DynamicType,
 {
-    Ok(conn.call_method(
-        Some("org.freedesktop.DBus"),
+    Ok(call(
+        conn,
+        "org.freedesktop.DBus",
         "/org/freedesktop/DBus",
-        Some("org.freedesktop.DBus"),
+        "org.freedesktop.DBus",
         method,
         body,
     )?)
@@ -175,7 +222,7 @@ pub fn swaync_dnd(conn: &Connection) -> Option<bool> {
     if !has_owner(conn, SWAYNC) {
         return None;
     }
-    conn.call_method(Some(SWAYNC), SWAYNC_PATH, Some(SWAYNC), "GetDnd", &())
+    call(conn, SWAYNC, SWAYNC_PATH, SWAYNC, "GetDnd", &())
         .ok()?
         .body()
         .deserialize()
@@ -183,16 +230,8 @@ pub fn swaync_dnd(conn: &Connection) -> Option<bool> {
 }
 
 fn get_prop(conn: &Connection, bus: &str, path: &str, iface: &str, name: &str) -> Option<MValue> {
-    let reply = conn
-        .call_method(
-            Some(bus),
-            path,
-            Some("org.freedesktop.DBus.Properties"),
-            "Get",
-            &(iface, name),
-        )
-        .ok()?;
-    let v: OwnedValue = reply.body().deserialize().ok()?;
+    let reply = call(conn, bus, path, PROPERTIES, "Get", &(iface, name)).ok()?;
+    let v: OwnedVariant = reply.body().deserialize().ok()?;
     Some(mvalue(&v))
 }
 

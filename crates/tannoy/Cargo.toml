@@ -20,8 +20,6 @@ serde.workspace = true
 serde_json.workspace = true
 anyhow.workspace = true
 libc.workspace = true
-zbus = { version = "5", default-features = false, features = ["blocking-api", "async-io"] }
-# Not used directly: holds zbus's `blocking` at 1.6. Since 1.7.0 its idle
-# pool thread never exits and wakes every 500 ms for the daemon's whole life
-# (smol-rs/blocking#83). Drop this once a fixed release is out.
-blocking = "~1.6.2"
+zbus = { version = "6", default-features = false, features = ["default-rt"] }
+# The Stream trait, to read zbus's signal streams one at a time.
+futures-core = "0.3"

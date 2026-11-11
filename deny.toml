@@ -7,14 +7,7 @@ targets = ["x86_64-unknown-linux-gnu", "aarch64-unknown-linux-gnu"]
 [advisories]
 # RustSec advisories are errors; a yanked crate in the lockfile too.
 yanked = "deny"
-ignore = [
-  # zbus 6 merged zvariant, zvariant_derive and zbus_names into itself, so
-  # the standalone crates are unmaintained. Tannoy is on zbus 5 because zbus
-  # 6 removed the blocking API the daemon uses; drop these with the port.
-  { id = "RUSTSEC-2026-0370", reason = "zvariant: unmaintained, merged into zbus 6; port pending" },
-  { id = "RUSTSEC-2026-0371", reason = "zbus_names: unmaintained, merged into zbus 6; port pending" },
-  { id = "RUSTSEC-2026-0372", reason = "zvariant_derive: unmaintained, merged into zbus 6; port pending" },
-]
+ignore = []
 
 [licenses]
 # Everything here is compatible with shipping Tannoy under MIT.

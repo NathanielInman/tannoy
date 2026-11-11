@@ -73,8 +73,9 @@ unlinking the winner's socket.
 
 ## MPRIS
 
-The daemon keeps one session-bus connection (zbus, blocking API, every
-method call limited to 3 seconds) and four signal streams:
+The daemon keeps one session-bus connection (zbus 6, each call and each
+signal read driven on its own thread with `zbus::block_on`, every
+method call limited to 3 seconds) and six signal streams:
 
 | Signal | Match | Effect |
 |---|---|---|

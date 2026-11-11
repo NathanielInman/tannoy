@@ -24,10 +24,10 @@ use tannoy_core::protocol::{Event, Reply, Request, SubKind};
 use tannoy_core::state::{Effect, Model};
 use tannoy_core::transport::{Listener, Stream};
 use tannoy_core::{art, dnd, paths};
+use zbus::Connection;
 use zbus::MatchRule;
-use zbus::blocking::{Connection, MessageIterator};
+use zbus::OwnedVariant;
 use zbus::message::Type as MsgType;
-use zbus::zvariant::OwnedValue;
 
 /// How often the position is read while the drawer is open.
 const POSITION_EVERY: Duration = Duration::from_secs(1);
@@ -259,10 +259,10 @@ fn forget(d: &Shared, bus: &str) {
 fn rule(iface: &str, member: &str, path: &str) -> Result<MatchRule<'static>> {
     Ok(MatchRule::builder()
         .msg_type(MsgType::Signal)
-        .interface(iface.to_string())?
-        .member(member.to_string())?
-        .path(path.to_string())?
-        .build())
+        .interface(iface.to_string())
+        .member(member.to_string())
+        .path(path.to_string())
+        .build()?)
 }
 
 /// Players appearing and leaving, and swaync starting or stopping.
@@ -272,7 +272,7 @@ fn watch_names(d: Shared) -> Result<()> {
         "NameOwnerChanged",
         "/org/freedesktop/DBus",
     )?;
-    for msg in MessageIterator::for_match_rule(r, &d.conn, Some(256))? {
+    for msg in dbus::signals(&d.conn, r, 256)? {
         let Ok(msg) = msg else { continue };
         let Ok((name, old, new)) = msg.body().deserialize::<(String, String, String)>() else {
             continue;
@@ -303,7 +303,7 @@ fn watch_names(d: Shared) -> Result<()> {
 /// Metadata, status and capability changes.
 fn watch_properties(d: Shared) -> Result<()> {
     let r = rule("org.freedesktop.DBus.Properties", "PropertiesChanged", PATH)?;
-    for msg in MessageIterator::for_match_rule(r, &d.conn, Some(256))? {
+    for msg in dbus::signals(&d.conn, r, 256)? {
         let Ok(msg) = msg else { continue };
         let header = msg.header();
         let Some(sender) = header.sender().map(|s| s.to_string()) else {
@@ -311,7 +311,7 @@ fn watch_properties(d: Shared) -> Result<()> {
         };
         let Ok((iface, changed, invalidated)) =
             msg.body()
-                .deserialize::<(String, HashMap<String, OwnedValue>, Vec<String>)>()
+                .deserialize::<(String, HashMap<String, OwnedVariant>, Vec<String>)>()
         else {
             continue;
         };
@@ -333,7 +333,7 @@ fn watch_properties(d: Shared) -> Result<()> {
 /// Jumps in position (the player's own scrub bar, or ours).
 fn watch_seeked(d: Shared) -> Result<()> {
     let r = rule(PLAYER_IFACE, "Seeked", PATH)?;
-    for msg in MessageIterator::for_match_rule(r, &d.conn, Some(64))? {
+    for msg in dbus::signals(&d.conn, r, 64)? {
         let Ok(msg) = msg else { continue };
         let header = msg.header();
         let Some(sender) = header.sender().map(|s| s.to_string()) else {
@@ -354,10 +354,10 @@ fn watch_seeked(d: Shared) -> Result<()> {
 fn watch_dnd(d: Shared) -> Result<()> {
     let r = MatchRule::builder()
         .msg_type(MsgType::Signal)
-        .interface(dbus::SWAYNC)?
-        .path(dbus::SWAYNC_PATH)?
-        .build();
-    for msg in MessageIterator::for_match_rule(r, &d.conn, Some(64))? {
+        .interface(dbus::SWAYNC)
+        .path(dbus::SWAYNC_PATH)
+        .build()?;
+    for msg in dbus::signals(&d.conn, r, 64)? {
         let Ok(msg) = msg else { continue };
         let header = msg.header();
         let member = header.member().map(|m| m.to_string()).unwrap_or_default();
@@ -389,11 +389,11 @@ fn watch_dnd(d: Shared) -> Result<()> {
 /// helper thread, never while this stream waits.
 fn watch_notifier(d: Shared, path: &str) -> Result<()> {
     let r = rule("org.freedesktop.DBus.Properties", "PropertiesChanged", path)?;
-    for msg in MessageIterator::for_match_rule(r, &d.conn, Some(64))? {
+    for msg in dbus::signals(&d.conn, r, 64)? {
         let Ok(msg) = msg else { continue };
         let Ok((iface, changed, invalidated)) =
             msg.body()
-                .deserialize::<(String, HashMap<String, OwnedValue>, Vec<String>)>()
+                .deserialize::<(String, HashMap<String, OwnedVariant>, Vec<String>)>()
         else {
             continue;
         };
