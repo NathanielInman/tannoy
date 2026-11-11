@@ -55,6 +55,7 @@ window.tannoy * { font-family: inherit; }
 .chip.hidden { color: @tn_hidden; background: alpha(@tn_hidden, 0.15); }
 
 .notice { color: @tn_hidden; font-size: 11px; }
+.notice.error { color: @tn_error; }
 
 /* ---- now playing ---- */
 .art {

@@ -68,7 +68,9 @@ podcast genre, or over 20 minutes with no album, which is what a podcast in a
 browser tab looks like). A chip per player: click one to pick it. The default
 output device with a button that runs your switcher. <kbd>Space</kbd> plays
 and pauses, <kbd>←</kbd>/<kbd>→</kbd> seek 5 seconds, <kbd>n</kbd>/<kbd>p</kbd>
-skip, and <kbd>Esc</kbd> or a click outside closes it.
+skip, and <kbd>Esc</kbd> or a click outside closes it. A control that
+cannot work (a player with no next track, or one that cannot seek) says why
+at the top of the drawer for a few seconds.
 
 `tannoy status` prints the same thing in a terminal, and `tannoy status
 --json` gives it to scripts.

@@ -310,7 +310,9 @@ request. Shapes follow Roundhouse's and Switchyard's.
 ```
 
 Replies are `{"ok":true}` with optional `snapshot`, `version`, `art`,
-`error` or `stale` (in a `ping` reply, see Upgrades). Commands wait up to 3 seconds for the daemon's first scan of the
+`error` or `stale` (in a `ping` reply, see Upgrades). The drawer shows the
+`error` of a command the user gave in its notice line for 4 seconds, over a
+config problem, which comes back after. Commands wait up to 3 seconds for the daemon's first scan of the
 bus, so a media key that starts the daemon still reaches a player.
 
 A `board` subscription receives `{"event":"snapshot","snapshot":{...}}` on

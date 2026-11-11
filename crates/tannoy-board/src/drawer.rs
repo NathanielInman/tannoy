@@ -24,6 +24,8 @@ pub enum Msg {
     Restyle,
     /// The default output device, read off the main thread.
     Sink(Option<Sink>),
+    /// A command the user gave failed ("Chrome has no next track").
+    Error(String),
 }
 
 const PLAY: &str = "\u{f040a}";
@@ -65,11 +67,30 @@ fn glyph_button(text: &str, tip: &str) -> gtk::Button {
     b
 }
 
+/// Sends a request the drawer does not need an answer to.
 fn send_quiet(req: Request) {
     std::thread::spawn(move || {
         let _ = tannoy_core::protocol::request(&req);
     });
 }
+
+/// Sends a command the user gave, and reports its error back to the drawer
+/// so a button that cannot work says why instead of doing nothing.
+fn send_with(tx: &async_channel::Sender<Msg>, req: Request) {
+    let tx = tx.clone();
+    std::thread::spawn(move || {
+        let error = match tannoy_core::protocol::request(&req) {
+            Ok(r) => r.error,
+            Err(e) => Some(format!("{e:#}")),
+        };
+        if let Some(e) = error {
+            let _ = tx.send_blocking(Msg::Error(e));
+        }
+    });
+}
+
+/// How long a command's error stays in the notice line.
+const ERROR_FOR: Duration = Duration::from_secs(4);
 
 fn find_monitor(name: &str) -> Option<gdk::Monitor> {
     let display = gdk::Display::default()?;
@@ -124,6 +145,9 @@ pub struct Drawer {
     sub: gtk::Label,
     chip: gtk::Label,
     notice: gtk::Label,
+    /// The last command error, shown over the config notice until it clears.
+    error: RefCell<Option<String>>,
+    error_timer: RefCell<Option<glib::SourceId>>,
 
     now: gtk::Stack,
     art_slot: gtk::Stack,
@@ -374,6 +398,8 @@ impl Drawer {
             sub,
             chip,
             notice,
+            error: RefCell::new(None),
+            error_timer: RefCell::new(None),
             now,
             art_slot,
             art,
@@ -422,7 +448,7 @@ impl Drawer {
         }
         let skip = |d: &Rc<Drawer>, sign: f64| {
             let secs = d.cfg.borrow().drawer.skip as f64;
-            send_quiet(Request::Seek {
+            d.send(Request::Seek {
                 offset: sign * secs,
             });
         };
@@ -436,9 +462,9 @@ impl Drawer {
         };
         bind(&self.back, Box::new(move |d| skip(d, -1.0)));
         bind(&self.fwd, Box::new(move |d| skip(d, 1.0)));
-        bind(&self.prev, Box::new(|_| send_quiet(Request::Previous)));
-        bind(&self.next, Box::new(|_| send_quiet(Request::Next)));
-        bind(&self.play, Box::new(|_| send_quiet(Request::PlayPause)));
+        bind(&self.prev, Box::new(|d| d.send(Request::Previous)));
+        bind(&self.next, Box::new(|d| d.send(Request::Next)));
+        bind(&self.play, Box::new(|d| d.send(Request::PlayPause)));
         bind(&self.out_btn, Box::new(|d| d.change_output()));
         {
             let w = Rc::downgrade(self);
@@ -509,17 +535,63 @@ impl Drawer {
                 }
             }
             Msg::Sink(sink) => self.render_sink(sink),
+            Msg::Error(e) => self.flash_error(e),
+        }
+    }
+
+    fn send(&self, req: Request) {
+        send_with(&self.tx, req);
+    }
+
+    /// Shows a command's error for a few seconds.
+    fn flash_error(self: &Rc<Self>, text: String) {
+        *self.error.borrow_mut() = Some(text);
+        if let Some(id) = self.error_timer.borrow_mut().take() {
+            id.remove();
+        }
+        let w = Rc::downgrade(self);
+        let id = glib::timeout_add_local_once(ERROR_FOR, move || {
+            let Some(d) = w.upgrade() else { return };
+            d.error_timer.borrow_mut().take();
+            d.error.borrow_mut().take();
+            d.render_notice();
+        });
+        *self.error_timer.borrow_mut() = Some(id);
+        self.render_notice();
+    }
+
+    /// The notice line: a command's error while it lasts, else a broken
+    /// config, else nothing.
+    fn render_notice(&self) {
+        let config = self
+            .snap
+            .borrow()
+            .as_ref()
+            .and_then(|s| s.config_error.clone());
+        let error = self.error.borrow().clone();
+        self.notice.set_visible(error.is_some() || config.is_some());
+        match (error, config) {
+            (Some(e), _) => {
+                self.notice.add_css_class("error");
+                self.notice.set_label(&e);
+            }
+            (None, Some(e)) => {
+                self.notice.remove_css_class("error");
+                self.notice
+                    .set_label(&format!("Config problem, using defaults: {e}"));
+            }
+            (None, None) => {}
         }
     }
 
     fn key(self: &Rc<Self>, key: gdk::Key) -> glib::Propagation {
         match key {
             gdk::Key::Escape => self.hide(),
-            gdk::Key::space | gdk::Key::k => send_quiet(Request::PlayPause),
-            gdk::Key::Left | gdk::Key::j => send_quiet(Request::Seek { offset: -5.0 }),
-            gdk::Key::Right | gdk::Key::l => send_quiet(Request::Seek { offset: 5.0 }),
-            gdk::Key::n => send_quiet(Request::Next),
-            gdk::Key::p => send_quiet(Request::Previous),
+            gdk::Key::space | gdk::Key::k => self.send(Request::PlayPause),
+            gdk::Key::Left | gdk::Key::j => self.send(Request::Seek { offset: -5.0 }),
+            gdk::Key::Right | gdk::Key::l => self.send(Request::Seek { offset: 5.0 }),
+            gdk::Key::n => self.send(Request::Next),
+            gdk::Key::p => self.send(Request::Previous),
             _ => return glib::Propagation::Proceed,
         }
         glib::Propagation::Stop
@@ -621,7 +693,7 @@ impl Drawer {
             let Some(d) = w.upgrade() else { return };
             d.seek_timer.borrow_mut().take();
             if let Some(v) = d.seek_to.take() {
-                send_quiet(Request::SetPosition {
+                d.send(Request::SetPosition {
                     position: v.max(0.0),
                 });
             }
@@ -663,14 +735,7 @@ impl Drawer {
             return;
         };
         let cfg = self.cfg.borrow();
-        match &s.config_error {
-            Some(e) => {
-                self.notice
-                    .set_label(&format!("Config problem, using defaults: {e}"));
-                self.notice.set_visible(true);
-            }
-            None => self.notice.set_visible(false),
-        }
+        self.render_notice();
 
         let active = s
             .active_player()
@@ -802,6 +867,7 @@ impl Drawer {
             self.players.remove(&c);
         }
         let chip = |text: &str, dot: Option<&str>, on: bool, req: Request, tip: &str| {
+            let tx = self.tx.clone();
             let row = gtk::Box::new(gtk::Orientation::Horizontal, 5);
             if let Some(state) = dot {
                 row.append(&label("\u{25cf}", &["dot", state]));
@@ -814,7 +880,7 @@ impl Drawer {
             if on {
                 b.add_css_class("on");
             }
-            b.connect_clicked(move |_| send_quiet(req.clone()));
+            b.connect_clicked(move |_| send_with(&tx, req.clone()));
             b
         };
         for p in &s.players {
