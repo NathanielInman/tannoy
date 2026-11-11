@@ -31,5 +31,9 @@ jobs:
         run: cargo build --workspace --locked
       - name: Test
         run: cargo test --workspace --locked
+      - name: End to end
+        run: |
+          sudo apt-get install -y --no-install-recommends dbus python3-gi gir1.2-glib-2.0 jq
+          PYTHON=/usr/bin/python3 tools/e2e.sh target/debug/tannoy
       - name: Clippy
         run: cargo clippy --workspace --all-targets --locked -- -D warnings

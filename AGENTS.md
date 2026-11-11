@@ -18,8 +18,10 @@ for whatever you change.
 
 ## Build and test
 
-`cargo build --workspace --locked`, `cargo test --workspace --locked` and
-`cargo clippy --workspace --all-targets -- -D warnings`. The drawer needs
+`cargo build --workspace --locked`, `cargo test --workspace --locked`,
+`cargo clippy --workspace --all-targets -- -D warnings` and `tools/e2e.sh`
+(the real daemon, bar and CLI against fake players on a private bus; CI
+runs it too). The drawer needs
 gtk4-layer-shell; `.github/scripts/gtk4-layer-shell.sh` is how CI gets it.
 
 Parsers are pure functions over plain data and are tested against real

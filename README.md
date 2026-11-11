@@ -261,6 +261,7 @@ drawer open it adds one `Position` read a second.
 
 ```sh
 cargo test --workspace
+tools/e2e.sh   # the daemon, bar and CLI against fake players on a private bus
 # A dev daemon that leaves an installed one alone:
 export TANNOY_RUNTIME_DIR=/tmp/tn-dev/run TANNOY_STATE_DIR=/tmp/tn-dev/state \
        TANNOY_CACHE_DIR=/tmp/tn-dev/cache TANNOY_CONFIG_DIR=/tmp/tn-dev/config
