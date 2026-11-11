@@ -8,7 +8,7 @@
 //! Fetching runs on a helper thread in the daemon with a timeout; nothing
 //! here is ever called from the bar's stream.
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 

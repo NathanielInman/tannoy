@@ -1,6 +1,6 @@
 //! The daemon's local socket: a Unix socket only the user can open.
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use std::path::Path;
 use std::time::Duration;
 

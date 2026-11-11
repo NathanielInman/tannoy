@@ -3,6 +3,7 @@ name = "tannoy-core"
 description = "Tannoy model, MPRIS parsing, player pick, config, protocol and waybar reader"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true

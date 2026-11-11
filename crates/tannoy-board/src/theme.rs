@@ -164,7 +164,9 @@ mod tests {
 
     #[test]
     fn follows_the_bar() {
-        let t = tannoy_core::waybar::parse_style("* { font-family: \"PragmataPro Liga\", monospace; }\nwindow#waybar { background: #282A2E; color: #C5C8C6; }");
+        let t = tannoy_core::waybar::parse_style(
+            "* { font-family: \"PragmataPro Liga\", monospace; }\nwindow#waybar { background: #282A2E; color: #C5C8C6; }",
+        );
         let c = css(Some(&t), &Config::default());
         assert!(c.contains("@define-color tn_panel rgba(40, 42, 46, 0.970);"));
         assert!(c.contains("font-family: \"PragmataPro Liga\""));

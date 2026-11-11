@@ -2,7 +2,7 @@
 //! next to the bar with [`bar_anchor::place`]. A click on the empty area
 //! around the panel closes the drawer.
 
-use bar_anchor::{place, Anchor, Rect, SIDE_MARGIN};
+use bar_anchor::{Anchor, Rect, SIDE_MARGIN, place};
 use gtk::glib;
 use gtk::graphene::Point;
 use gtk::prelude::*;

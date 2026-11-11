@@ -331,12 +331,13 @@ mod tests {
         assert_eq!(p.status, Status::Playing);
         assert_eq!(p.last_playing, 50.0);
         assert!(p.track.is_podcast());
-        assert!(p
-            .track
-            .art_url
-            .as_deref()
-            .unwrap()
-            .starts_with("https://i.scdn.co/image/"));
+        assert!(
+            p.track
+                .art_url
+                .as_deref()
+                .unwrap()
+                .starts_with("https://i.scdn.co/image/")
+        );
         assert_eq!(p.track.artist(), "Neil deGrasse Tyson");
     }
 

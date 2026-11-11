@@ -485,10 +485,10 @@ impl Drawer {
         {
             let w = Rc::downgrade(self);
             self.scale.connect_change_value(move |_, _, value| {
-                if let Some(d) = w.upgrade() {
-                    if !d.updating.get() {
-                        d.scrub(value);
-                    }
+                if let Some(d) = w.upgrade()
+                    && !d.updating.get()
+                {
+                    d.scrub(value);
                 }
                 glib::Propagation::Proceed
             });
@@ -614,10 +614,10 @@ impl Drawer {
     }
 
     fn show(self: &Rc<Self>, anchor: Option<Anchor>) {
-        if let Some(name) = anchor.as_ref().and_then(|a| a.monitor.clone()) {
-            if let Some(m) = find_monitor(&name) {
-                self.window.set_monitor(Some(&m));
-            }
+        if let Some(name) = anchor.as_ref().and_then(|a| a.monitor.clone())
+            && let Some(m) = find_monitor(&name)
+        {
+            self.window.set_monitor(Some(&m));
         }
         *self.anchor.borrow_mut() = anchor.clone();
         self.stage.set_anchor(anchor);
@@ -638,10 +638,10 @@ impl Drawer {
         }
         let w = Rc::downgrade(self);
         self.spring.play_out(move || {
-            if let Some(d) = w.upgrade() {
-                if !d.visible.get() {
-                    d.window.set_visible(false);
-                }
+            if let Some(d) = w.upgrade()
+                && !d.visible.get()
+            {
+                d.window.set_visible(false);
             }
         });
         send_quiet(Request::BoardVisible { visible: false });

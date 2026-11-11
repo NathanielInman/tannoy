@@ -3,9 +3,9 @@
 //! {...}}`, `{"event":"show",...}`), so a sibling can talk to any of them
 //! without a shared crate.
 
-use crate::model::Snapshot;
 use crate::Anchor;
-use anyhow::{anyhow, Result};
+use crate::model::Snapshot;
+use anyhow::{Result, anyhow};
 use serde::{Deserialize, Serialize};
 use std::io::{BufRead, BufReader, Write};
 use std::time::Duration;

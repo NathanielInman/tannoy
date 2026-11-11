@@ -76,18 +76,18 @@ fn first_color(value: &str, colors: &BTreeMap<String, String>) -> Option<String>
         if w.starts_with('#') && w.len() >= 4 && w[1..].chars().all(|c| c.is_ascii_hexdigit()) {
             return Some(w.to_string());
         }
-        if let Some(name) = w.strip_prefix('@') {
-            if let Some(c) = colors.get(name) {
-                return Some(c.clone());
-            }
+        if let Some(name) = w.strip_prefix('@')
+            && let Some(c) = colors.get(name)
+        {
+            return Some(c.clone());
         }
     }
     let lower = value.to_ascii_lowercase();
     for f in ["rgba(", "rgb("] {
-        if let Some(i) = lower.find(f) {
-            if let Some(j) = value[i..].find(')') {
-                return Some(value[i..i + j + 1].to_string());
-            }
+        if let Some(i) = lower.find(f)
+            && let Some(j) = value[i..].find(')')
+        {
+            return Some(value[i..i + j + 1].to_string());
         }
     }
     None
@@ -136,10 +136,10 @@ pub fn parse_style(text: &str) -> BarTheme {
                 .map(|(_, v)| v.clone())
         };
 
-        if selectors.contains(&"*") || selectors.contains(&"window#waybar") {
-            if let Some(f) = get("font-family") {
-                theme.font.get_or_insert(f);
-            }
+        if (selectors.contains(&"*") || selectors.contains(&"window#waybar"))
+            && let Some(f) = get("font-family")
+        {
+            theme.font.get_or_insert(f);
         }
         if selectors.contains(&"window#waybar") {
             if let Some(c) = get("background")
@@ -291,7 +291,9 @@ window#waybar.hidden { opacity: 0.2; }
 
     #[test]
     fn resolves_named_and_rgba_colors() {
-        let t = parse_style("@define-color bg rgba(10, 20, 30, 0.9);\nwindow#waybar { background-color: @bg; color: rgb(200,200,200); }");
+        let t = parse_style(
+            "@define-color bg rgba(10, 20, 30, 0.9);\nwindow#waybar { background-color: @bg; color: rgb(200,200,200); }",
+        );
         assert_eq!(t.background.as_deref(), Some("rgba(10, 20, 30, 0.9)"));
         assert_eq!(t.foreground.as_deref(), Some("rgb(200,200,200)"));
     }

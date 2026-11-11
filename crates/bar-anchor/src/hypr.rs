@@ -2,7 +2,7 @@
 //! its IPC socket directly (no `hyprctl` processes).
 
 use crate::{Anchor, Edge};
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use serde::Deserialize;
 use std::collections::BTreeMap;
 #[cfg(unix)]

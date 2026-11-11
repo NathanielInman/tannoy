@@ -13,7 +13,7 @@
 //! Recorded with `busctl --json=short monitor` and `get-property` against
 //! dunst 1.13.2 and mako 1.11.0 on a private bus.
 
-use crate::mpris::{from_busctl, MValue, Props};
+use crate::mpris::{MValue, Props, from_busctl};
 
 pub const NOTIFICATIONS: &str = "org.freedesktop.Notifications";
 pub const DUNST_PATH: &str = "/org/freedesktop/Notifications";

@@ -13,7 +13,7 @@
 pub mod hypr;
 mod place;
 
-pub use place::{place, Rect, SIDE_MARGIN};
+pub use place::{Rect, SIDE_MARGIN, place};
 use serde::{Deserialize, Serialize};
 
 /// The screen edge the bar is on.

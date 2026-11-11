@@ -2,10 +2,10 @@
 //! here is zbus's blocking API with a method timeout, so a player that hangs
 //! cannot hold up anything but the helper thread that asked it.
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::HashMap;
 use std::time::Duration;
-use tannoy_core::mpris::{MValue, Props, PATH, PLAYER_IFACE};
+use tannoy_core::mpris::{MValue, PATH, PLAYER_IFACE, Props};
 use zbus::blocking::Connection;
 use zbus::zvariant::{OwnedValue, Value};
 

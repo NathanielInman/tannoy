@@ -12,7 +12,7 @@
 //! connection thread, never under the lock that feeds the bar.
 
 use crate::dbus;
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::HashMap;
 use std::io::{BufRead, BufReader, Write};
 use std::sync::{Arc, Condvar, Mutex, MutexGuard};
@@ -24,10 +24,10 @@ use tannoy_core::protocol::{Event, Reply, Request, SubKind};
 use tannoy_core::state::{Effect, Model};
 use tannoy_core::transport::{Listener, Stream};
 use tannoy_core::{art, dnd, paths};
+use zbus::MatchRule;
 use zbus::blocking::{Connection, MessageIterator};
 use zbus::message::Type as MsgType;
 use zbus::zvariant::OwnedValue;
-use zbus::MatchRule;
 
 /// How often the position is read while the drawer is open.
 const POSITION_EVERY: Duration = Duration::from_secs(1);
@@ -471,15 +471,17 @@ fn watch_screencast(d: Shared) {
 /// forever; the next session's bar starts a new one.
 fn keep(d: &Shared, name: &'static str, f: fn(Shared) -> Result<()>) {
     let d = d.clone();
-    std::thread::spawn(move || loop {
-        if let Err(e) = f(d.clone()) {
-            eprintln!("tannoy: {name} watcher: {e:#}");
+    std::thread::spawn(move || {
+        loop {
+            if let Err(e) = f(d.clone()) {
+                eprintln!("tannoy: {name} watcher: {e:#}");
+            }
+            if !dbus::bus_alive(&d.conn) {
+                eprintln!("tannoy: the session bus is gone");
+                retire(&mut d.lock());
+            }
+            std::thread::sleep(Duration::from_secs(2));
         }
-        if !dbus::bus_alive(&d.conn) {
-            eprintln!("tannoy: the session bus is gone");
-            retire(&mut d.lock());
-        }
-        std::thread::sleep(Duration::from_secs(2));
     });
 }
 
@@ -495,21 +497,22 @@ fn ticker(d: Shared) {
             d.cv.wait_timeout(st, POSITION_EVERY)
                 .map(|(g, _)| g)
                 .unwrap_or_else(|e| e.into_inner().0);
-        if st.visible && !st.position_busy {
-            if let Some(bus) = st.m.snap.active.clone() {
-                st.position_busy = true;
-                let d = d.clone();
-                std::thread::spawn(move || {
-                    let pos = dbus::position(&d.conn, &bus);
-                    let mut st = d.lock();
-                    st.position_busy = false;
-                    if let Ok(pos) = pos {
-                        if st.m.position(&bus, pos, tannoy_core::now()) {
-                            refresh(&d, &mut st);
-                        }
-                    }
-                });
-            }
+        if st.visible
+            && !st.position_busy
+            && let Some(bus) = st.m.snap.active.clone()
+        {
+            st.position_busy = true;
+            let d = d.clone();
+            std::thread::spawn(move || {
+                let pos = dbus::position(&d.conn, &bus);
+                let mut st = d.lock();
+                st.position_busy = false;
+                if let Ok(pos) = pos
+                    && st.m.position(&bus, pos, tannoy_core::now())
+                {
+                    refresh(&d, &mut st);
+                }
+            });
         }
     }
 }
@@ -555,10 +558,10 @@ fn spawn_board() {
     let log = paths::board_log();
     let mut cmd = std::process::Command::new(&bin);
     cmd.stdin(std::process::Stdio::null());
-    if let Ok(f) = paths::open_log(&log) {
-        if let Ok(f2) = f.try_clone() {
-            cmd.stdout(f).stderr(f2);
-        }
+    if let Ok(f) = paths::open_log(&log)
+        && let Ok(f2) = f.try_clone()
+    {
+        cmd.stdout(f).stderr(f2);
     }
     match cmd.spawn() {
         Ok(mut child) => {

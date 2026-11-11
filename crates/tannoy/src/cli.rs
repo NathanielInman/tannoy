@@ -1,6 +1,6 @@
 //! Command-line entry points.
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::io::Write;
 use std::time::Duration;
 use tannoy_core::config::Config;

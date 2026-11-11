@@ -41,10 +41,10 @@ fn better(a: &Player, b: &Player) -> Ordering {
 pub fn choose(players: &[Player], picked: Option<&str>) -> Option<usize> {
     let mut idx: Vec<usize> = (0..players.len()).collect();
     idx.sort_by(|a, b| better(&players[*a], &players[*b]).then(a.cmp(b)));
-    if let Some(k) = picked {
-        if let Some(i) = idx.iter().find(|i| matches_key(&players[**i], k)) {
-            return Some(*i);
-        }
+    if let Some(k) = picked
+        && let Some(i) = idx.iter().find(|i| matches_key(&players[**i], k))
+    {
+        return Some(*i);
     }
     idx.first().copied()
 }
@@ -160,8 +160,10 @@ mod tests {
         );
         assert_eq!(resolve(&ps, "Spot"), Ok(Some("spotify".into())));
         assert_eq!(resolve(&ps, "auto"), Ok(None));
-        assert!(resolve(&ps, "vlc")
-            .unwrap_err()
-            .contains("chromium, spotify, mpv"));
+        assert!(
+            resolve(&ps, "vlc")
+                .unwrap_err()
+                .contains("chromium, spotify, mpv")
+        );
     }
 }

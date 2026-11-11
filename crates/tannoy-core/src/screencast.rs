@@ -116,7 +116,9 @@ mod tests {
     #[test]
     fn other_lines_and_stray_stops() {
         assert_eq!(
-            run("workspace>>2\nactivewindow>>kitty,~\nscreencast>>0,monitor\nscreencastv2>>0,monitor,DP-2\nscreencast>>x\n"),
+            run(
+                "workspace>>2\nactivewindow>>kitty,~\nscreencast>>0,monitor\nscreencastv2>>0,monitor,DP-2\nscreencast>>x\n"
+            ),
             Vec::<bool>::new()
         );
     }
