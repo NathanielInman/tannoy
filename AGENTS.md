@@ -58,6 +58,9 @@ Update in the same commit:
 
 - `docs/design.md` for a new config key, protocol message, signal or rule.
 - The README for anything a new user meets (CLI, keys, install, config).
+- `docs/assets/hero.py` when the drawer or the bar module looks different,
+  then run `python3 docs/assets/hero.py` to rewrite `hero.svg` (never edit
+  the SVG by hand).
 
 Commits are conventional, scoped by area: `anchor`, `core`, `mpris`,
 `pick`, `art`, `cli`, `daemon`, `board`, `docs`, `ci`.
