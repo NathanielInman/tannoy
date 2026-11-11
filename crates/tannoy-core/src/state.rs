@@ -37,6 +37,9 @@ pub struct Model {
     /// What `tannoy art` prints.
     art_line: Option<String>,
     bar_line: String,
+    /// App icons for `art.fallback = "player"`, by player key. Finding one
+    /// searches the icon theme on disk, so it happens once per player.
+    icons: HashMap<String, Option<String>>,
     /// The last snapshot made by [`Model::refresh`].
     pub snap: Snapshot,
 }
@@ -159,6 +162,7 @@ impl Model {
         }
         self.cfg = cfg;
         self.cfg_error = cfg_error;
+        self.icons.clear();
         let ignored: Vec<String> = self
             .players
             .keys()
@@ -219,12 +223,19 @@ impl Model {
             art: self.art_path.clone(),
             config_error: self.cfg_error.clone(),
         };
-        let bar = serde_json::to_string(&crate::bar::line(&snap, cfg)).unwrap_or_default();
+        let icons = &mut self.icons;
+        let art_line = crate::bar::art_path_with(&snap, cfg, |p| {
+            icons
+                .entry(p.key.clone())
+                .or_insert_with(|| crate::bar::player_icon(p))
+                .clone()
+        });
+        let line = crate::bar::line_with(&snap, cfg, art_line.is_some());
+        let bar = serde_json::to_string(&line).unwrap_or_default();
         if bar != self.bar_line {
             self.bar_line = bar.clone();
             effects.push(Effect::Bar(bar));
         }
-        let art_line = crate::bar::art_path(&snap, cfg);
         if art_line != self.art_line {
             self.art_line = art_line;
             effects.push(Effect::SignalWaybar);
@@ -431,6 +442,20 @@ mod tests {
         let fx = m.refresh(15.0, |_| None);
         assert_eq!(bars(&fx), vec![""]);
         assert_eq!(m.snap.active, None);
+    }
+
+    #[test]
+    fn the_player_icon_is_looked_up_once() {
+        let (mut m, _) = with_chrome();
+        let mut cfg = Config::default();
+        cfg.art.enabled = true;
+        cfg.art.fallback = "player".into();
+        m.reload(cfg, None);
+        m.refresh(1.0, |_| None);
+        m.refresh(2.0, |_| None);
+        assert_eq!(m.icons.len(), 1, "one entry for chromium, found or not");
+        m.reload(Config::default(), None);
+        assert!(m.icons.is_empty(), "a reload forgets the icons");
     }
 
     #[test]

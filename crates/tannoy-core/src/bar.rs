@@ -30,6 +30,12 @@ fn empty(class: &str, tooltip: &str) -> BarLine {
 }
 
 pub fn line(snap: &Snapshot, cfg: &Config) -> BarLine {
+    line_with(snap, cfg, art_path(snap, cfg).is_some())
+}
+
+/// The bar line, given whether the image module shows a cover (the daemon
+/// works that out once per refresh, with its icon cache).
+pub fn line_with(snap: &Snapshot, cfg: &Config, with_art: bool) -> BarLine {
     let Some(p) = snap.active_player() else {
         return empty("stopped", "Nothing is playing");
     };
@@ -91,7 +97,7 @@ pub fn line(snap: &Snapshot, cfg: &Config) -> BarLine {
     tip.push(format!("{}{state}", p.name));
     let class = p.status.as_str();
     let mut classes = vec![class.to_string()];
-    if art_path(snap, cfg).is_some() {
+    if with_art {
         classes.push("with-art".into());
     }
     BarLine {
@@ -111,6 +117,23 @@ pub fn offline() -> BarLine {
 /// (waybar hides an image module whose path does not exist). Never a cover
 /// while do not disturb hides titles.
 pub fn art_path(snap: &Snapshot, cfg: &Config) -> Option<String> {
+    art_path_with(snap, cfg, player_icon)
+}
+
+/// The player's app icon from the icon theme. A search on disk, so the
+/// daemon caches it per player.
+pub fn player_icon(p: &crate::model::Player) -> Option<String> {
+    let names = crate::art::icon_names(p.desktop_entry.as_deref(), &p.key, &p.name);
+    crate::art::player_icon(&names).map(|p| p.display().to_string())
+}
+
+/// [`art_path`] with the player icon (`art.fallback = "player"`) looked up
+/// by `icon`.
+pub fn art_path_with(
+    snap: &Snapshot,
+    cfg: &Config,
+    icon: impl FnOnce(&crate::model::Player) -> Option<String>,
+) -> Option<String> {
     if !cfg.art.enabled || snap.hidden {
         return None;
     }
@@ -123,10 +146,7 @@ pub fn art_path(snap: &Snapshot, cfg: &Config) -> Option<String> {
     }
     match cfg.art.fallback.as_str() {
         "" | "none" => None,
-        "player" => {
-            let names = crate::art::icon_names(p.desktop_entry.as_deref(), &p.key, &p.name);
-            crate::art::player_icon(&names).map(|p| p.display().to_string())
-        }
+        "player" => icon(p),
         path => {
             let p = crate::paths::expand(path);
             p.exists().then(|| p.display().to_string())
