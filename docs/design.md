@@ -44,12 +44,12 @@ flowchart LR
   D -- socket --> W["tannoy bar<br/>waybar custom module"]
   D -- "SIGRTMIN+12" --> I["waybar image module<br/>runs tannoy art"]
   D <-- socket --> C["tannoy CLI, media keys"]
-  C -. "anchor from" .-> H["Hyprland IPC"]
+  C -. "anchor from" .-> H["Hyprland, sway or niri IPC"]
 ```
 
 | Crate | Role |
 |---|---|
-| `bar-anchor` | Hyprland anchoring and panel placement. A copy of Roundhouse's; its `Anchor` JSON is the same as Roundhouse's and Switchyard's. |
+| `bar-anchor` | Anchoring (Hyprland, sway, niri) and panel placement. A copy of Roundhouse's; its `Anchor` JSON is the same as Roundhouse's and Switchyard's. |
 | `tannoy-core` | The model, MPRIS parsing, the player pick, the daemon's state (`state::Model`: events in, effects out), the bar line, config, cover art, the socket protocol, the waybar reader and the swaync, dunst, mako and wpctl parsers. No D-Bus, no UI. |
 | `tannoy` | The `tannoy` binary: daemon, CLI and waybar module. Owns the zbus connection, the threads and the sockets, and carries out the model's effects (fetch a cover, send a bar line, signal waybar). |
 | `tannoy-board` | The Linux drawer: GTK4 on `gtk4-layer-shell`, overlay layer, namespace `tannoy`, keyboard exclusive while open. |
@@ -282,8 +282,26 @@ its monitor and the bar's layer surface (`bar.namespace`) while the cursor
 is still on the icon, and sends the `Anchor` with the request. The drawer
 covers the monitor with a transparent overlay surface, places the panel
 next to the bar centered on the click (`bar_anchor::place`), and scales it
-open from the click point. A click outside the panel closes it. Without
-Hyprland, or with `--center`, it opens centered.
+open from the click point. A click outside the panel closes it. Under
+another compositor, or with `--center`, it opens centered.
+
+Sway and niri do not tell a client where the cursor is, or where layer
+surfaces are, so there the anchor is coarser (`bar_anchor::anchor` picks the
+compositor from `HYPRLAND_INSTANCE_SIGNATURE`, `NIRI_SOCKET` or `SWAYSOCK`):
+
+- The monitor is the focused output. Moving onto a bar focuses its output
+  under sway's default `focus_follows_mouse yes`, and a click focuses it
+  under niri, before waybar runs `on-click`.
+- The edge is waybar's `position` (`top` when unset). Sway also reports the
+  space bars take from the visible workspace, so its edge and size come from
+  there when the config has none.
+- The click point is a stand-in: the middle of the bar's thickness, at the
+  start, middle or end of the bar for a module in `modules-left`,
+  `modules-center` or `modules-right` (`waybar::BarLayout::hint`, which
+  finds the bar whose module runs `tannoy bar`, inside a `group/` too).
+
+`docs/research/compositor-anchoring.md` has the sources, and a probe that
+could find the exact icon on both.
 
 ## Theme
 

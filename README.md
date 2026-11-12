@@ -81,8 +81,10 @@ and brings the player's window forward, for players that offer it over MPRIS
 
 ## Install
 
-Tannoy is at 0.1. It runs on Linux with Wayland, and Hyprland gets the
-exact-icon anchoring. Packages come later; for now grab a tarball from the
+Tannoy is at 0.1. It runs on Linux with Wayland. Under Hyprland the drawer
+opens at the icon you clicked; under sway and niri it opens on the monitor
+you clicked, at the end of the bar that holds the module (left, center or
+right in waybar's config). Packages come later; for now grab a tarball from the
 [releases](https://github.com/NathanielInman/tannoy/releases) (each one also
 carries the man page, shell completions, the systemd user unit and example
 configs in `examples/`) or build from source:

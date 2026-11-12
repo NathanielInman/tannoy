@@ -5,9 +5,9 @@ for whatever you change.
 
 ## Crates
 
-- `bar-anchor`: Hyprland anchoring and panel placement, no GTK. A copy of
-  Roundhouse's; its `Anchor` JSON must stay identical to Roundhouse's and
-  Switchyard's.
+- `bar-anchor`: anchoring (Hyprland, sway, niri) and panel placement, no
+  GTK. A copy of Roundhouse's; its `Anchor` JSON must stay identical to
+  Roundhouse's and Switchyard's.
 - `tannoy-core`: the model, MPRIS parsing (`mpris.rs`), the player pick
   (`pick.rs`), the daemon's state and its transitions (`state.rs`: what
   happened in, effects out), the bar line (`bar.rs`), config, cover art, the
