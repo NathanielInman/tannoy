@@ -1,93 +1,79 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="1200" height="660" font-family="JetBrains Mono, DejaVu Sans Mono, Menlo, Consolas, monospace" xml:space="preserve" role="img" aria-label="A floating waybar whose media pill shows a small podcast cover and Slow Signals · Where the Night Trains…, cut at a word with a real ellipsis. A click on the cover opens the Tannoy drawer out of it: the podcast playing in Chrome with its scrub bar moving, play and pause, previous and next, and 15 second skips. A click on +15 jumps ahead. A click on the Spotify chip swaps the cover, the title and the bar pill to a song, the skips give way to shuffle and repeat toggles, and play starts it. Do not disturb turns on: the bell turns amber, the bar keeps only a dim music glyph, and the drawer says the title is hidden while its controls stay. Do not disturb turns off again, and a click outside closes the drawer.">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="1200" height="660" font-family="JetBrains Mono, DejaVu Sans Mono, Menlo, Consolas, monospace" xml:space="preserve" role="img" aria-label="A floating waybar of frosted pills: workspaces with a glyph per open window, the window title, Tannoy's media pill with a small podcast cover and Slow Signals · Where the Night Trains…, cut at a word with a real ellipsis, then the lamps, audio, the desk pill with Logbook's mic and a drawer handle, the clock and the tray. A click on the cover opens the Tannoy drawer out of it: the podcast playing in Chrome with its scrub bar moving, previous and next, play and pause, and 15 second skips. A click on the forward skip jumps ahead and a click on pause stops it, dimming the bar pill. A click on the Spotify chip picks Spotify: the cover, the title and the bar pill swap to a song, the skips give way to shuffle and repeat toggles, an Auto chip appears, and play starts it. Do not disturb turns on: the bell turns amber, the bar keeps only a dim music glyph, and the drawer shrinks to say the title is hidden while its controls stay. Do not disturb turns off again, and a click outside closes the drawer.">
 <style>
+text { white-space: pre; }
 .a { animation-duration: 14s; animation-iteration-count: infinite; animation-timing-function: linear; animation-fill-mode: both; }
 @media (prefers-reduced-motion: reduce) {
   .a { animation: none !important; }
   #cursor, .ripple { display: none; }
 }
-@keyframes k0 { 0.00% { opacity: 1; } 57.14% { opacity: 1; } 57.43% { opacity: 0; } 71.43% { opacity: 0; } 71.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k1 { 0.00% { opacity: 0; } 57.14% { opacity: 0; } 57.43% { opacity: 1; } 71.43% { opacity: 1; } 71.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k2 { 0.00% { opacity: 0; } 57.14% { opacity: 0; } 57.50% { opacity: 0.8; } 62.14% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k3 { 0.00% { transform: scale(.4); } 57.14% { transform: scale(.4); } 62.14% { transform: scale(1.5); } 100.00% { transform: scale(1.5); } }
-@keyframes k4 { 0.00% { opacity: 0; } 5.71% { opacity: 0; } 6.57% { opacity: 1; } 18.21% { opacity: 1; } 19.07% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k5 { 0.00% { opacity: 1; } 36.43% { opacity: 1; } 36.57% { opacity: 0; } 94.29% { opacity: 0; } 94.43% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k6 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 36.57% { opacity: 1; } 46.43% { opacity: 1; } 46.57% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k7 { 0.00% { opacity: 0; } 46.43% { opacity: 0; } 46.57% { opacity: 1; } 57.50% { opacity: 1; } 57.64% { opacity: 0; } 71.79% { opacity: 0; } 71.93% { opacity: 1; } 94.29% { opacity: 1; } 94.43% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k8 { 0.00% { opacity: 0; } 57.50% { opacity: 0; } 57.64% { opacity: 1; } 71.79% { opacity: 1; } 71.93% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k9 { 0.00% { transform: translateY(26px) scale(.06); } 7.64% { transform: translateY(26px) scale(.06); } 8.43% { transform: translateY(14px) scale(.5); } 9.14% { transform: translateY(4px) scale(.9); } 9.86% { transform: translateY(-1px) scale(1.035); } 10.71% { transform: translateY(0) scale(.988); } 11.71% { transform: scale(1.006); } 12.86% { transform: scale(1); } 83.43% { transform: scale(1); } 86.07% { transform: translateY(14px) scale(.4); } 100.00% { transform: translateY(14px) scale(.4); } }
-@keyframes k10 { 0.00% { opacity: 0; } 7.64% { opacity: 0; } 8.57% { opacity: 0.85; } 9.14% { opacity: 1; } 83.43% { opacity: 1; } 86.07% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k11 { 0.00% { transform: none; } 57.43% { transform: none; } 59.29% { transform: translateY(78px); } 71.43% { transform: translateY(78px); } 73.29% { transform: none; } 100.00% { transform: none; } }
-@keyframes k12 { 0.00% { transform: none; } 57.43% { transform: none; } 59.29% { transform: scaleY(0.7958); } 71.43% { transform: scaleY(0.7958); } 73.29% { transform: none; } 100.00% { transform: none; } }
-@keyframes k13 { 0.00% { opacity: 0; transform: translateY(12px); } 7.71% { opacity: 0; transform: translateY(12px); } 10.57% { opacity: 1; transform: none; } 100.00% { opacity: 1; transform: none; } }
-@keyframes k14 { 0.00% { opacity: 1; } 36.43% { opacity: 1; } 36.71% { opacity: 0; } 46.43% { opacity: 0; } 46.71% { opacity: 1; } 57.14% { opacity: 1; } 57.43% { opacity: 0; } 71.43% { opacity: 0; } 71.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k15 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 36.71% { opacity: 1; } 46.43% { opacity: 1; } 46.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k16 { 0.00% { opacity: 0; } 57.14% { opacity: 0; } 57.43% { opacity: 1; } 71.43% { opacity: 1; } 71.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k17 { 0.00% { opacity: 1; } 36.43% { opacity: 1; } 36.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k18 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 36.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k19 { 0.00% { opacity: 0; transform: translateY(12px); } 8.14% { opacity: 0; transform: translateY(12px); } 11.00% { opacity: 1; transform: none; } 100.00% { opacity: 1; transform: none; } }
-@keyframes k20 { 0.00% { opacity: 1; } 36.43% { opacity: 1; } 37.57% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k21 { 0.00% { transform: scaleX(1.0000); } 7.71% { transform: scaleX(1.0000); } 24.29% { transform: scaleX(1.0042); } 25.57% { transform: scaleX(1.0314); } 39.29% { transform: scaleX(1.0352); } 100.00% { transform: scaleX(1.0352); } }
-@keyframes k22 { 0.00% { transform: translateX(0.00px); } 7.71% { transform: translateX(0.00px); } 24.29% { transform: translateX(0.61px); } 25.57% { transform: translateX(4.59px); } 39.29% { transform: translateX(5.15px); } 100.00% { transform: translateX(5.15px); } }
-@keyframes k23 { 0.00% { opacity: 1; } 14.86% { opacity: 1; } 14.93% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k24 { 0.00% { opacity: 0; } 14.86% { opacity: 0; } 14.93% { opacity: 1; } 22.00% { opacity: 1; } 22.07% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k25 { 0.00% { opacity: 0; } 22.00% { opacity: 0; } 22.07% { opacity: 1; } 24.29% { opacity: 1; } 24.36% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k26 { 0.00% { opacity: 0; } 24.29% { opacity: 0; } 24.36% { opacity: 1; } 29.14% { opacity: 1; } 29.21% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k27 { 0.00% { opacity: 0; } 29.14% { opacity: 0; } 29.21% { opacity: 1; } 36.29% { opacity: 1; } 36.36% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k28 { 0.00% { opacity: 0; } 36.29% { opacity: 0; } 36.36% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k29 { 0.00% { opacity: 0; transform: none; } 24.29% { opacity: 0; transform: translateY(4px); } 25.36% { opacity: 1; transform: none; } 31.43% { opacity: 1; transform: translateY(-4px); } 33.57% { opacity: 0; transform: translateY(-6px); } 100.00% { opacity: 0; transform: none; } }
-@keyframes k30 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 37.57% { opacity: 1; } 57.14% { opacity: 1; } 58.29% { opacity: 0; } 72.29% { opacity: 0; } 73.43% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k31 { 0.00% { transform: scaleX(1.0000); } 46.43% { transform: scaleX(1.0000); } 100.00% { transform: scaleX(1.0701); } }
-@keyframes k32 { 0.00% { transform: translateX(0.00px); } 46.43% { transform: translateX(0.00px); } 100.00% { transform: translateX(13.71px); } }
-@keyframes k33 { 0.00% { opacity: 1; } 53.57% { opacity: 1; } 53.64% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k34 { 0.00% { opacity: 0; } 53.57% { opacity: 0; } 53.64% { opacity: 1; } 60.71% { opacity: 1; } 60.79% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k35 { 0.00% { opacity: 0; } 60.71% { opacity: 0; } 60.79% { opacity: 1; } 67.86% { opacity: 1; } 67.93% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k36 { 0.00% { opacity: 0; } 67.86% { opacity: 0; } 67.93% { opacity: 1; } 75.00% { opacity: 1; } 75.07% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k37 { 0.00% { opacity: 0; } 75.00% { opacity: 0; } 75.07% { opacity: 1; } 82.14% { opacity: 1; } 82.21% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k38 { 0.00% { opacity: 0; } 82.14% { opacity: 0; } 82.21% { opacity: 1; } 89.29% { opacity: 1; } 89.36% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k39 { 0.00% { opacity: 0; } 89.29% { opacity: 0; } 89.36% { opacity: 1; } 96.43% { opacity: 1; } 96.50% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k40 { 0.00% { opacity: 0; } 96.43% { opacity: 0; } 96.50% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k41 { 0.00% { opacity: 0; } 58.00% { opacity: 0; } 59.14% { opacity: 1; } 71.43% { opacity: 1; } 72.57% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k42 { 0.00% { opacity: 0; transform: translateY(12px); } 8.57% { opacity: 0; transform: translateY(12px); } 11.43% { opacity: 1; transform: none; } 100.00% { opacity: 1; transform: none; } }
-@keyframes k43 { 0.00% { opacity: 1; } 36.43% { opacity: 1; } 36.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k44 { 0.00% { opacity: 0; } 23.50% { opacity: 0; } 23.57% { opacity: 1; } 25.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k45 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 36.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k46 { 0.00% { opacity: 0; } 45.64% { opacity: 0; } 45.71% { opacity: 1; } 47.86% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k47 { 0.00% { opacity: 1; } 36.43% { opacity: 1; } 36.71% { opacity: 0; } 46.43% { opacity: 0; } 46.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k48 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 36.71% { opacity: 1; } 46.43% { opacity: 1; } 46.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k49 { 0.00% { opacity: 0; transform: translateY(12px); } 9.00% { opacity: 0; transform: translateY(12px); } 11.86% { opacity: 1; transform: none; } 100.00% { opacity: 1; transform: none; } }
-@keyframes k50 { 0.00% { opacity: 1; } 36.43% { opacity: 1; } 36.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k51 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 36.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k52 { 0.00% { opacity: 1; } 36.43% { opacity: 1; } 36.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k53 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 36.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k54 { 0.00% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k55 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 36.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k56 { 0.00% { opacity: 1; } 36.43% { opacity: 1; } 36.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k57 { 0.00% { opacity: 1; } 46.43% { opacity: 1; } 46.71% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k58 { 0.00% { opacity: 0; } 46.43% { opacity: 0; } 46.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k59 { 0.00% { opacity: 0; } 36.43% { opacity: 0; } 36.71% { opacity: 1; } 100.00% { opacity: 1; } }
-@keyframes k60 { 0.00% { opacity: 0; transform: translateY(12px); } 9.43% { opacity: 0; transform: translateY(12px); } 12.29% { opacity: 1; transform: none; } 100.00% { opacity: 1; transform: none; } }
-@keyframes k61 { 0.00% { opacity: 0; transform: translateY(12px); } 9.86% { opacity: 0; transform: translateY(12px); } 12.71% { opacity: 1; transform: none; } 100.00% { opacity: 1; transform: none; } }
-@keyframes k62 { 0.00% { opacity: 0; } 7.07% { opacity: 0; } 7.14% { opacity: 0.9; } 10.36% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k63 { 0.00% { transform: scale(.3); } 7.14% { transform: scale(.3); } 10.36% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
-@keyframes k64 { 0.00% { opacity: 0; } 23.50% { opacity: 0; } 23.57% { opacity: 0.9; } 26.79% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k65 { 0.00% { transform: scale(.3); } 23.57% { transform: scale(.3); } 26.79% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
-@keyframes k66 { 0.00% { opacity: 0; } 35.64% { opacity: 0; } 35.71% { opacity: 0.9; } 38.93% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k67 { 0.00% { transform: scale(.3); } 35.71% { transform: scale(.3); } 38.93% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
-@keyframes k68 { 0.00% { opacity: 0; } 45.64% { opacity: 0; } 45.71% { opacity: 0.9; } 48.93% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k69 { 0.00% { transform: scale(.3); } 45.71% { transform: scale(.3); } 48.93% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
-@keyframes k70 { 0.00% { opacity: 0; } 82.79% { opacity: 0; } 82.86% { opacity: 0.9; } 86.07% { opacity: 0; } 100.00% { opacity: 0; } }
-@keyframes k71 { 0.00% { transform: scale(.3); } 82.86% { transform: scale(.3); } 86.07% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
-@keyframes k72 { 0.00% { transform: translate(777.0px, 376.0px); } 6.07% { transform: translate(429.2px, 628.0px); } 17.14% { transform: translate(429.2px, 628.0px); } 22.50% { transform: translate(552.2px, 405.0px); } 29.29% { transform: translate(552.2px, 405.0px); } 34.64% { transform: translate(336.8px, 473.0px); } 40.00% { transform: translate(336.8px, 473.0px); } 44.64% { transform: translate(429.2px, 405.0px); } 51.43% { transform: translate(429.2px, 405.0px); } 56.43% { transform: translate(558.2px, 410.0px); } 76.43% { transform: translate(558.2px, 410.0px); } 81.79% { transform: translate(637.0px, 246.0px); } 90.00% { transform: translate(637.0px, 246.0px); } 100.00% { transform: translate(777.0px, 376.0px); } }</style>
+@keyframes k0 { 0.00% { opacity: 1; } 29.29% { opacity: 1; } 29.43% { opacity: 0; } 92.86% { opacity: 0; } 93.00% { opacity: 1; } 100.00% { opacity: 1; } }
+@keyframes k1 { 0.00% { opacity: 0; } 29.29% { opacity: 0; } 29.43% { opacity: 1; } 92.86% { opacity: 1; } 93.00% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k2 { 0.00% { opacity: 1; } 56.43% { opacity: 1; } 56.71% { opacity: 0; } 70.71% { opacity: 0; } 71.00% { opacity: 1; } 100.00% { opacity: 1; } }
+@keyframes k3 { 0.00% { opacity: 0; } 56.43% { opacity: 0; } 56.71% { opacity: 1; } 70.71% { opacity: 1; } 71.00% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k4 { 0.00% { opacity: 0; } 56.43% { opacity: 0; } 56.79% { opacity: 0.8; } 61.43% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k5 { 0.00% { transform: scale(.4); } 56.43% { transform: scale(.4); } 61.43% { transform: scale(1.5); } 100.00% { transform: scale(1.5); } }
+@keyframes k6 { 0.00% { opacity: 1; } 29.29% { opacity: 1; } 29.43% { opacity: 0; } 92.86% { opacity: 0; } 93.00% { opacity: 1; } 100.00% { opacity: 1; } }
+@keyframes k7 { 0.00% { opacity: 0; } 29.29% { opacity: 0; } 29.43% { opacity: 1; } 37.14% { opacity: 1; } 37.29% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k8 { 0.00% { opacity: 0; } 37.14% { opacity: 0; } 37.29% { opacity: 1; } 45.71% { opacity: 1; } 45.86% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k9 { 0.00% { opacity: 0; } 45.71% { opacity: 0; } 45.86% { opacity: 1; } 56.79% { opacity: 1; } 56.93% { opacity: 0; } 71.07% { opacity: 0; } 71.21% { opacity: 1; } 92.86% { opacity: 1; } 93.00% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k10 { 0.00% { opacity: 0; } 56.79% { opacity: 0; } 56.93% { opacity: 1; } 71.07% { opacity: 1; } 71.21% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k11 { 0.00% { transform: translateY(26px) scale(.06); } 7.64% { transform: translateY(26px) scale(.06); } 8.43% { transform: translateY(14px) scale(.5); } 9.14% { transform: translateY(4px) scale(.9); } 9.86% { transform: translateY(-1px) scale(1.035); } 10.71% { transform: translateY(0) scale(.988); } 11.71% { transform: scale(1.006); } 12.86% { transform: scale(1); } 82.71% { transform: scale(1); } 85.36% { transform: translateY(14px) scale(.4); } 100.00% { transform: translateY(14px) scale(.4); } }
+@keyframes k12 { 0.00% { opacity: 0; } 7.64% { opacity: 0; } 8.57% { opacity: 0.85; } 9.14% { opacity: 1; } 82.71% { opacity: 1; } 85.36% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k13 { 0.00% { transform: scaleX(1.0000); } 7.71% { transform: scaleX(1.0000); } 14.86% { transform: scaleX(1.0018); } 21.43% { transform: scaleX(1.0035); } 22.00% { transform: scaleX(1.0308); } 22.71% { transform: scaleX(1.0310); } 29.14% { transform: scaleX(1.0326); } 29.29% { transform: scaleX(1.0326); } 100.00% { transform: scaleX(1.0326); } }
+@keyframes k14 { 0.00% { transform: translateX(0.00px); } 7.71% { transform: translateX(0.00px); } 14.86% { transform: translateX(0.23px); } 21.43% { transform: translateX(0.44px); } 22.00% { transform: translateX(3.93px); } 22.71% { transform: translateX(3.95px); } 29.14% { transform: translateX(4.16px); } 29.29% { transform: translateX(4.17px); } 100.00% { transform: translateX(4.17px); } }
+@keyframes k15 { 0.00% { opacity: 1; } 14.86% { opacity: 1; } 14.93% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k16 { 0.00% { opacity: 0; } 14.86% { opacity: 0; } 14.93% { opacity: 1; } 21.43% { opacity: 1; } 21.50% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k17 { 0.00% { opacity: 0; } 21.43% { opacity: 0; } 21.50% { opacity: 1; } 22.00% { opacity: 1; } 22.07% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k18 { 0.00% { opacity: 0; } 22.00% { opacity: 0; } 22.07% { opacity: 1; } 29.14% { opacity: 1; } 29.21% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k19 { 0.00% { opacity: 0; } 29.14% { opacity: 0; } 29.21% { opacity: 1; } 100.00% { opacity: 1; } }
+@keyframes k20 { 0.00% { opacity: 0; transform: none; } 21.43% { opacity: 0; transform: translateY(4px); } 22.50% { opacity: 1; transform: none; } 27.86% { opacity: 1; transform: translateY(-4px); } 30.00% { opacity: 0; transform: translateY(-6px); } 100.00% { opacity: 0; transform: none; } }
+@keyframes k21 { 0.00% { opacity: 1; } 29.57% { opacity: 1; } 29.64% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k22 { 0.00% { opacity: 0; } 29.29% { opacity: 0; } 29.57% { opacity: 1; } 38.29% { opacity: 1; } 38.36% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k23 { 0.00% { opacity: 0; } 37.14% { opacity: 0; } 38.29% { opacity: 1; } 46.00% { opacity: 1; } 46.07% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k24 { 0.00% { transform: scaleX(1.0000); } 45.71% { transform: scaleX(1.0000); } 52.86% { transform: scaleX(1.0093); } 60.00% { transform: scaleX(1.0187); } 67.14% { transform: scaleX(1.0280); } 74.29% { transform: scaleX(1.0374); } 81.43% { transform: scaleX(1.0467); } 88.57% { transform: scaleX(1.0561); } 95.71% { transform: scaleX(1.0654); } 100.00% { transform: scaleX(1.0710); } }
+@keyframes k25 { 0.00% { transform: translateX(0.00px); } 45.71% { transform: translateX(0.00px); } 52.86% { transform: translateX(1.59px); } 60.00% { transform: translateX(3.19px); } 67.14% { transform: translateX(4.78px); } 74.29% { transform: translateX(6.38px); } 81.43% { transform: translateX(7.97px); } 88.57% { transform: translateX(9.57px); } 95.71% { transform: translateX(11.16px); } 100.00% { transform: translateX(12.12px); } }
+@keyframes k26 { 0.00% { opacity: 1; } 52.86% { opacity: 1; } 52.93% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k27 { 0.00% { opacity: 0; } 52.86% { opacity: 0; } 52.93% { opacity: 1; } 60.00% { opacity: 1; } 60.07% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k28 { 0.00% { opacity: 0; } 60.00% { opacity: 0; } 60.07% { opacity: 1; } 67.14% { opacity: 1; } 67.21% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k29 { 0.00% { opacity: 0; } 67.14% { opacity: 0; } 67.21% { opacity: 1; } 74.29% { opacity: 1; } 74.36% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k30 { 0.00% { opacity: 0; } 74.29% { opacity: 0; } 74.36% { opacity: 1; } 81.43% { opacity: 1; } 81.50% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k31 { 0.00% { opacity: 0; } 81.43% { opacity: 0; } 81.50% { opacity: 1; } 88.57% { opacity: 1; } 88.64% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k32 { 0.00% { opacity: 0; } 88.57% { opacity: 0; } 88.64% { opacity: 1; } 95.71% { opacity: 1; } 95.79% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k33 { 0.00% { opacity: 0; } 95.71% { opacity: 0; } 95.79% { opacity: 1; } 100.00% { opacity: 1; } }
+@keyframes k34 { 0.00% { opacity: 0; } 45.71% { opacity: 0; } 46.00% { opacity: 1; } 57.57% { opacity: 1; } 57.64% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k35 { 0.00% { opacity: 0; } 56.43% { opacity: 0; } 57.57% { opacity: 1; } 71.86% { opacity: 1; } 71.93% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k36 { 0.00% { transform: scaleX(1.0000); } 45.71% { transform: scaleX(1.0000); } 52.86% { transform: scaleX(1.0093); } 60.00% { transform: scaleX(1.0187); } 67.14% { transform: scaleX(1.0280); } 74.29% { transform: scaleX(1.0374); } 81.43% { transform: scaleX(1.0467); } 88.57% { transform: scaleX(1.0561); } 95.71% { transform: scaleX(1.0654); } 100.00% { transform: scaleX(1.0710); } }
+@keyframes k37 { 0.00% { transform: translateX(0.00px); } 45.71% { transform: translateX(0.00px); } 52.86% { transform: translateX(1.59px); } 60.00% { transform: translateX(3.19px); } 67.14% { transform: translateX(4.78px); } 74.29% { transform: translateX(6.38px); } 81.43% { transform: translateX(7.97px); } 88.57% { transform: translateX(9.57px); } 95.71% { transform: translateX(11.16px); } 100.00% { transform: translateX(12.12px); } }
+@keyframes k38 { 0.00% { opacity: 1; } 52.86% { opacity: 1; } 52.93% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k39 { 0.00% { opacity: 0; } 52.86% { opacity: 0; } 52.93% { opacity: 1; } 60.00% { opacity: 1; } 60.07% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k40 { 0.00% { opacity: 0; } 60.00% { opacity: 0; } 60.07% { opacity: 1; } 67.14% { opacity: 1; } 67.21% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k41 { 0.00% { opacity: 0; } 67.14% { opacity: 0; } 67.21% { opacity: 1; } 74.29% { opacity: 1; } 74.36% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k42 { 0.00% { opacity: 0; } 74.29% { opacity: 0; } 74.36% { opacity: 1; } 81.43% { opacity: 1; } 81.50% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k43 { 0.00% { opacity: 0; } 81.43% { opacity: 0; } 81.50% { opacity: 1; } 88.57% { opacity: 1; } 88.64% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k44 { 0.00% { opacity: 0; } 88.57% { opacity: 0; } 88.64% { opacity: 1; } 95.71% { opacity: 1; } 95.79% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k45 { 0.00% { opacity: 0; } 95.71% { opacity: 0; } 95.79% { opacity: 1; } 100.00% { opacity: 1; } }
+@keyframes k46 { 0.00% { opacity: 0; } 70.71% { opacity: 0; } 71.86% { opacity: 1; } 100.00% { opacity: 1; } }
+@keyframes k47 { 0.00% { opacity: 0; } 20.64% { opacity: 0; } 20.71% { opacity: 1; } 22.86% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k48 { 0.00% { opacity: 0; } 28.50% { opacity: 0; } 28.57% { opacity: 1; } 30.71% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k49 { 0.00% { opacity: 0; } 44.93% { opacity: 0; } 45.00% { opacity: 1; } 47.14% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k50 { 0.00% { opacity: 0; } 7.07% { opacity: 0; } 7.14% { opacity: 0.9; } 10.36% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k51 { 0.00% { transform: scale(.3); } 7.14% { transform: scale(.3); } 10.36% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
+@keyframes k52 { 0.00% { opacity: 0; } 20.64% { opacity: 0; } 20.71% { opacity: 0.9; } 23.93% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k53 { 0.00% { transform: scale(.3); } 20.71% { transform: scale(.3); } 23.93% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
+@keyframes k54 { 0.00% { opacity: 0; } 28.50% { opacity: 0; } 28.57% { opacity: 0.9; } 31.79% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k55 { 0.00% { transform: scale(.3); } 28.57% { transform: scale(.3); } 31.79% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
+@keyframes k56 { 0.00% { opacity: 0; } 36.36% { opacity: 0; } 36.43% { opacity: 0.9; } 39.64% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k57 { 0.00% { transform: scale(.3); } 36.43% { transform: scale(.3); } 39.64% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
+@keyframes k58 { 0.00% { opacity: 0; } 44.93% { opacity: 0; } 45.00% { opacity: 0.9; } 48.21% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k59 { 0.00% { transform: scale(.3); } 45.00% { transform: scale(.3); } 48.21% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
+@keyframes k60 { 0.00% { opacity: 0; } 82.07% { opacity: 0; } 82.14% { opacity: 0.9; } 85.36% { opacity: 0; } 100.00% { opacity: 0; } }
+@keyframes k61 { 0.00% { transform: scale(.3); } 82.14% { transform: scale(.3); } 85.36% { transform: scale(1.6); } 100.00% { transform: scale(1.6); } }
+@keyframes k62 { 0.00% { transform: translate(615.6px, 396.0px); } 6.07% { transform: translate(275.6px, 633.0px); } 15.71% { transform: translate(275.6px, 633.0px); } 19.64% { transform: translate(385.6px, 425.0px); } 24.29% { transform: translate(385.6px, 425.0px); } 27.50% { transform: translate(275.6px, 425.0px); } 32.14% { transform: translate(275.6px, 425.0px); } 35.36% { transform: translate(210.2px, 484.0px); } 40.00% { transform: translate(210.2px, 484.0px); } 43.93% { transform: translate(275.6px, 425.0px); } 49.29% { transform: translate(275.6px, 425.0px); } 54.29% { transform: translate(525.6px, 418.0px); } 75.71% { transform: translate(525.6px, 418.0px); } 81.07% { transform: translate(595.6px, 296.0px); } 88.57% { transform: translate(595.6px, 296.0px); } 100.00% { transform: translate(615.6px, 396.0px); } }</style>
 <defs>
 <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14171c"/><stop offset="1" stop-color="#0d0f12"/></linearGradient>
 <radialGradient id="haze1" cx=".85" cy="0" r=".75"><stop offset="0" stop-color="#88c0d0" stop-opacity=".13"/><stop offset="1" stop-color="#88c0d0" stop-opacity="0"/></radialGradient>
 <radialGradient id="haze2" cx=".05" cy="1" r=".6"><stop offset="0" stop-color="#b48ead" stop-opacity=".09"/><stop offset="1" stop-color="#b48ead" stop-opacity="0"/></radialGradient>
-<linearGradient id="podsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22324a"/><stop offset="1" stop-color="#3b4f6b"/></linearGradient>
-<linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2b4a"/><stop offset=".7" stop-color="#b8706a"/><stop offset="1" stop-color="#d08770"/></linearGradient>
-<radialGradient id="glow"><stop offset="0" stop-color="#ebcb8b" stop-opacity=".55"/><stop offset="1" stop-color="#ebcb8b" stop-opacity="0"/></radialGradient>
-<clipPath id="art"><rect width="100" height="100" rx="7"/></clipPath>
-<symbol id="pod" viewBox="0 0 100 100"><g clip-path="url(#art)"><rect width="100" height="100" fill="url(#podsky)"/><circle cx="74" cy="26" r="13" fill="#ebcb8b" opacity=".9"/><circle cx="79" cy="22" r="12" fill="#22324a"/><path d="M18,66 A10,10 0 0 1 38,66" fill="none" stroke="#88c0d0" stroke-width="2.6" opacity="0.9"/><path d="M9,66 A19,19 0 0 1 47,66" fill="none" stroke="#88c0d0" stroke-width="2.6" opacity="0.6"/><path d="M0,66 A28,28 0 0 1 56,66" fill="none" stroke="#88c0d0" stroke-width="2.6" opacity="0.35"/><path d="M-9,66 A37,37 0 0 1 65,66" fill="none" stroke="#88c0d0" stroke-width="2.6" opacity="0.18"/><circle cx="28" cy="66" r="4.5" fill="#a3be8c"/><rect y="78" width="100" height="22" fill="#121a24"/><path d="M0,84 H100 M0,92 H100" stroke="#4c566a" stroke-width="1.6"/><rect x="4" y="82" width="3" height="12" fill="#3b4252"/><rect x="16" y="82" width="3" height="12" fill="#3b4252"/><rect x="28" y="82" width="3" height="12" fill="#3b4252"/><rect x="40" y="82" width="3" height="12" fill="#3b4252"/><rect x="52" y="82" width="3" height="12" fill="#3b4252"/><rect x="64" y="82" width="3" height="12" fill="#3b4252"/><rect x="76" y="82" width="3" height="12" fill="#3b4252"/><rect x="88" y="82" width="3" height="12" fill="#3b4252"/></g></symbol>
-<symbol id="song" viewBox="0 0 100 100"><g clip-path="url(#art)"><rect width="100" height="100" fill="url(#dusk)"/><line x1="26" y1="0" x2="26" y2="31.0" stroke="#2e2235" stroke-width="1.2"/><circle cx="26" cy="40" r="18.0" fill="url(#glow)"/><rect x="20.0" y="31.0" width="12.0" height="18.0" rx="5.0" fill="#ebcb8b"/><rect x="20.0" y="39.0" width="12.0" height="2.0" fill="#d08770" opacity=".7"/><line x1="54" y1="0" x2="54" y2="16.8" stroke="#2e2235" stroke-width="1.2"/><circle cx="54" cy="28" r="22.5" fill="url(#glow)"/><rect x="46.5" y="16.8" width="15.0" height="22.5" rx="6.2" fill="#ebcb8b"/><rect x="46.5" y="26.8" width="15.0" height="2.5" fill="#d08770" opacity=".7"/><line x1="78" y1="0" x2="78" y2="38.4" stroke="#2e2235" stroke-width="1.2"/><circle cx="78" cy="46" r="15.3" fill="url(#glow)"/><rect x="72.9" y="38.4" width="10.2" height="15.3" rx="4.2" fill="#ebcb8b"/><rect x="72.9" y="45.1" width="10.2" height="1.7" fill="#d08770" opacity=".7"/><path d="M0,74 Q22,64 44,72 T100,68 V100 H0 Z" fill="#2e2235"/><rect y="80" width="100" height="20" fill="#3b4252" opacity=".55"/><path d="M18,86 h16 M48,90 h12 M70,85 h18" stroke="#ebcb8b" stroke-width="1.4" opacity=".55"/></g></symbol>
+<linearGradient id="podsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22324a"/><stop offset="1" stop-color="#3b4f6b"/></linearGradient><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2b4a"/><stop offset=".7" stop-color="#b8706a"/><stop offset="1" stop-color="#d08770"/></linearGradient><radialGradient id="glow"><stop offset="0" stop-color="#ebcb8b" stop-opacity=".55"/><stop offset="1" stop-color="#ebcb8b" stop-opacity="0"/></radialGradient><clipPath id="art"><rect width="100" height="100" rx="7"/></clipPath><symbol id="pod" viewBox="0 0 100 100"><g clip-path="url(#art)"><rect width="100" height="100" fill="url(#podsky)"/><circle cx="74" cy="26" r="13" fill="#ebcb8b" opacity=".9"/><circle cx="79" cy="22" r="12" fill="#22324a"/><path d="M18,66 A10,10 0 0 1 38,66" fill="none" stroke="#88c0d0" stroke-width="2.6" opacity="0.9"/><path d="M9,66 A19,19 0 0 1 47,66" fill="none" stroke="#88c0d0" stroke-width="2.6" opacity="0.6"/><path d="M0,66 A28,28 0 0 1 56,66" fill="none" stroke="#88c0d0" stroke-width="2.6" opacity="0.35"/><path d="M-9,66 A37,37 0 0 1 65,66" fill="none" stroke="#88c0d0" stroke-width="2.6" opacity="0.18"/><circle cx="28" cy="66" r="4.5" fill="#a3be8c"/><rect y="78" width="100" height="22" fill="#121a24"/><path d="M0,84 H100 M0,92 H100" stroke="#4c566a" stroke-width="1.6"/><rect x="4" y="82" width="3" height="12" fill="#3b4252"/><rect x="16" y="82" width="3" height="12" fill="#3b4252"/><rect x="28" y="82" width="3" height="12" fill="#3b4252"/><rect x="40" y="82" width="3" height="12" fill="#3b4252"/><rect x="52" y="82" width="3" height="12" fill="#3b4252"/><rect x="64" y="82" width="3" height="12" fill="#3b4252"/><rect x="76" y="82" width="3" height="12" fill="#3b4252"/><rect x="88" y="82" width="3" height="12" fill="#3b4252"/></g></symbol><symbol id="song" viewBox="0 0 100 100"><g clip-path="url(#art)"><rect width="100" height="100" fill="url(#dusk)"/><line x1="26" y1="0" x2="26" y2="31.0" stroke="#2e2235" stroke-width="1.2"/><circle cx="26" cy="40" r="18.0" fill="url(#glow)"/><rect x="20.0" y="31.0" width="12.0" height="18.0" rx="5.0" fill="#ebcb8b"/><rect x="20.0" y="39.0" width="12.0" height="2.0" fill="#d08770" opacity=".7"/><line x1="54" y1="0" x2="54" y2="16.8" stroke="#2e2235" stroke-width="1.2"/><circle cx="54" cy="28" r="22.5" fill="url(#glow)"/><rect x="46.5" y="16.8" width="15.0" height="22.5" rx="6.2" fill="#ebcb8b"/><rect x="46.5" y="26.8" width="15.0" height="2.5" fill="#d08770" opacity=".7"/><line x1="78" y1="0" x2="78" y2="38.4" stroke="#2e2235" stroke-width="1.2"/><circle cx="78" cy="46" r="15.3" fill="url(#glow)"/><rect x="72.9" y="38.4" width="10.2" height="15.3" rx="4.2" fill="#ebcb8b"/><rect x="72.9" y="45.1" width="10.2" height="1.7" fill="#d08770" opacity=".7"/><path d="M0,74 Q22,64 44,72 T100,68 V100 H0 Z" fill="#2e2235"/><rect y="80" width="100" height="20" fill="#3b4252" opacity=".55"/><path d="M18,86 h16 M48,90 h12 M70,85 h18" stroke="#ebcb8b" stroke-width="1.4" opacity=".55"/></g></symbol>
 <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".65"/></filter>
 <clipPath id="screen"><rect width="1200" height="660" rx="18"/></clipPath>
 </defs>
@@ -125,8 +111,12 @@
 <rect x="908" y="256" width="180" height="7" rx="3" fill="#3b4252"/>
 <rect x="740" y="302" width="396" height="44" rx="22" fill="#262a30"/>
 <circle cx="764" cy="324" r="12" fill="#3b4252"/>
-<rect x="760.0" y="317.5" width="3.4" height="13" rx="1" fill="#c5c8c6"/>
-<rect x="766.0" y="317.5" width="3.4" height="13" rx="1" fill="#c5c8c6"/>
+<g class="a" style="animation-name:k0;" opacity="1">
+<rect x="760.0" y="317.5" width="3.4" height="13" rx="1" fill="#c5c8c6"/><rect x="766.0" y="317.5" width="3.4" height="13" rx="1" fill="#c5c8c6"/>
+</g>
+<g class="a" style="animation-name:k1;" opacity="0">
+<path d="M760.5,317.5 L760.5,330.5 L771,324 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
 <rect x="788" y="322" width="282" height="4" rx="2" fill="#3b4252"/>
 <rect x="788" y="322" width="97" height="4" rx="2" fill="#7c838e"/>
 <rect x="740" y="376" width="340" height="8" rx="4" fill="#2e3440"/>
@@ -136,263 +126,99 @@
 <rect x="740" y="472" width="310" height="8" rx="4" fill="#2e3440"/>
 <rect x="740" y="496" width="260" height="8" rx="4" fill="#2e3440"/>
 <rect x="740" y="520" width="120" height="8" rx="4" fill="#2e3440"/>
-<rect x="10.0" y="614" width="148.0" height="36" rx="10" fill="rgba(40,42,46,.84)" stroke="rgba(76,86,106,.55)"/>
-<text x="29.0" y="636.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="middle">1</text>
-<rect x="44" y="619" width="26" height="26" rx="7" fill="rgba(129,161,193,.26)"/>
-<text x="57.0" y="636.5" font-size="13" fill="#d8dee9" font-weight="700" text-anchor="middle">2</text>
-<text x="85.0" y="636.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="middle">3</text>
-<text x="113.0" y="636.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="middle">4</text>
-<text x="141.0" y="636.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="middle">5</text>
-<rect x="164.0" y="614" width="133.2" height="36" rx="10" fill="rgba(40,42,46,.84)" stroke="rgba(76,86,106,.55)"/>
-<text x="176.0" y="636.5" font-size="13" fill="#d8dee9" font-weight="400" text-anchor="start">nvim  notes.md</text>
-<rect x="1033.4" y="614" width="156.6" height="36" rx="10" fill="rgba(40,42,46,.84)" stroke="rgba(76,86,106,.55)"/>
-<text x="1045.4" y="636.5" font-size="13" fill="#b48ead" font-weight="400" text-anchor="start">Tue Nov 10  14:32</text>
-<rect x="902.6" y="614" width="124.8" height="36" rx="10" fill="rgba(40,42,46,.84)" stroke="rgba(76,86,106,.55)"/>
-<path d="M915.6000000000001,629.5 L918.6000000000001,629.5 L922.6000000000001,626.0 L922.6000000000001,638.0 L918.6000000000001,634.5 L915.6000000000001,634.5 Z" fill="#88c0d0"/>
-<path d="M925.6000000000001,629.0 Q928.1000000000001,632.0 925.6000000000001,635.0 M928.1000000000001,626.5 Q932.6000000000001,632.0 928.1000000000001,637.5" fill="none" stroke="#88c0d0" stroke-width="1.5" stroke-linecap="round"/>
-<text x="936.6" y="636.5" font-size="13" fill="#88c0d0" font-weight="400" text-anchor="start">35%</text>
-<rect x="976.0000000000001" y="625" width="10" height="14" rx="5" fill="none" stroke="#616e88" stroke-width="1.5"/><line x1="981.0000000000001" y1="626" x2="981.0000000000001" y2="631" stroke="#616e88" stroke-width="1.5"/>
-<text x="992.0" y="636.5" font-size="13" fill="#616e88" font-weight="400" text-anchor="start">80%</text>
-<rect x="764.6" y="614" width="132.0" height="36" rx="10" fill="rgba(40,42,46,.84)" stroke="rgba(76,86,106,.55)"/>
-<circle cx="785.6000000000001" cy="632.0" r="6" fill="#a3be8c"/>
-<rect x="810.6000000000001" y="623.0" width="10" height="18" rx="5" fill="none" stroke="#88c0d0" stroke-width="1.5"/>
-<circle cx="815.6000000000001" cy="627.5" r="1.6" fill="#88c0d0" opacity="0.35"/>
-<circle cx="815.6000000000001" cy="632.0" r="1.6" fill="#88c0d0" opacity="0.35"/>
-<circle cx="815.6000000000001" cy="636.5" r="1.6" fill="#88c0d0" opacity="1"/>
-<circle cx="845.6000000000001" cy="632.0" r="5.5" fill="none" stroke="#616e88" stroke-width="1.6"/>
-<g class="a" style="animation-name:k0;" opacity="1">
-<path d="M870.1000000000001,635.5 L870.1000000000001,631.0 Q870.1000000000001,625.5 875.6000000000001,625.5 Q881.1000000000001,625.5 881.1000000000001,631.0 L881.1000000000001,635.5 L882.6000000000001,637.0 L868.6000000000001,637.0 Z" fill="#616e88"/>
-<circle cx="875.6000000000001" cy="639.0" r="1.8" fill="#616e88"/>
+<rect x="6.0" y="620.5" width="116.0" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<rect x="11.0" y="624" width="61.4" height="26" rx="7" fill="#3c4651"/>
+<text x="19.0" y="641.5" font-size="13" fill="#d8dee9" font-weight="400" text-anchor="start" fill-opacity=".55">1</text>
+<path d="M34.6,632.5 l4,4 l-4,4 M40.1,641.5 h6" fill="none" stroke="#d8dee9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="58.9" cy="637.0" r="6.2" fill="none" stroke="#d8dee9" stroke-width="1.6"/><circle cx="58.9" cy="637.0" r="2.3" fill="#d8dee9"/><path d="M58.9,634.7 h5.6 M60.9,638.2 l-2.8,4.8 M56.9,638.2 l-2.8,-4.8" stroke="#d8dee9" stroke-width="1.4"/>
+<text x="82.4" y="641.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start" fill-opacity=".55">2</text>
+<path d="M101.3,631.0 v12 M105.7,631.0 v12 M97.5,634.8 h12 M97.5,639.2 h12" stroke="#c5c8c6" stroke-width="1.8" stroke-linecap="round"/>
+<rect x="128.0" y="620.5" width="105.2" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<path d="M145.5,630.0 L152.5,637.0 L145.5,644.0 L138.5,637.0 Z" fill="none" stroke="#d8dee9" stroke-width="1.4" stroke-linejoin="round"/><path d="M142.5,634.5 L145.5,640.0 L148.5,634.5" fill="none" stroke="#d8dee9" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="166.6" y="641.5" font-size="13" fill="#d8dee9" font-weight="400" text-anchor="start">~/notes</text>
+<rect x="1116.0" y="620.5" width="78.0" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<rect x="1126" y="630.0" width="14" height="14" rx="4" fill="#81a1c1" fill-opacity=".8"/>
+<rect x="1148" y="630.0" width="14" height="14" rx="4" fill="#b48ead" fill-opacity=".8"/>
+<rect x="1170" y="630.0" width="14" height="14" rx="4" fill="#5e81ac" fill-opacity=".8"/>
+<rect x="953.4" y="620.5" width="156.6" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<text x="965.4" y="641.5" font-size="13" fill="#b48ead" font-weight="400" text-anchor="start">Tue Nov 10  14:32</text>
+<rect x="888.4" y="620.5" width="59.0" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<g fill="none" stroke="#616e88" stroke-width="1.5" stroke-linecap="round"><rect x="903.1" y="629.5" width="5.6" height="9.5" rx="2.8"/><path d="M900.4,636.0 a5.5,5.5 0 0 0 11,0 M905.9,641.5 v3"/></g>
+<path d="M933.4,632.0 l-5,5 l5,5" fill="none" stroke="#616e88" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="759.0" y="620.5" width="123.4" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<path d="M771.0,634.5 L774.0,634.5 L778.0,631.0 L778.0,643.0 L774.0,639.5 L771.0,639.5 Z" fill="#88c0d0"/><path d="M781.0,634.0 Q783.5,637.0 781.0,640.0 M783.5,631.5 Q788.0,637.0 783.5,642.5" fill="none" stroke="#88c0d0" stroke-width="1.5" stroke-linecap="round"/>
+<text x="789.8" y="641.5" font-size="13" fill="#88c0d0" font-weight="400" text-anchor="start">35%</text>
+<rect x="829.2" y="630.0" width="10" height="14" rx="5" fill="none" stroke="#616e88" stroke-width="1.5"/><line x1="834.2" y1="631.0" x2="834.2" y2="636.0" stroke="#616e88" stroke-width="1.5"/>
+<text x="847.0" y="641.5" font-size="13" fill="#616e88" font-weight="400" text-anchor="start">80%</text>
+<rect x="610.0" y="620.5" width="143.0" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<circle cx="627.5" cy="637.0" r="5.5" fill="#a3be8c"/>
+<rect x="649.5" y="628.0" width="10" height="18" rx="4" fill="none" stroke="#88c0d0" stroke-width="1.4"/>
+<circle cx="654.5" cy="632.0" r="1.8" fill="#88c0d0"/>
+<circle cx="654.5" cy="637.0" r="1.8" fill="#88c0d0"/>
+<circle cx="654.5" cy="642.0" r="1.8" fill="#88c0d0"/>
+<circle cx="681.5" cy="637.0" r="5.5" fill="none" stroke="#616e88" stroke-width="1.6"/>
+<g fill="none" stroke="#616e88" stroke-width="1.4"><rect x="706.0" y="630.0" width="5" height="4" rx="1"/><rect x="701.5" y="640.0" width="5" height="4" rx="1"/><rect x="710.5" y="640.0" width="5" height="4" rx="1"/><path d="M708.5,634.0 v2.5 M704.0,640.0 v-2 h3 M713.0,640.0 v-2 h-3"/></g>
+<g class="a" style="animation-name:k2;" opacity="1">
+<path d="M730.0,640.5 L730.0,636.0 Q730.0,630.5 735.5,630.5 Q741.0,630.5 741.0,636.0 L741.0,640.5 L742.5,642.0 L728.5,642.0 Z" fill="#616e88"/><circle cx="735.5" cy="644.0" r="1.8" fill="#616e88"/>
 </g>
-<g class="a" style="animation-name:k1;" opacity="0">
-<path d="M870.1000000000001,635.5 L870.1000000000001,631.0 Q870.1000000000001,625.5 875.6000000000001,625.5 Q881.1000000000001,625.5 881.1000000000001,631.0 L881.1000000000001,635.5 L882.6000000000001,637.0 L868.6000000000001,637.0 Z" fill="#ebcb8b"/>
-<circle cx="875.6000000000001" cy="639.0" r="1.8" fill="#ebcb8b"/>
-<line x1="868.1000000000001" y1="624.5" x2="883.1000000000001" y2="639.5" stroke="#1c1e22" stroke-width="3.6"/>
-<line x1="868.1000000000001" y1="624.5" x2="883.1000000000001" y2="639.5" stroke="#ebcb8b" stroke-width="1.7" stroke-linecap="round"/>
+<g class="a" style="animation-name:k3;" opacity="0">
+<path d="M730.0,640.5 L730.0,636.0 Q730.0,630.5 735.5,630.5 Q741.0,630.5 741.0,636.0 L741.0,640.5 L742.5,642.0 L728.5,642.0 Z" fill="#ebcb8b"/><circle cx="735.5" cy="644.0" r="1.8" fill="#ebcb8b"/><line x1="728.0" y1="629.5" x2="743.0" y2="644.5" stroke="#24262a" stroke-width="3.6"/><line x1="728.0" y1="629.5" x2="743.0" y2="644.5" stroke="#ebcb8b" stroke-width="1.7" stroke-linecap="round"/>
 </g>
-<circle class="a" style="animation-name:k2,k3;transform-box:fill-box;transform-origin:center" opacity="0" cx="875.6000000000001" cy="632.0" r="13" fill="none" stroke="#ebcb8b" stroke-width="2"/>
-<g class="a" style="animation-name:k5;" opacity="1">
-<rect x="412.2" y="614" width="346.4" height="36" rx="10" fill="rgba(40,42,46,.84)" stroke="rgba(76,86,106,.55)"/>
-<rect x="412.2" y="614" width="346.4" height="36" rx="10" fill="rgba(55,62,74,.92)" class="a" style="animation-name:k4;" opacity="0"/>
-<use href="#pod" x="422.2" y="622" width="20" height="20"/>
-<text x="450.2" y="636.5" font-size="13" fill="#ebcb8b" font-weight="400" text-anchor="start">Slow Signals · Where the Night Trains…</text>
-</g>
-<g class="a" style="animation-name:k6;" opacity="0">
-<rect x="498.0" y="614" width="260.6" height="36" rx="10" fill="rgba(40,42,46,.84)" stroke="rgba(76,86,106,.55)"/>
-<use href="#song" x="508.0" y="622" width="20" height="20"/>
-<text x="536.0" y="636.5" font-size="13" fill="#616e88" font-weight="400" text-anchor="start">Marlow Fen · Paper Lanterns</text>
+<circle class="a" style="animation-name:k4,k5;transform-box:fill-box;transform-origin:center" opacity="0" cx="735.5" cy="637.0" r="13" fill="none" stroke="#ebcb8b" stroke-width="2"/>
+<g class="a" style="animation-name:k6;" opacity="1">
+<rect x="259.6" y="620.5" width="344.4" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<use href="#pod" x="269.6" y="628.0" width="18" height="18"/>
+<text x="295.6" y="641.5" font-size="13" fill="#ebcb8b" font-weight="400" text-anchor="start">Slow Signals · Where the Night Trains…</text>
 </g>
 <g class="a" style="animation-name:k7;" opacity="0">
-<rect x="498.0" y="614" width="260.6" height="36" rx="10" fill="rgba(40,42,46,.84)" stroke="rgba(76,86,106,.55)"/>
-<use href="#song" x="508.0" y="622" width="20" height="20"/>
-<text x="536.0" y="636.5" font-size="13" fill="#ebcb8b" font-weight="400" text-anchor="start">Marlow Fen · Paper Lanterns</text>
+<rect x="259.6" y="620.5" width="344.4" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<use href="#pod" x="269.6" y="628.0" width="18" height="18"/>
+<text x="295.6" y="641.5" font-size="13" fill="#616e88" font-weight="400" text-anchor="start">Slow Signals · Where the Night Trains…</text>
 </g>
 <g class="a" style="animation-name:k8;" opacity="0">
-<rect x="718.6" y="614" width="40.0" height="36" rx="10" fill="rgba(40,42,46,.84)" stroke="rgba(76,86,106,.55)"/>
-<g transform="translate(738.6000000000001,632.0) scale(0.95)" fill="#616e88"><ellipse cx="-4.2" cy="5" rx="2.9" ry="2.3"/><ellipse cx="4.6" cy="3.2" rx="2.9" ry="2.3"/><rect x="-1.9" y="-6.5" width="1.6" height="11.5"/><rect x="6.9" y="-8.3" width="1.6" height="11.5"/><path d="M-1.9,-6.5 L8.5,-8.3 L8.5,-5.6 L-1.9,-3.8 Z"/></g>
+<rect x="345.4" y="620.5" width="258.6" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<use href="#song" x="355.4" y="628.0" width="18" height="18"/>
+<text x="381.4" y="641.5" font-size="13" fill="#616e88" font-weight="400" text-anchor="start">Marlow Fen · Paper Lanterns</text>
 </g>
-<g class="a" style="animation-name:k9,k10;transform-origin:432.2px 632.0px"><g transform="translate(202.2,142.0)">
-<g filter="url(#shadow)">
-<g class="a" style="animation-name:k12;transform-box:fill-box;transform-origin:center bottom">
-<rect y="40" width="460" height="383" fill="#1e2024"/>
-<path d="M0,40 V423 M460,40 V423" stroke="#41464e" vector-effect="non-scaling-stroke"/>
+<g class="a" style="animation-name:k9;" opacity="0">
+<rect x="345.4" y="620.5" width="258.6" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<use href="#song" x="355.4" y="628.0" width="18" height="18"/>
+<text x="381.4" y="641.5" font-size="13" fill="#ebcb8b" font-weight="400" text-anchor="start">Marlow Fen · Paper Lanterns</text>
 </g>
-<path d="M0,422 V446 A16,16 0 0 0 16,462 H444 A16,16 0 0 0 460,446 V422" fill="#1e2024" stroke="#41464e"/>
-<path d="M0,48 V16 A16,16 0 0 1 16,0 H444 A16,16 0 0 1 460,16 V48" fill="#1e2024" stroke="#41464e" class="a" style="animation-name:k11;"/>
+<g class="a" style="animation-name:k10;" opacity="0">
+<rect x="564.0" y="620.5" width="40.0" height="33" rx="10" fill="#24262a" stroke="#3a404d"/>
+<g transform="translate(582.0,637.0) scale(0.95)" fill="#616e88"><ellipse cx="-4.2" cy="5" rx="2.9" ry="2.3"/><ellipse cx="4.6" cy="3.2" rx="2.9" ry="2.3"/><rect x="-1.9" y="-6.5" width="1.6" height="11.5"/><rect x="6.9" y="-8.3" width="1.6" height="11.5"/><path d="M-1.9,-6.5 L8.5,-8.3 L8.5,-5.6 L-1.9,-3.8 Z"/></g>
 </g>
-<g class="a" style="animation-name:k13;"><g class="a" style="animation-name:k11;">
-<g class="a" style="animation-name:k14;" opacity="1">
-<circle cx="24" cy="26" r="4.5" fill="#a3be8c"/>
-<rect x="373.7" y="16" width="68.3" height="22" rx="11" fill="#a3be8c" fill-opacity=".15"/>
-<text x="407.9" y="31.0" font-size="11.5" fill="#a3be8c" font-weight="700" text-anchor="middle">playing</text>
+<g class="a" style="animation-name:k11,k12;transform-origin:278.6px 620px"><g transform="translate(78.6,191.0)">
+<g class="a" style="animation-name:k21;" opacity="1">
+<g transform="translate(0,0)"><rect width="400" height="421" rx="16" fill="#1e2024" stroke="#41464e" filter="url(#shadow)"/><circle cx="19" cy="30" r="4.5" fill="#a3be8c"/><text x="33.0" y="27.0" font-size="12" fill="#c5c8c6" font-weight="700" text-anchor="start" letter-spacing="2">TANNOY</text><text x="33.0" y="42.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">Chrome · 2 players</text><rect x="320.8" y="20.5" width="64.2" height="19" rx="9.5" fill="#a3be8c" fill-opacity=".15"/><text x="352.9" y="34.0" font-size="11" fill="#a3be8c" font-weight="700" text-anchor="middle">playing</text><use href="#pod" x="15" y="57" width="112" height="112"/><text x="139.0" y="85.1" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PODCAST · CHROME</text><text x="139.0" y="105.8" font-size="15" fill="#c5c8c6" font-weight="700" text-anchor="start">Where the Night Trains Go,</text><text x="139.0" y="127.8" font-size="15" fill="#c5c8c6" font-weight="700" text-anchor="start">with Iris Calloway</text><text x="139.0" y="147.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Slow Signals</text><rect x="15" y="180" width="370" height="4" rx="2" fill="#2f3237"/><rect x="15" y="180" width="127.6" height="4" rx="2" fill="#88c0d0" class="a" style="animation-name:k13;transform-box:fill-box;transform-origin:left center"/><circle cx="142.6" cy="182" r="6" fill="#c5c8c6" stroke="#0b0c0e" stroke-opacity=".5" class="a" style="animation-name:k14;"/><g class="a" style="animation-name:k15;" opacity="1"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">9:12</text></g><g class="a" style="animation-name:k16;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">9:13</text></g><g class="a" style="animation-name:k17;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">9:28</text></g><g class="a" style="animation-name:k18;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">9:29</text></g><g class="a" style="animation-name:k19;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">9:30</text></g><text x="150.6" y="172.0" font-size="11" fill="#88c0d0" font-weight="700" text-anchor="middle" class="a" style="animation-name:k20;" opacity="0">+15s</text><text x="385.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="end">26:40</text><rect x="68.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M98.2,242.8 A9.5,9.5 0 1 1 91.6,228.6" fill="none" stroke="#c5c8c6" stroke-width="1.7" stroke-linecap="round"/><path d="M87.4,228.6 L92.2,225.0 L92.2,232.2 Z" fill="#c5c8c6"/><text x="90.0" y="241.2" font-size="8.5" fill="#c5c8c6" font-weight="700" text-anchor="middle">15</text><rect x="120.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M146.5,232.5 L146.5,243.5 L139.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="136.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="172.0" y="221" width="56" height="34" rx="10" fill="#88c0d0"/><rect x="195.5" y="231.5" width="3.4" height="13" rx="1" fill="#15171a"/><rect x="201.5" y="231.5" width="3.4" height="13" rx="1" fill="#15171a"/><rect x="236.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M253.5,232.5 L253.5,243.5 L261.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="261.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="288.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M301.8,242.8 A9.5,9.5 0 1 0 308.4,228.6" fill="none" stroke="#c5c8c6" stroke-width="1.7" stroke-linecap="round"/><path d="M312.6,228.6 L307.8,225.0 L307.8,232.2 Z" fill="#c5c8c6"/><text x="310.0" y="241.2" font-size="8.5" fill="#c5c8c6" font-weight="700" text-anchor="middle">15</text><text x="15.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PLAYERS</text><text x="385.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">MEDIA KEYS FOLLOW THE LATEST</text><rect x="15.0" y="286.5" width="73.4" height="21" rx="10.5" fill="none" stroke="#88c0d0"/><circle cx="29.0" cy="297" r="3" fill="#a3be8c"/><text x="39.0" y="301.0" font-size="11.5" fill="#88c0d0" font-weight="400" text-anchor="start">Chrome</text><rect x="94.4" y="286.5" width="80.3" height="21" rx="10.5" fill="none" stroke="#41464e"/><circle cx="108.4" cy="297" r="3" fill="#7c838e"/><text x="118.4" y="301.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Spotify</text><rect x="15" y="320" width="370" height="61" rx="10" fill="#25282c" stroke="#2f3237"/><text x="26.0" y="340.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">OUTPUT</text><path d="M27,357.5 L30,357.5 L34,354 L34,366 L30,362.5 L27,362.5 Z" fill="#88c0d0"/><path d="M37,357 Q39.5,360 37,363 M39.5,354.5 Q44,360 39.5,365.5" fill="none" stroke="#88c0d0" stroke-width="1.5" stroke-linecap="round"/><text x="51.0" y="364.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Desk speakers · 35%</text><rect x="310.6" y="350" width="63.4" height="21" rx="8" fill="none" stroke="#41464e"/><text x="342.3" y="364.5" font-size="11.5" fill="#c5c8c6" font-weight="400" text-anchor="middle">Change</text><text x="15.0" y="403.0" font-size="10.5" fill="#7c838e" font-weight="400" text-anchor="start">Space play/pause · ←/→ seek · Esc close</text></g>
 </g>
-<g class="a" style="animation-name:k15;" opacity="0">
-<circle cx="24" cy="26" r="4.5" fill="#88c0d0"/>
-<rect x="380.6" y="16" width="61.4" height="22" rx="11" fill="#88c0d0" fill-opacity=".15"/>
-<text x="411.3" y="31.0" font-size="11.5" fill="#88c0d0" font-weight="700" text-anchor="middle">paused</text>
+<g class="a" style="animation-name:k22;" opacity="0">
+<g transform="translate(0,0)"><rect width="400" height="421" rx="16" fill="#1e2024" stroke="#41464e" filter="url(#shadow)"/><circle cx="19" cy="30" r="4.5" fill="#88c0d0"/><text x="33.0" y="27.0" font-size="12" fill="#c5c8c6" font-weight="700" text-anchor="start" letter-spacing="2">TANNOY</text><text x="33.0" y="42.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">Chrome · 2 players</text><rect x="327.4" y="20.5" width="57.6" height="19" rx="9.5" fill="#88c0d0" fill-opacity=".15"/><text x="356.2" y="34.0" font-size="11" fill="#88c0d0" font-weight="700" text-anchor="middle">paused</text><use href="#pod" x="15" y="57" width="112" height="112"/><text x="139.0" y="85.1" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PODCAST · CHROME</text><text x="139.0" y="105.8" font-size="15" fill="#c5c8c6" font-weight="700" text-anchor="start">Where the Night Trains Go,</text><text x="139.0" y="127.8" font-size="15" fill="#c5c8c6" font-weight="700" text-anchor="start">with Iris Calloway</text><text x="139.0" y="147.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Slow Signals</text><rect x="15" y="180" width="370" height="4" rx="2" fill="#2f3237"/><rect x="15" y="180" width="131.8" height="4" rx="2" fill="#88c0d0"/><circle cx="146.8" cy="182" r="6" fill="#c5c8c6" stroke="#0b0c0e" stroke-opacity=".5"/><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">9:30</text><text x="385.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="end">26:40</text><rect x="68.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M98.2,242.8 A9.5,9.5 0 1 1 91.6,228.6" fill="none" stroke="#c5c8c6" stroke-width="1.7" stroke-linecap="round"/><path d="M87.4,228.6 L92.2,225.0 L92.2,232.2 Z" fill="#c5c8c6"/><text x="90.0" y="241.2" font-size="8.5" fill="#c5c8c6" font-weight="700" text-anchor="middle">15</text><rect x="120.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M146.5,232.5 L146.5,243.5 L139.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="136.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="172.0" y="221" width="56" height="34" rx="10" fill="#88c0d0"/><path d="M196.5,231.5 L196.5,244.5 L207.0,238.0 Z" fill="#15171a" stroke="#15171a" stroke-width="1.5" stroke-linejoin="round"/><rect x="236.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M253.5,232.5 L253.5,243.5 L261.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="261.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="288.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M301.8,242.8 A9.5,9.5 0 1 0 308.4,228.6" fill="none" stroke="#c5c8c6" stroke-width="1.7" stroke-linecap="round"/><path d="M312.6,228.6 L307.8,225.0 L307.8,232.2 Z" fill="#c5c8c6"/><text x="310.0" y="241.2" font-size="8.5" fill="#c5c8c6" font-weight="700" text-anchor="middle">15</text><text x="15.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PLAYERS</text><text x="385.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">MEDIA KEYS FOLLOW THE LATEST</text><rect x="15.0" y="286.5" width="73.4" height="21" rx="10.5" fill="none" stroke="#88c0d0"/><circle cx="29.0" cy="297" r="3" fill="#7c838e"/><text x="39.0" y="301.0" font-size="11.5" fill="#88c0d0" font-weight="400" text-anchor="start">Chrome</text><rect x="94.4" y="286.5" width="80.3" height="21" rx="10.5" fill="none" stroke="#41464e"/><circle cx="108.4" cy="297" r="3" fill="#7c838e"/><text x="118.4" y="301.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Spotify</text><rect x="15" y="320" width="370" height="61" rx="10" fill="#25282c" stroke="#2f3237"/><text x="26.0" y="340.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">OUTPUT</text><path d="M27,357.5 L30,357.5 L34,354 L34,366 L30,362.5 L27,362.5 Z" fill="#88c0d0"/><path d="M37,357 Q39.5,360 37,363 M39.5,354.5 Q44,360 39.5,365.5" fill="none" stroke="#88c0d0" stroke-width="1.5" stroke-linecap="round"/><text x="51.0" y="364.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Desk speakers · 35%</text><rect x="310.6" y="350" width="63.4" height="21" rx="8" fill="none" stroke="#41464e"/><text x="342.3" y="364.5" font-size="11.5" fill="#c5c8c6" font-weight="400" text-anchor="middle">Change</text><text x="15.0" y="403.0" font-size="10.5" fill="#7c838e" font-weight="400" text-anchor="start">Space play/pause · ←/→ seek · Esc close</text></g>
 </g>
-<g class="a" style="animation-name:k16;" opacity="0">
-<circle cx="24" cy="26" r="4.5" fill="#ebcb8b"/>
-<rect x="380.6" y="16" width="61.4" height="22" rx="11" fill="#ebcb8b" fill-opacity=".15"/>
-<text x="411.3" y="31.0" font-size="11.5" fill="#ebcb8b" font-weight="700" text-anchor="middle">hidden</text>
-</g>
-<text x="38.0" y="31.0" font-size="13" fill="#c5c8c6" font-weight="700" text-anchor="start" letter-spacing="2">TANNOY</text>
-<g class="a" style="animation-name:k17;" opacity="1">
-<text x="38.0" y="48.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Chrome · 2 players</text>
-</g>
-<g class="a" style="animation-name:k18;" opacity="0">
-<text x="38.0" y="48.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Spotify · 2 players</text>
-</g>
-</g></g>
-<g class="a" style="animation-name:k19;">
-<g class="a" style="animation-name:k20;" opacity="1">
-<use href="#pod" x="18" y="64" width="128" height="128"/>
-<text x="160.0" y="98.0" font-size="10.5" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PODCAST · CHROME</text>
-<text x="160.0" y="122.0" font-size="15.5" fill="#c5c8c6" font-weight="700" text-anchor="start">Where the Night Trains Go,</text>
-<text x="160.0" y="142.0" font-size="15.5" fill="#c5c8c6" font-weight="700" text-anchor="start">with Iris Calloway</text>
-<text x="160.0" y="164.0" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Slow Signals</text>
-<rect x="18" y="206" width="424" height="4" rx="2" fill="#2f3237"/>
-<rect x="18" y="206" width="146.3" height="4" rx="2" fill="#88c0d0" class="a" style="animation-name:k21;transform-box:fill-box;transform-origin:left center"/>
-<circle cx="164.3" cy="208" r="6.5" fill="#c5c8c6" stroke="#0b0c0e" stroke-opacity=".5" class="a" style="animation-name:k22;"/>
-<g class="a" style="animation-name:k23;" opacity="1">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">9:12</text>
-</g>
-<g class="a" style="animation-name:k24;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">9:13</text>
-</g>
-<g class="a" style="animation-name:k25;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">9:14</text>
-</g>
-<g class="a" style="animation-name:k26;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">9:29</text>
-</g>
-<g class="a" style="animation-name:k27;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">9:30</text>
-</g>
-<g class="a" style="animation-name:k28;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">9:31</text>
-</g>
-<text x="442.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="end">26:40</text>
-<text x="168.3" y="197.0" font-size="11" fill="#88c0d0" font-weight="700" text-anchor="middle" class="a" style="animation-name:k29;" opacity="0">+15s</text>
-</g>
-<g class="a" style="animation-name:k30;" opacity="0">
-<use href="#song" x="18" y="64" width="128" height="128"/>
-<text x="160.0" y="104.0" font-size="10.5" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">SPOTIFY</text>
-<text x="160.0" y="128.0" font-size="15.5" fill="#c5c8c6" font-weight="700" text-anchor="start">Paper Lanterns</text>
-<text x="160.0" y="149.0" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Marlow Fen</text>
-<text x="160.0" y="168.0" font-size="12" fill="#7c838e" font-weight="400" text-anchor="start">Low Tide Radio</text>
-<rect x="18" y="206" width="424" height="4" rx="2" fill="#2f3237"/>
-<rect x="18" y="206" width="195.6" height="4" rx="2" fill="#88c0d0" class="a" style="animation-name:k31;transform-box:fill-box;transform-origin:left center"/>
-<circle cx="213.6" cy="208" r="6.5" fill="#c5c8c6" stroke="#0b0c0e" stroke-opacity=".5" class="a" style="animation-name:k32;"/>
-<g class="a" style="animation-name:k33;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">1:47</text>
+<g class="a" style="animation-name:k23;" opacity="0">
+<g transform="translate(0,0)"><rect width="400" height="421" rx="16" fill="#1e2024" stroke="#41464e" filter="url(#shadow)"/><circle cx="19" cy="30" r="4.5" fill="#88c0d0"/><text x="33.0" y="27.0" font-size="12" fill="#c5c8c6" font-weight="700" text-anchor="start" letter-spacing="2">TANNOY</text><text x="33.0" y="42.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">Spotify · 2 players</text><rect x="327.4" y="20.5" width="57.6" height="19" rx="9.5" fill="#88c0d0" fill-opacity=".15"/><text x="356.2" y="34.0" font-size="11" fill="#88c0d0" font-weight="700" text-anchor="middle">paused</text><use href="#song" x="15" y="57" width="112" height="112"/><text x="139.0" y="87.6" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">SPOTIFY</text><text x="139.0" y="108.3" font-size="15" fill="#c5c8c6" font-weight="700" text-anchor="start">Paper Lanterns</text><text x="139.0" y="128.0" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Marlow Fen</text><text x="139.0" y="145.4" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Low Tide Radio</text><rect x="15" y="180" width="370" height="4" rx="2" fill="#2f3237"/><rect x="15" y="180" width="170.6" height="4" rx="2" fill="#88c0d0"/><circle cx="185.6" cy="182" r="6" fill="#c5c8c6" stroke="#0b0c0e" stroke-opacity=".5"/><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:47</text><text x="385.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="end">3:52</text><rect x="68.0" y="221.5" width="44" height="33" rx="10" fill="none" stroke="#2f3237"/><path d="M83.0,233.5 C89.0,233.5 91.0,242.5 96.0,242.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/><path d="M98.5,242.5 L95.0,239.9 L95.0,245.1 Z" fill="#7c838e"/><path d="M83.0,242.5 C89.0,242.5 91.0,233.5 96.0,233.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/><path d="M98.5,233.5 L95.0,230.9 L95.0,236.1 Z" fill="#7c838e"/><rect x="120.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M146.5,232.5 L146.5,243.5 L139.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="136.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="172.0" y="221" width="56" height="34" rx="10" fill="#88c0d0"/><path d="M196.5,231.5 L196.5,244.5 L207.0,238.0 Z" fill="#15171a" stroke="#15171a" stroke-width="1.5" stroke-linejoin="round"/><rect x="236.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M253.5,232.5 L253.5,243.5 L261.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="261.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="288.0" y="221.5" width="44" height="33" rx="10" fill="none" stroke="#2f3237"/><path d="M303.0,239.0 L303.0,234.0 L315.0,234.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M318.0,234.0 L314.5,231.4 L314.5,236.6 Z" fill="#7c838e"/><path d="M317.0,237.0 L317.0,242.0 L305.0,242.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M302.0,242.0 L305.5,239.4 L305.5,244.6 Z" fill="#7c838e"/><text x="15.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PLAYERS</text><text x="385.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">PICKED · MEDIA KEYS FOLLOW IT</text><rect x="15.0" y="286.5" width="73.4" height="21" rx="10.5" fill="none" stroke="#41464e"/><circle cx="29.0" cy="297" r="3" fill="#7c838e"/><text x="39.0" y="301.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Chrome</text><rect x="94.4" y="286.5" width="80.3" height="21" rx="10.5" fill="none" stroke="#88c0d0"/><circle cx="108.4" cy="297" r="3" fill="#7c838e"/><text x="118.4" y="301.0" font-size="11.5" fill="#88c0d0" font-weight="400" text-anchor="start">Spotify</text><rect x="180.7" y="286.5" width="49.6" height="21" rx="10.5" fill="none" stroke="#41464e"/><text x="191.7" y="301.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Auto</text><rect x="15" y="320" width="370" height="61" rx="10" fill="#25282c" stroke="#2f3237"/><text x="26.0" y="340.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">OUTPUT</text><path d="M27,357.5 L30,357.5 L34,354 L34,366 L30,362.5 L27,362.5 Z" fill="#88c0d0"/><path d="M37,357 Q39.5,360 37,363 M39.5,354.5 Q44,360 39.5,365.5" fill="none" stroke="#88c0d0" stroke-width="1.5" stroke-linecap="round"/><text x="51.0" y="364.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Desk speakers · 35%</text><rect x="310.6" y="350" width="63.4" height="21" rx="8" fill="none" stroke="#41464e"/><text x="342.3" y="364.5" font-size="11.5" fill="#c5c8c6" font-weight="400" text-anchor="middle">Change</text><text x="15.0" y="403.0" font-size="10.5" fill="#7c838e" font-weight="400" text-anchor="start">Space play/pause · ←/→ seek · Esc close</text></g>
 </g>
 <g class="a" style="animation-name:k34;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">1:48</text>
+<g transform="translate(0,0)"><rect width="400" height="421" rx="16" fill="#1e2024" stroke="#41464e" filter="url(#shadow)"/><circle cx="19" cy="30" r="4.5" fill="#a3be8c"/><text x="33.0" y="27.0" font-size="12" fill="#c5c8c6" font-weight="700" text-anchor="start" letter-spacing="2">TANNOY</text><text x="33.0" y="42.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">Spotify · 2 players</text><rect x="320.8" y="20.5" width="64.2" height="19" rx="9.5" fill="#a3be8c" fill-opacity=".15"/><text x="352.9" y="34.0" font-size="11" fill="#a3be8c" font-weight="700" text-anchor="middle">playing</text><use href="#song" x="15" y="57" width="112" height="112"/><text x="139.0" y="87.6" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">SPOTIFY</text><text x="139.0" y="108.3" font-size="15" fill="#c5c8c6" font-weight="700" text-anchor="start">Paper Lanterns</text><text x="139.0" y="128.0" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Marlow Fen</text><text x="139.0" y="145.4" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Low Tide Radio</text><rect x="15" y="180" width="370" height="4" rx="2" fill="#2f3237"/><rect x="15" y="180" width="170.6" height="4" rx="2" fill="#88c0d0" class="a" style="animation-name:k24;transform-box:fill-box;transform-origin:left center"/><circle cx="185.6" cy="182" r="6" fill="#c5c8c6" stroke="#0b0c0e" stroke-opacity=".5" class="a" style="animation-name:k25;"/><g class="a" style="animation-name:k26;" opacity="1"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:47</text></g><g class="a" style="animation-name:k27;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:48</text></g><g class="a" style="animation-name:k28;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:49</text></g><g class="a" style="animation-name:k29;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:50</text></g><g class="a" style="animation-name:k30;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:51</text></g><g class="a" style="animation-name:k31;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:52</text></g><g class="a" style="animation-name:k32;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:53</text></g><g class="a" style="animation-name:k33;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:54</text></g><text x="385.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="end">3:52</text><rect x="68.0" y="221.5" width="44" height="33" rx="10" fill="none" stroke="#2f3237"/><path d="M83.0,233.5 C89.0,233.5 91.0,242.5 96.0,242.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/><path d="M98.5,242.5 L95.0,239.9 L95.0,245.1 Z" fill="#7c838e"/><path d="M83.0,242.5 C89.0,242.5 91.0,233.5 96.0,233.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/><path d="M98.5,233.5 L95.0,230.9 L95.0,236.1 Z" fill="#7c838e"/><rect x="120.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M146.5,232.5 L146.5,243.5 L139.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="136.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="172.0" y="221" width="56" height="34" rx="10" fill="#88c0d0"/><rect x="195.5" y="231.5" width="3.4" height="13" rx="1" fill="#15171a"/><rect x="201.5" y="231.5" width="3.4" height="13" rx="1" fill="#15171a"/><rect x="236.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M253.5,232.5 L253.5,243.5 L261.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="261.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="288.0" y="221.5" width="44" height="33" rx="10" fill="none" stroke="#2f3237"/><path d="M303.0,239.0 L303.0,234.0 L315.0,234.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M318.0,234.0 L314.5,231.4 L314.5,236.6 Z" fill="#7c838e"/><path d="M317.0,237.0 L317.0,242.0 L305.0,242.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M302.0,242.0 L305.5,239.4 L305.5,244.6 Z" fill="#7c838e"/><text x="15.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PLAYERS</text><text x="385.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">PICKED · MEDIA KEYS FOLLOW IT</text><rect x="15.0" y="286.5" width="73.4" height="21" rx="10.5" fill="none" stroke="#41464e"/><circle cx="29.0" cy="297" r="3" fill="#7c838e"/><text x="39.0" y="301.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Chrome</text><rect x="94.4" y="286.5" width="80.3" height="21" rx="10.5" fill="none" stroke="#88c0d0"/><circle cx="108.4" cy="297" r="3" fill="#a3be8c"/><text x="118.4" y="301.0" font-size="11.5" fill="#88c0d0" font-weight="400" text-anchor="start">Spotify</text><rect x="180.7" y="286.5" width="49.6" height="21" rx="10.5" fill="none" stroke="#41464e"/><text x="191.7" y="301.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Auto</text><rect x="15" y="320" width="370" height="61" rx="10" fill="#25282c" stroke="#2f3237"/><text x="26.0" y="340.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">OUTPUT</text><path d="M27,357.5 L30,357.5 L34,354 L34,366 L30,362.5 L27,362.5 Z" fill="#88c0d0"/><path d="M37,357 Q39.5,360 37,363 M39.5,354.5 Q44,360 39.5,365.5" fill="none" stroke="#88c0d0" stroke-width="1.5" stroke-linecap="round"/><text x="51.0" y="364.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Desk speakers · 35%</text><rect x="310.6" y="350" width="63.4" height="21" rx="8" fill="none" stroke="#41464e"/><text x="342.3" y="364.5" font-size="11.5" fill="#c5c8c6" font-weight="400" text-anchor="middle">Change</text><text x="15.0" y="403.0" font-size="10.5" fill="#7c838e" font-weight="400" text-anchor="start">Space play/pause · ←/→ seek · Esc close</text></g>
 </g>
 <g class="a" style="animation-name:k35;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">1:49</text>
+<g transform="translate(0,65)"><rect width="400" height="356" rx="16" fill="#1e2024" stroke="#41464e" filter="url(#shadow)"/><circle cx="19" cy="30" r="4.5" fill="#ebcb8b"/><text x="33.0" y="27.0" font-size="12" fill="#c5c8c6" font-weight="700" text-anchor="start" letter-spacing="2">TANNOY</text><text x="33.0" y="42.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">Spotify · 2 players</text><rect x="327.4" y="20.5" width="57.6" height="19" rx="9.5" fill="#ebcb8b" fill-opacity=".15"/><text x="356.2" y="34.0" font-size="11" fill="#ebcb8b" font-weight="700" text-anchor="middle">hidden</text><rect x="15" y="57" width="370" height="87" rx="10" fill="#ebcb8b" fill-opacity=".07" stroke="#ebcb8b" stroke-opacity=".3"/><text x="26.0" y="77.0" font-size="10" fill="#ebcb8b" font-weight="700" text-anchor="start" letter-spacing="1">HIDDEN</text><text x="374.0" y="77.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">DO NOT DISTURB IS ON</text><text x="26.0" y="99.0" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">The title and cover stay off the bar while</text><text x="26.0" y="115.0" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">do not disturb is on or the screen is</text><text x="26.0" y="131.0" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">shared. The controls still work.</text><rect x="68.0" y="156.5" width="44" height="33" rx="10" fill="none" stroke="#2f3237"/><path d="M83.0,168.5 C89.0,168.5 91.0,177.5 96.0,177.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/><path d="M98.5,177.5 L95.0,174.9 L95.0,180.1 Z" fill="#7c838e"/><path d="M83.0,177.5 C89.0,177.5 91.0,168.5 96.0,168.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/><path d="M98.5,168.5 L95.0,165.9 L95.0,171.1 Z" fill="#7c838e"/><rect x="120.0" y="156.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M146.5,167.5 L146.5,178.5 L139.0,173.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="136.5" y="167.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="172.0" y="156" width="56" height="34" rx="10" fill="#88c0d0"/><rect x="195.5" y="166.5" width="3.4" height="13" rx="1" fill="#15171a"/><rect x="201.5" y="166.5" width="3.4" height="13" rx="1" fill="#15171a"/><rect x="236.0" y="156.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M253.5,167.5 L253.5,178.5 L261.0,173.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="261.5" y="167.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="288.0" y="156.5" width="44" height="33" rx="10" fill="none" stroke="#2f3237"/><path d="M303.0,174.0 L303.0,169.0 L315.0,169.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M318.0,169.0 L314.5,166.4 L314.5,171.6 Z" fill="#7c838e"/><path d="M317.0,172.0 L317.0,177.0 L305.0,177.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M302.0,177.0 L305.5,174.4 L305.5,179.6 Z" fill="#7c838e"/><text x="15.0" y="212.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PLAYERS</text><text x="385.0" y="212.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">PICKED · MEDIA KEYS FOLLOW IT</text><rect x="15.0" y="221.5" width="73.4" height="21" rx="10.5" fill="none" stroke="#41464e"/><circle cx="29.0" cy="232" r="3" fill="#7c838e"/><text x="39.0" y="236.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Chrome</text><rect x="94.4" y="221.5" width="80.3" height="21" rx="10.5" fill="none" stroke="#88c0d0"/><circle cx="108.4" cy="232" r="3" fill="#a3be8c"/><text x="118.4" y="236.0" font-size="11.5" fill="#88c0d0" font-weight="400" text-anchor="start">Spotify</text><rect x="180.7" y="221.5" width="49.6" height="21" rx="10.5" fill="none" stroke="#41464e"/><text x="191.7" y="236.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Auto</text><rect x="15" y="255" width="370" height="61" rx="10" fill="#25282c" stroke="#2f3237"/><text x="26.0" y="275.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">OUTPUT</text><path d="M27,292.5 L30,292.5 L34,289 L34,301 L30,297.5 L27,297.5 Z" fill="#88c0d0"/><path d="M37,292 Q39.5,295 37,298 M39.5,289.5 Q44,295 39.5,300.5" fill="none" stroke="#88c0d0" stroke-width="1.5" stroke-linecap="round"/><text x="51.0" y="299.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Desk speakers · 35%</text><rect x="310.6" y="285" width="63.4" height="21" rx="8" fill="none" stroke="#41464e"/><text x="342.3" y="299.5" font-size="11.5" fill="#c5c8c6" font-weight="400" text-anchor="middle">Change</text><text x="15.0" y="338.0" font-size="10.5" fill="#7c838e" font-weight="400" text-anchor="start">Space play/pause · ←/→ seek · Esc close</text></g>
 </g>
-<g class="a" style="animation-name:k36;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">1:50</text>
+<g class="a" style="animation-name:k46;" opacity="0">
+<g transform="translate(0,0)"><rect width="400" height="421" rx="16" fill="#1e2024" stroke="#41464e" filter="url(#shadow)"/><circle cx="19" cy="30" r="4.5" fill="#a3be8c"/><text x="33.0" y="27.0" font-size="12" fill="#c5c8c6" font-weight="700" text-anchor="start" letter-spacing="2">TANNOY</text><text x="33.0" y="42.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">Spotify · 2 players</text><rect x="320.8" y="20.5" width="64.2" height="19" rx="9.5" fill="#a3be8c" fill-opacity=".15"/><text x="352.9" y="34.0" font-size="11" fill="#a3be8c" font-weight="700" text-anchor="middle">playing</text><use href="#song" x="15" y="57" width="112" height="112"/><text x="139.0" y="87.6" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">SPOTIFY</text><text x="139.0" y="108.3" font-size="15" fill="#c5c8c6" font-weight="700" text-anchor="start">Paper Lanterns</text><text x="139.0" y="128.0" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Marlow Fen</text><text x="139.0" y="145.4" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Low Tide Radio</text><rect x="15" y="180" width="370" height="4" rx="2" fill="#2f3237"/><rect x="15" y="180" width="170.6" height="4" rx="2" fill="#88c0d0" class="a" style="animation-name:k36;transform-box:fill-box;transform-origin:left center"/><circle cx="185.6" cy="182" r="6" fill="#c5c8c6" stroke="#0b0c0e" stroke-opacity=".5" class="a" style="animation-name:k37;"/><g class="a" style="animation-name:k38;" opacity="1"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:47</text></g><g class="a" style="animation-name:k39;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:48</text></g><g class="a" style="animation-name:k40;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:49</text></g><g class="a" style="animation-name:k41;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:50</text></g><g class="a" style="animation-name:k42;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:51</text></g><g class="a" style="animation-name:k43;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:52</text></g><g class="a" style="animation-name:k44;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:53</text></g><g class="a" style="animation-name:k45;" opacity="0"><text x="15.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="start">1:54</text></g><text x="385.0" y="206.0" font-size="11" fill="#7c838e" font-weight="400" text-anchor="end">3:52</text><rect x="68.0" y="221.5" width="44" height="33" rx="10" fill="none" stroke="#2f3237"/><path d="M83.0,233.5 C89.0,233.5 91.0,242.5 96.0,242.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/><path d="M98.5,242.5 L95.0,239.9 L95.0,245.1 Z" fill="#7c838e"/><path d="M83.0,242.5 C89.0,242.5 91.0,233.5 96.0,233.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/><path d="M98.5,233.5 L95.0,230.9 L95.0,236.1 Z" fill="#7c838e"/><rect x="120.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M146.5,232.5 L146.5,243.5 L139.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="136.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="172.0" y="221" width="56" height="34" rx="10" fill="#88c0d0"/><rect x="195.5" y="231.5" width="3.4" height="13" rx="1" fill="#15171a"/><rect x="201.5" y="231.5" width="3.4" height="13" rx="1" fill="#15171a"/><rect x="236.0" y="221.5" width="44" height="33" rx="10" fill="#25282c" stroke="#2f3237"/><path d="M253.5,232.5 L253.5,243.5 L261.0,238.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/><rect x="261.5" y="232.5" width="2" height="11" rx=".8" fill="#c5c8c6"/><rect x="288.0" y="221.5" width="44" height="33" rx="10" fill="none" stroke="#2f3237"/><path d="M303.0,239.0 L303.0,234.0 L315.0,234.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M318.0,234.0 L314.5,231.4 L314.5,236.6 Z" fill="#7c838e"/><path d="M317.0,237.0 L317.0,242.0 L305.0,242.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M302.0,242.0 L305.5,239.4 L305.5,244.6 Z" fill="#7c838e"/><text x="15.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PLAYERS</text><text x="385.0" y="277.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">PICKED · MEDIA KEYS FOLLOW IT</text><rect x="15.0" y="286.5" width="73.4" height="21" rx="10.5" fill="none" stroke="#41464e"/><circle cx="29.0" cy="297" r="3" fill="#7c838e"/><text x="39.0" y="301.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Chrome</text><rect x="94.4" y="286.5" width="80.3" height="21" rx="10.5" fill="none" stroke="#88c0d0"/><circle cx="108.4" cy="297" r="3" fill="#a3be8c"/><text x="118.4" y="301.0" font-size="11.5" fill="#88c0d0" font-weight="400" text-anchor="start">Spotify</text><rect x="180.7" y="286.5" width="49.6" height="21" rx="10.5" fill="none" stroke="#41464e"/><text x="191.7" y="301.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Auto</text><rect x="15" y="320" width="370" height="61" rx="10" fill="#25282c" stroke="#2f3237"/><text x="26.0" y="340.0" font-size="10" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">OUTPUT</text><path d="M27,357.5 L30,357.5 L34,354 L34,366 L30,362.5 L27,362.5 Z" fill="#88c0d0"/><path d="M37,357 Q39.5,360 37,363 M39.5,354.5 Q44,360 39.5,365.5" fill="none" stroke="#88c0d0" stroke-width="1.5" stroke-linecap="round"/><text x="51.0" y="364.5" font-size="13" fill="#c5c8c6" font-weight="400" text-anchor="start">Desk speakers · 35%</text><rect x="310.6" y="350" width="63.4" height="21" rx="8" fill="none" stroke="#41464e"/><text x="342.3" y="364.5" font-size="11.5" fill="#c5c8c6" font-weight="400" text-anchor="middle">Change</text><text x="15.0" y="403.0" font-size="10.5" fill="#7c838e" font-weight="400" text-anchor="start">Space play/pause · ←/→ seek · Esc close</text></g>
 </g>
-<g class="a" style="animation-name:k37;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">1:51</text>
-</g>
-<g class="a" style="animation-name:k38;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">1:52</text>
-</g>
-<g class="a" style="animation-name:k39;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">1:53</text>
-</g>
-<g class="a" style="animation-name:k40;" opacity="0">
-<text x="18.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">1:54</text>
-</g>
-<text x="442.0" y="230.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="end">3:52</text>
-</g>
-<g class="a" style="animation-name:k41;" opacity="0">
-<rect x="18" y="142" width="424" height="94" rx="10" fill="#ebcb8b" fill-opacity=".07" stroke="#ebcb8b" stroke-opacity=".3"/>
-<text x="30.0" y="163.0" font-size="10.5" fill="#ebcb8b" font-weight="700" text-anchor="start" letter-spacing="1">HIDDEN</text>
-<text x="430.0" y="163.0" font-size="10.5" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">DO NOT DISTURB IS ON</text>
-<text x="30.0" y="187.0" font-size="12.5" fill="#c5c8c6" font-weight="400" text-anchor="start">The title and cover stay off the bar while do not</text>
-<text x="30.0" y="205.0" font-size="12.5" fill="#c5c8c6" font-weight="400" text-anchor="start">disturb is on or the screen is shared. The</text>
-<text x="30.0" y="223.0" font-size="12.5" fill="#c5c8c6" font-weight="400" text-anchor="start">controls still work.</text>
+<rect x="288.0" y="221.0" width="44" height="34" rx="10" fill="#fff" fill-opacity=".14" class="a" style="animation-name:k47;" opacity="0"/>
+<rect x="172.0" y="221.0" width="56" height="34" rx="10" fill="#fff" fill-opacity=".14" class="a" style="animation-name:k48;" opacity="0"/>
+<rect x="172.0" y="221.0" width="56" height="34" rx="10" fill="#fff" fill-opacity=".14" class="a" style="animation-name:k49;" opacity="0"/>
 </g></g>
-<g class="a" style="animation-name:k42;">
-<g class="a" style="animation-name:k43;" opacity="1">
-<rect x="83.0" y="248" width="48" height="38" rx="10" fill="#25282c" stroke="#2f3237"/>
-<path d="M115.2,271.8 A9.5,9.5 0 1 1 108.6,257.6" fill="none" stroke="#c5c8c6" stroke-width="1.7" stroke-linecap="round"/>
-<path d="M104.4,257.6 L109.2,254.0 L109.2,261.2 Z" fill="#c5c8c6"/>
-<text x="107.0" y="270.2" font-size="8.5" fill="#c5c8c6" font-weight="700" text-anchor="middle">15</text>
-<rect x="329.0" y="248" width="48" height="38" rx="10" fill="#25282c" stroke="#2f3237"/>
-<rect x="329.0" y="248" width="48" height="38" rx="10" fill="#fff" fill-opacity=".14" class="a" style="animation-name:k44;" opacity="0"/>
-<path d="M344.8,271.8 A9.5,9.5 0 1 0 351.4,257.6" fill="none" stroke="#c5c8c6" stroke-width="1.7" stroke-linecap="round"/>
-<path d="M355.6,257.6 L350.8,254.0 L350.8,261.2 Z" fill="#c5c8c6"/>
-<text x="353.0" y="270.2" font-size="8.5" fill="#c5c8c6" font-weight="700" text-anchor="middle">15</text>
-</g>
-<g class="a" style="animation-name:k45;" opacity="0">
-<path d="M100.0,262.5 C106.0,262.5 108.0,271.5 113.0,271.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/>
-<path d="M115.5,271.5 L112.0,268.9 L112.0,274.1 Z" fill="#7c838e"/>
-<path d="M100.0,271.5 C106.0,271.5 108.0,262.5 113.0,262.5" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round"/>
-<path d="M115.5,262.5 L112.0,259.9 L112.0,265.1 Z" fill="#7c838e"/>
-<path d="M346.0,268.0 L346.0,263.0 L358.0,263.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M361.0,263.0 L357.5,260.4 L357.5,265.6 Z" fill="#7c838e"/>
-<path d="M360.0,266.0 L360.0,271.0 L348.0,271.0" fill="none" stroke="#7c838e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M345.0,271.0 L348.5,268.4 L348.5,273.6 Z" fill="#7c838e"/>
-</g>
-<rect x="140.0" y="248" width="48" height="38" rx="10" fill="#25282c" stroke="#2f3237"/>
-<path d="M168.5,261.5 L168.5,272.5 L161.0,267.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/>
-<rect x="158.5" y="261.5" width="2" height="11" rx=".8" fill="#c5c8c6"/>
-<rect x="197.0" y="248" width="66" height="38" rx="10" fill="#88c0d0" stroke="#88c0d0"/>
-<rect x="197.0" y="248" width="66" height="38" rx="10" fill="#fff" fill-opacity=".14" class="a" style="animation-name:k46;" opacity="0"/>
-<g class="a" style="animation-name:k47;" opacity="1">
-<rect x="225.5" y="260.5" width="3.4" height="13" rx="1" fill="#15171a"/>
-<rect x="231.5" y="260.5" width="3.4" height="13" rx="1" fill="#15171a"/>
-</g>
-<g class="a" style="animation-name:k48;" opacity="0">
-<path d="M226.5,260.5 L226.5,273.5 L237.0,267.0 Z" fill="#15171a" stroke="#15171a" stroke-width="1.5" stroke-linejoin="round"/>
-</g>
-<rect x="272.0" y="248" width="48" height="38" rx="10" fill="#25282c" stroke="#2f3237"/>
-<path d="M291.5,261.5 L291.5,272.5 L299.0,267.0 Z" fill="#c5c8c6" stroke="#c5c8c6" stroke-width="1.2" stroke-linejoin="round"/>
-<rect x="299.5" y="261.5" width="2" height="11" rx=".8" fill="#c5c8c6"/>
-</g>
-<g class="a" style="animation-name:k49;">
-<text x="18.0" y="314.0" font-size="10.5" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">PLAYERS</text>
-<g class="a" style="animation-name:k50;" opacity="1">
-<text x="442.0" y="314.0" font-size="10.5" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">MEDIA KEYS FOLLOW THE LATEST</text>
-</g>
-<g class="a" style="animation-name:k51;" opacity="0">
-<text x="442.0" y="314.0" font-size="10.5" fill="#7c838e" font-weight="700" text-anchor="end" letter-spacing="1">PICKED · MEDIA KEYS FOLLOW IT</text>
-</g>
-<rect x="18.0" y="322" width="73.4" height="26" rx="13" fill="none" stroke="#41464e"/>
-<g class="a" style="animation-name:k52;" opacity="1">
-<rect x="18.0" y="322" width="73.4" height="26" rx="13" fill="#88c0d0" fill-opacity=".08" stroke="#88c0d0"/>
-<text x="40.0" y="339.0" font-size="11.5" fill="#88c0d0" font-weight="400" text-anchor="start">Chrome</text>
-</g>
-<g class="a" style="animation-name:k53;" opacity="0">
-<text x="40.0" y="339.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Chrome</text>
-</g>
-<g class="a" style="animation-name:k54;" opacity="1">
-<circle cx="31.5" cy="335" r="3.5" fill="#a3be8c"/>
-</g>
-<rect x="97.4" y="322" width="80.3" height="26" rx="13" fill="none" stroke="#41464e"/>
-<g class="a" style="animation-name:k55;" opacity="0">
-<rect x="97.4" y="322" width="80.3" height="26" rx="13" fill="#88c0d0" fill-opacity=".08" stroke="#88c0d0"/>
-<text x="119.4" y="339.0" font-size="11.5" fill="#88c0d0" font-weight="400" text-anchor="start">Spotify</text>
-</g>
-<g class="a" style="animation-name:k56;" opacity="1">
-<text x="119.4" y="339.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Spotify</text>
-</g>
-<g class="a" style="animation-name:k57;" opacity="1">
-<circle cx="110.9" cy="335" r="3.5" fill="#7c838e"/>
-</g>
-<g class="a" style="animation-name:k58;" opacity="0">
-<circle cx="110.9" cy="335" r="3.5" fill="#a3be8c"/>
-</g>
-<g class="a" style="animation-name:k59;" opacity="0">
-<rect x="183.7" y="322" width="47.6" height="26" rx="13" fill="none" stroke="#41464e"/>
-<text x="193.7" y="339.0" font-size="11.5" fill="#7c838e" font-weight="400" text-anchor="start">Auto</text>
-</g>
-</g>
-<g class="a" style="animation-name:k60;">
-<rect x="18" y="360" width="424" height="60" rx="10" fill="#25282c" stroke="#2f3237"/>
-<text x="30.0" y="378.0" font-size="10.5" fill="#7c838e" font-weight="700" text-anchor="start" letter-spacing="1">OUTPUT</text>
-<path d="M30,397.5 L33,397.5 L37,394 L37,406 L33,402.5 L30,402.5 Z" fill="#88c0d0"/>
-<path d="M40,397 Q42.5,400 40,403 M42.5,394.5 Q47,400 42.5,405.5" fill="none" stroke="#88c0d0" stroke-width="1.5" stroke-linecap="round"/>
-<text x="52.0" y="404.5" font-size="12.5" fill="#c5c8c6" font-weight="400" text-anchor="start">Desk speakers · 35%</text>
-<rect x="366" y="388" width="64" height="24" rx="8" fill="none" stroke="#41464e"/>
-<text x="398.0" y="404.0" font-size="11.5" fill="#c5c8c6" font-weight="400" text-anchor="middle">Change</text>
-</g>
-<g class="a" style="animation-name:k61;">
-<text x="18.0" y="446.0" font-size="10.5" fill="#7c838e" font-weight="400" text-anchor="start">Space play/pause · ←/→ seek · Esc close</text>
-</g>
-</g></g>
-<circle class="a ripple" style="animation-name:k62,k63;transform-box:fill-box;transform-origin:center" cx="432.2" cy="632.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
-<circle class="a ripple" style="animation-name:k64,k65;transform-box:fill-box;transform-origin:center" cx="555.2" cy="409.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
-<circle class="a ripple" style="animation-name:k66,k67;transform-box:fill-box;transform-origin:center" cx="339.8" cy="477.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
-<circle class="a ripple" style="animation-name:k68,k69;transform-box:fill-box;transform-origin:center" cx="432.2" cy="409.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
-<circle class="a ripple" style="animation-name:k70,k71;transform-box:fill-box;transform-origin:center" cx="640.0" cy="250.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
-<g id="cursor" class="a" style="animation-name:k72;animation-timing-function:cubic-bezier(.45,0,.25,1);transform:translate(777.0px, 376.0px)">
+<circle class="a ripple" style="animation-name:k50,k51;transform-box:fill-box;transform-origin:center" cx="278.6" cy="637.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
+<circle class="a ripple" style="animation-name:k52,k53;transform-box:fill-box;transform-origin:center" cx="388.6" cy="429.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
+<circle class="a ripple" style="animation-name:k54,k55;transform-box:fill-box;transform-origin:center" cx="278.6" cy="429.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
+<circle class="a ripple" style="animation-name:k56,k57;transform-box:fill-box;transform-origin:center" cx="213.2" cy="488.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
+<circle class="a ripple" style="animation-name:k58,k59;transform-box:fill-box;transform-origin:center" cx="278.6" cy="429.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
+<circle class="a ripple" style="animation-name:k60,k61;transform-box:fill-box;transform-origin:center" cx="598.6" cy="300.0" r="18" fill="none" stroke="#88c0d0" stroke-width="2.5" opacity="0"/>
+<g id="cursor" class="a" style="animation-name:k62;animation-timing-function:cubic-bezier(.45,0,.25,1);transform:translate(615.6px, 396.0px)">
 <path d="M0,0 L0,22 L6,17 L10,26 L14,24 L10,15 L18,15 Z" fill="#eceff4" stroke="#1d2024" stroke-width="1.4" stroke-linejoin="round"/>
 </g>
 </g></svg>
