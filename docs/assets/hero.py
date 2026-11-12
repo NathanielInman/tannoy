@@ -370,6 +370,11 @@ def center(spot):
     return x + w / 2, y + h / 2
 
 
+# ---- end of the panel ----
+# dot-files' bar hero (docs/bar/apps.py) runs everything above this line
+# to draw the panel in its own tour, so keep the panel's code above it and
+# the story below it.
+
 # ---------------------------------------------------------------- animation
 
 # The story, in seconds.
