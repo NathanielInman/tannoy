@@ -19,6 +19,8 @@ use tannoy_core::protocol::{Event, Request};
 use tannoy_core::text::clock;
 
 pub enum Msg {
+    /// Another app's drawer opened: close this one.
+    OtherDrawerOpened,
     Event(Event),
     /// A watched stylesheet or the config changed.
     Restyle,
@@ -548,6 +550,7 @@ impl Drawer {
 
     pub fn handle(self: &Rc<Self>, msg: Msg) {
         match msg {
+            Msg::OtherDrawerOpened => self.hide(),
             Msg::Event(Event::Snapshot { snapshot }) => {
                 *self.snap.borrow_mut() = Some(*snapshot);
                 if self.visible.get() {
@@ -655,6 +658,7 @@ impl Drawer {
         self.window.set_visible(true);
         self.window.present();
         if !was_visible {
+            bar_anchor::drawers::opened("tannoy");
             self.spring.play_in(0);
             send_quiet(Request::BoardVisible { visible: true });
             self.refresh_sink();
