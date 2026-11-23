@@ -12,7 +12,7 @@ publish = false
 # The layer-shell drawer is Linux only.
 [target.'cfg(target_os = "linux")'.dependencies]
 tannoy-core = { path = "../tannoy-core" }
-bar-anchor = { path = "../bar-anchor" }
+bar-anchor.workspace = true
 gtk = { package = "gtk4", version = "0.11", features = ["v4_12"] }
 gtk4-layer-shell = "0.8"
 async-channel = "2"

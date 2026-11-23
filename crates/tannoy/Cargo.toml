@@ -15,7 +15,7 @@ path = "src/main.rs"
 
 [dependencies]
 tannoy-core = { path = "../tannoy-core" }
-bar-anchor = { path = "../bar-anchor" }
+bar-anchor.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 anyhow.workspace = true

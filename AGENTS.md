@@ -5,9 +5,10 @@ for whatever you change.
 
 ## Crates
 
-- `bar-anchor`: anchoring (Hyprland, sway, niri) and panel placement, no
-  GTK. A copy of Roundhouse's; its `Anchor` JSON must stay identical to
-  Roundhouse's and Switchyard's.
+- `bar-anchor` is no longer in this repo: it's the shared
+  [bar-anchor](https://github.com/NathanielInman/bar-anchor) crate, pinned by tag in the root `Cargo.toml`.
+  Change it there and move the tag; its `Anchor` JSON must stay
+  identical across the apps.
 - `tannoy-core`: the model, MPRIS parsing (`mpris.rs`), the player pick
   (`pick.rs`), the daemon's state and its transitions (`state.rs`: what
   happened in, effects out), the bar line (`bar.rs`), config, cover art, the

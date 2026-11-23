@@ -10,7 +10,7 @@ authors.workspace = true
 publish = false
 
 [dependencies]
-bar-anchor = { path = "../bar-anchor" }
+bar-anchor.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 toml.workspace = true
